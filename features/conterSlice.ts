@@ -32,7 +32,7 @@ export const counterSlice = createSlice({
 
 export const { increment, decrement, incrementByAmount } = counterSlice.actions;
 
-export const selectConunt = (state: RootState) => state.counter.value;
+//export const selectConunt = (state: RootState) => state.counter.value;
 
 // exporting the reducer here, as we need to add this to the store
 export default counterSlice.reducer;
