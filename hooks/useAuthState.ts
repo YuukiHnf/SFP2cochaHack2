@@ -1,7 +1,9 @@
 import {
   createUserWithEmailAndPassword,
+  GoogleAuthProvider,
   onAuthStateChanged,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut,
   updateProfile,
 } from "firebase/auth";
@@ -87,7 +89,19 @@ const useAuthState = ({ LoginType }: Props) => {
     }
   };
 
-  return { signInEmail, signUpEmail, logout };
+  const provider = new GoogleAuthProvider();
+
+  const signInGoogle = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+
+      router.push(`/${LoginType}`);
+    } catch (e: any) {
+      alert(`[MyAuthWithGoogleError] : ${e.message}`);
+    }
+  };
+
+  return { signInEmail, signUpEmail, logout, signInGoogle };
 };
 
 export default useAuthState;

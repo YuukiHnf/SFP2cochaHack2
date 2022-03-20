@@ -9,7 +9,9 @@ interface Props {
 
 const SignInForm2: VFC<Props> = ({ LoginType, isSignUp }) => {
   //const [signUp, setSignUp] = useState<boolean>(true);
-  const { signInEmail, signUpEmail } = useAuthState({ LoginType });
+  const { signInEmail, signUpEmail, signInGoogle } = useAuthState({
+    LoginType,
+  });
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const teamId = "hokudaiFesta";
@@ -47,6 +49,7 @@ const SignInForm2: VFC<Props> = ({ LoginType, isSignUp }) => {
         >
           {isSignUp ? "SignUp" : "Login"}
         </Button>
+        <Button onClick={() => signInGoogle()}>GOOGLE</Button>
       </form>{" "}
     </>
   );
