@@ -1,34 +1,84 @@
-import { onAuthStateChanged } from "firebase/auth";
-import { useEffect, useState } from "react";
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
+import { addDoc, doc, setDoc } from "firebase/firestore";
+import { useRouter } from "next/router";
 import { auth } from "../utils/firebase/FirebaseAuth";
+import {
+  DateSchedule,
+  db,
+  getUserCollection,
+  USER,
+} from "../utils/firebase/FirebaseStore";
 
+interface Props {
+  LoginType: "admin" | "guest";
+}
 /**
- * useAuthState フックの戻り値の型。
+ * GoogleでのLoginやLogoutを担う関数を扱う
+ * 値のreduxStateへの更新などは、最初のAuthComponentにて行っている、これはauthStateChangedを使っているため
  */
-export type AuthState = {
-  isSignedIn: boolean;
-  isLoading: boolean;
-  userId: string | undefined;
-  userName: string | undefined;
-  avatarUrl: string | undefined;
-};
+const useAuthState = ({ LoginType }: Props) => {
+  const router = useRouter();
 
-/**
- * useAuthState が返す初期値。
- * Next.js のサーバーサイドレンダリング時もこの値になる。
- */
-const INITIAL_AUTH_STATE: AuthState = {
-  isSignedIn: false,
-  isLoading: true,
-  userId: undefined,
-  userName: undefined,
-  avatarUrl: undefined,
-};
+  const signInEmail = async (
+    email: string,
+    password: string,
+    teamId: string
+  ) => {
+    try {
+      const usrCredient = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
 
-const useAuthState = () => {
-  //const [authState, setAuthState] = useState(INITIAL_AUTH_STATE);
+      router.push(`/${LoginType}`);
+    } catch (e: any) {
+      alert(`[MyAuthWithEmail] : ${e.message}`);
+    }
+  };
 
-  return {};
+  const signUpEmail = async (
+    email: string,
+    password: string,
+    teamId: string
+  ) => {
+    try {
+      // 新規作成
+      const usrCredient = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      await updateProfile(usrCredient.user, {
+        displayName: email.split("@")[0],
+        photoURL: "",
+      });
+      console.log("[MyAuth]:CreateNew");
+
+      // firestoreに入れる, idランダム
+      await setDoc(doc(db, "users", usrCredient.user.uid), {
+        username: usrCredient.user.displayName,
+        avatarUrl: usrCredient.user.photoURL,
+        timeSche: [] as DateSchedule[],
+        isActive: true,
+        isGPS: false,
+        location: { lat: 0, lng: 0 },
+        teamId: teamId,
+        taskId: "",
+      } as Omit<USER, "uid">);
+
+      signInEmail(email, password, teamId);
+    } catch (e: any) {
+      alert(`[MyAuthWithCREATEEmail] : ${e.message}`);
+    }
+  };
+
+  return { signInEmail, signUpEmail };
 };
 
 export default useAuthState;

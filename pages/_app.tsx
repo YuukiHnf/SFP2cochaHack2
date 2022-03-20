@@ -1,9 +1,24 @@
 import "../styles/globals.css";
-import "../utils/firebase/FirebaseInit"; // exe Firebase init setting
+
+// exe Firebase init setting
+import "../utils/firebase/FirebaseInit";
+
 import type { AppProps } from "next/app";
 
+// redux
+import { store } from "../app/store";
+import { Provider } from "react-redux";
+import useAuthState from "../hooks/useAuthState";
+import AuthComponent from "../components/AuthComponent";
+
 function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />;
+  return (
+    <Provider store={store}>
+      <AuthComponent>
+        <Component {...pageProps} />
+      </AuthComponent>
+    </Provider>
+  );
 }
 
 export default MyApp;
