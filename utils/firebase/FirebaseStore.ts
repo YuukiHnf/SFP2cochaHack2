@@ -45,6 +45,6 @@ export type DateSchedule = {
 export type PLACE = {
   center: { lat: number; lng: number };
   zoom: number;
-  tilt: number;
-  heading: number;
+  tilt?: number;
+  heading?: number; // 設定できるようになったら入れる
 };

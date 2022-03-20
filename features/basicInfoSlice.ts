@@ -41,6 +41,7 @@ export const basicInfoSlice = createSlice({
 export const { login, logout } = basicInfoSlice.actions;
 
 export const selectBasicInfo = (state: RootState) => state.basicInfo;
+export const selectTeamId = (state: RootState) => state.basicInfo.teamId;
 
 // exporting the reducer here, as we need to add this to the store
 export default basicInfoSlice.reducer;
