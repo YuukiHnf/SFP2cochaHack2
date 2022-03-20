@@ -2,6 +2,7 @@ import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signInWithEmailAndPassword,
+  signOut,
   updateProfile,
 } from "firebase/auth";
 import { addDoc, doc, setDoc } from "firebase/firestore";
@@ -78,7 +79,15 @@ const useAuthState = ({ LoginType }: Props) => {
     }
   };
 
-  return { signInEmail, signUpEmail };
+  const logout = async () => {
+    try {
+      await signOut(auth);
+    } catch (e: any) {
+      alert(`[Myerror] authLogout : ${e}`);
+    }
+  };
+
+  return { signInEmail, signUpEmail, logout };
 };
 
 export default useAuthState;

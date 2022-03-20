@@ -19,7 +19,9 @@ const AdminWrapper: VFC<Props> = ({ children }) => {
       router.push("/login");
     }
     // admin用のState入力
-    const unSub = onSnapshot(doc(db, "users", basicInfo.userId), (doc) => {});
+    const unSub = onSnapshot(doc(db, "users", basicInfo.userId), (doc) => {
+      console.log(doc.data());
+    });
     return () => unSub();
   }, [basicInfo]);
 

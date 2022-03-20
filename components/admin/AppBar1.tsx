@@ -12,12 +12,15 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useRouter } from "next/router";
+import useAuthState from "../../hooks/useAuthState";
+import Link from "next/link";
 
 const pages = ["team", "place", "object"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
-const ResponsiveAppBar = () => {
+const AppBar1 = () => {
   const router = useRouter();
+  const { logout } = useAuthState({ LoginType: "admin" });
 
   //   const pageFunc = {
   //     Team: router.push("/admin/team"),
@@ -55,6 +58,7 @@ const ResponsiveAppBar = () => {
             noWrap
             component="div"
             sx={{ mr: 2, display: { xs: "none", md: "flex" } }}
+            onClick={() => router.push("/admin")}
           >
             CochaHack
           </Typography>
@@ -89,15 +93,17 @@ const ResponsiveAppBar = () => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem
-                  key={page}
-                  onClick={() => {
-                    handleCloseNavMenu();
-                    router.push(`/admin/${page}`);
-                  }}
-                >
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
+                <Link href={`/admin/${page}`}>
+                  <MenuItem
+                    key={page}
+                    onClick={() => {
+                      handleCloseNavMenu();
+                      // router.push(`/admin/${page}`);
+                    }}
+                  >
+                    <Typography textAlign="center">{page}</Typography>
+                  </MenuItem>
+                </Link>
               ))}
             </Menu>
           </Box>
@@ -111,17 +117,19 @@ const ResponsiveAppBar = () => {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={() => {
-                  handleCloseNavMenu();
-                  router.push(`/admin/${page}`);
-                }}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
+              <Link href={`/admin/${page}`}>
+                <Button
+                  key={page}
+                  onClick={() => {
+                    handleCloseNavMenu();
+                  }}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  {page}
+                </Button>
+              </Link>
             ))}
+            <Button onClick={() => logout()}>LOGOUT</Button>
           </Box>
 
           {/* <Box sx={{ flexGrow: 0 }}>
@@ -158,4 +166,4 @@ const ResponsiveAppBar = () => {
     </AppBar>
   );
 };
-export default ResponsiveAppBar;
+export default AppBar1;
