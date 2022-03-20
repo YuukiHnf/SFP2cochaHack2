@@ -6,7 +6,7 @@ import SignInForm2 from "../components/SignInForm2";
 
 const login: VFC = () => {
   const [loginAdmin, setLoginAdmin] = useState<boolean>(true);
-  const [signUp, setSignUp] = useState<boolean>(true);
+  const [signUp, setSignUp] = useState<boolean>(false);
   //console.log(loginAdmin ? "Admin" : "Guest");
 
   return (

@@ -41,3 +41,10 @@ export type DateSchedule = {
   start: Date;
   end: Date;
 };
+
+export type PLACE = {
+  center: { lat: number; lng: number };
+  zoom: number;
+  tilt: number;
+  heading: number;
+};

@@ -50,6 +50,11 @@ const SignInForm2: VFC<Props> = ({ LoginType, isSignUp }) => {
           {isSignUp ? "SignUp" : "Login"}
         </Button>
         <Button onClick={() => signInGoogle()}>GOOGLE</Button>
+        <Button
+          onClick={() => signInEmail("admin@gmail.com", "adminadmin", teamId)}
+        >
+          Dev
+        </Button>
       </form>{" "}
     </>
   );
