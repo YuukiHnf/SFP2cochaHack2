@@ -3,8 +3,6 @@ import { RootState } from "../app/store";
 
 // 定義したいState
 export type GuestState = {
-  username: string;
-  avatarUrl?: string;
   isActive: boolean;
   isGPS: boolean;
   taskId: string;
@@ -12,8 +10,6 @@ export type GuestState = {
 
 // Stateの初期値
 const initialState: GuestState = {
-  username: "unKnown",
-  avatarUrl: "",
   isActive: false,
   isGPS: false,
   taskId: "",
@@ -25,27 +21,18 @@ export const guestStateSlice = createSlice({
   initialState,
   // reducerをここに定義する
   reducers: {
-    loginGuest: (
-      state,
-      action: PayloadAction<
-        Omit<GuestState, "isActive" | "isGPS" | "teamId" | "taskId">
-      >
-    ) => {
-      state = {
-        username: action.payload.username,
-        avatarUrl: action.payload.avatarUrl ?? "",
-        isActive: true,
-        isGPS: false,
-        taskId: "",
-      };
+    guestSetter: (state, action: PayloadAction<GuestState>) => {
+      state.isActive = action.payload.isActive;
+      state.isGPS = action.payload.isGPS;
+      state.taskId = action.payload.taskId;
     },
-    logoutGuest: (state) => {
-      state = initialState;
+    cleanGuest: (state) => {
+      state = { ...initialState };
     },
   },
 });
 
-export const { loginGuest, logoutGuest } = guestStateSlice.actions;
+export const { guestSetter, cleanGuest } = guestStateSlice.actions;
 
 export const selectAllGuestState = (state: RootState) => state.guestState;
 export const selectTaskGuestState = (state: RootState) =>

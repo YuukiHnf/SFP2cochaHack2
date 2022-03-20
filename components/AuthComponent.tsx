@@ -13,7 +13,14 @@ const AuthComponent: VFC<Props> = ({ children }) => {
   useEffect(() => {
     const unSub = onAuthStateChanged(auth, (user) => {
       if (user) {
-        dispatch(login({ userId: user.uid, teamId: "hokudaiFesta" }));
+        dispatch(
+          login({
+            userId: user.uid,
+            teamId: "hokudaiFesta",
+            username: user.displayName ?? "noName",
+            avaterUrl: user.photoURL ?? "",
+          })
+        );
         //console.log(user);
       }
     });

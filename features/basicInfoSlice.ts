@@ -6,13 +6,17 @@ import { RootState } from "../app/store";
 // 定義したいState
 export type BasicInfo = {
   userId: string;
+  username: string;
   teamId: string;
+  avaterUrl?: string;
 };
 
 // Stateの初期値
 const initialState: BasicInfo = {
   userId: "",
   teamId: "",
+  username: "",
+  avaterUrl: "",
 };
 
 // sliceの設定
@@ -25,6 +29,8 @@ export const basicInfoSlice = createSlice({
       //console.log(action.payload);
       state.teamId = action.payload.teamId;
       state.userId = action.payload.userId;
+      state.username = action.payload.username;
+      state.avaterUrl = action.payload.avaterUrl;
     },
     logout: (state) => {
       state = initialState;
