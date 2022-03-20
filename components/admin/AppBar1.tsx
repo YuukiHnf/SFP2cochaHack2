@@ -93,7 +93,7 @@ const AppBar1 = () => {
               }}
             >
               {pages.map((page) => (
-                <Link href={`/admin/${page}`}>
+                <Link href={`/admin/${page}`} key={page}>
                   <MenuItem
                     key={page}
                     onClick={() => {
@@ -117,7 +117,7 @@ const AppBar1 = () => {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
-              <Link href={`/admin/${page}`}>
+              <Link href={`/admin/${page}`} key={page}>
                 <Button
                   key={page}
                   onClick={() => {

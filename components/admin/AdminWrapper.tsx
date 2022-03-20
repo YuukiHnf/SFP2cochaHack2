@@ -18,11 +18,11 @@ const AdminWrapper: VFC<Props> = ({ children }) => {
     if (!basicInfo.userId) {
       router.push("/login");
     }
-    // admin用のState入力
-    const unSub = onSnapshot(doc(db, "users", basicInfo.userId), (doc) => {
-      console.log(doc.data());
-    });
-    return () => unSub();
+    // // admin用のState入力
+    // const unSub = onSnapshot(doc(db, "users", basicInfo.userId), (doc) => {
+    //   console.log(doc.data());
+    // });
+    // return () => unSub();
   }, [basicInfo]);
 
   return <div>{children}</div>;
