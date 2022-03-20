@@ -4,8 +4,8 @@ import React, { useCallback, useRef, useState } from "react";
 import { PLACE } from "../../utils/firebase/FirebaseStore";
 
 const initContainerStyle = {
-  width: "80%",
-  height: "400px",
+  width: "600px",
+  height: "600px",
 };
 
 const initMapState: PLACE = {
@@ -18,12 +18,12 @@ const initMapState: PLACE = {
   heading: 90,
 };
 const options = {
-  disableDefaultUI: false,
-  // デフォルトUI（衛星写真オプションなど）をキャンセルします。
+  //disableDefaultUI: true,
   zoomControl: true,
   rotateControl: true,
-  keyboardShortcuts: true,
-  clickableIcons: true,
+  //keyboardShortcuts: true,
+  //clickableIcons: false,
+  //gestureHandling: "auto",
 };
 
 const PlaceComponent = () => {
@@ -41,35 +41,39 @@ const PlaceComponent = () => {
       <LoadScript
         googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_APIKEY ?? ""}
       >
-        <GoogleMap
-          mapContainerStyle={initContainerStyle}
-          center={mapState.center}
-          zoom={mapState.zoom}
-          tilt={mapState.tilt}
-          heading={mapState.heading}
-          options={options}
-          onLoad={onMapLoad}
-          onZoomChanged={() => {
-            setMapState({
-              ...mapState,
-              zoom: mapRef.current?.getZoom() ?? initMapState.zoom,
-            });
-          }}
-          onDragEnd={() => {
-            setMapState({
-              ...mapState,
-              center: {
-                lat:
-                  mapRef.current?.getCenter()?.lat() ?? initMapState.center.lat,
-                lng:
-                  mapRef.current?.getCenter()?.lng() ?? initMapState.center.lng,
-              },
-            });
-          }}
-          onHeadingChanged={() => {
-            console.log("head Change");
-          }}
-        ></GoogleMap>
+        <div style={{ transform: "rotate(0deg)" }}>
+          <GoogleMap
+            mapContainerStyle={initContainerStyle}
+            center={mapState.center}
+            zoom={mapState.zoom}
+            tilt={mapState.tilt}
+            heading={mapState.heading}
+            options={options}
+            onLoad={onMapLoad}
+            onZoomChanged={() => {
+              setMapState({
+                ...mapState,
+                zoom: mapRef.current?.getZoom() ?? initMapState.zoom,
+              });
+            }}
+            onDragEnd={() => {
+              setMapState({
+                ...mapState,
+                center: {
+                  lat:
+                    mapRef.current?.getCenter()?.lat() ??
+                    initMapState.center.lat,
+                  lng:
+                    mapRef.current?.getCenter()?.lng() ??
+                    initMapState.center.lng,
+                },
+              });
+            }}
+            onHeadingChanged={() => {
+              console.log("head Change");
+            }}
+          ></GoogleMap>
+        </div>
       </LoadScript>
       <p>zoom:{mapState.zoom}</p>
       <p>

@@ -13,7 +13,7 @@ export const authPort = 9099;
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FB_APIKEY,
-  authDomain: isEmulating ? "localhost" : process.env.NEXT_PUBLIC_FB_AUTHDOMAIN,
+  authDomain: process.env.NEXT_PUBLIC_FB_AUTHDOMAIN,
   projectId: process.env.NEXT_PUBLIC_FB_PROJECTID,
   storageBucket: isEmulating ? "" : process.env.NEXT_PUBLIC_FB_STORAGEBUCKET,
   messagingSenderId: isEmulating
