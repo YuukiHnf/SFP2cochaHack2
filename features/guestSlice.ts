@@ -8,7 +8,6 @@ export type GuestState = {
   isActive: boolean;
   isGPS: boolean;
   taskId: string;
-  teamId: string;
 };
 
 // Stateの初期値
@@ -18,7 +17,6 @@ const initialState: GuestState = {
   isActive: false,
   isGPS: false,
   taskId: "",
-  teamId: "",
 };
 
 // sliceの設定
@@ -27,7 +25,7 @@ export const guestStateSlice = createSlice({
   initialState,
   // reducerをここに定義する
   reducers: {
-    login: (
+    loginGuest: (
       state,
       action: PayloadAction<
         Omit<GuestState, "isActive" | "isGPS" | "teamId" | "taskId">
@@ -39,16 +37,15 @@ export const guestStateSlice = createSlice({
         isActive: true,
         isGPS: false,
         taskId: "",
-        teamId: "",
       };
     },
-    logout: (state) => {
+    logoutGuest: (state) => {
       state = initialState;
     },
   },
 });
 
-export const { login, logout } = guestStateSlice.actions;
+export const { loginGuest, logoutGuest } = guestStateSlice.actions;
 
 export const selectAllGuestState = (state: RootState) => state.guestState;
 export const selectTaskGuestState = (state: RootState) =>

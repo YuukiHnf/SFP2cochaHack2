@@ -1,5 +1,8 @@
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import { useEffect, useState } from "react";
+import { shallowEqual } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { login, logout, selectBasicInfo } from "../features/basicInfoSlice";
 import { auth } from "../utils/firebase/FirebaseAuth";
 
 /**
@@ -25,8 +28,22 @@ const INITIAL_AUTH_STATE: AuthState = {
   avatarUrl: undefined,
 };
 
+interface Props {
+  LoginType: "Admin" | "Guest";
+}
+
 const useAuthState = () => {
-  //const [authState, setAuthState] = useState(INITIAL_AUTH_STATE);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const unSub = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        dispatch(login({ userId: user.uid, teamId: "hokudaiSai" }));
+        //console.log(user.uid);
+      }
+    });
+    return () => unSub();
+  }, [dispatch]);
 
   return {};
 };
