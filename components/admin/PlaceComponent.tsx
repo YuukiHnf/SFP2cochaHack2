@@ -1,15 +1,18 @@
 import { Button, Input } from "@mui/material";
 import { GoogleMap, LoadScript, useLoadScript } from "@react-google-maps/api";
 import React, { useCallback, useRef, useState } from "react";
+import { useAppSelector } from "../../app/hooks";
+import { selectTeamId } from "../../features/basicInfoSlice";
+import usePlaceHooks from "../../hooks/usePlaceHooks";
 import { PLACE } from "../../utils/firebase/FirebaseStore";
 
 const initContainerStyle = {
-  width: "600px",
+  width: "80%",
   height: "600px",
 };
 
 const initMapState: PLACE = {
-  zoom: 19,
+  zoom: 19.5,
   center: {
     lat: 43.08014911998283,
     lng: 141.34006823521992,
@@ -28,6 +31,8 @@ const options = {
 
 const PlaceComponent = () => {
   const [mapState, setMapState] = useState(initMapState);
+  const teamId = useAppSelector(selectTeamId);
+  const { saveMapState } = usePlaceHooks({ teamId: teamId });
 
   const mapRef = useRef<google.maps.Map>();
   const onMapLoad = useCallback((map) => {
@@ -79,6 +84,13 @@ const PlaceComponent = () => {
       <p>
         loc:[ lat: {mapState.center.lat}, lng: {mapState.center.lng}]
       </p>
+      <Button
+        onClick={() => {
+          saveMapState(mapState);
+        }}
+      >
+        SAVE
+      </Button>
       {/* <p>tilt:0-45</p>
       <Input
         type="text"
@@ -94,7 +106,7 @@ const PlaceComponent = () => {
       >
         Apply
       </Button> */}
-      <p>heading</p>
+      {/* <p>heading</p>
       <Input
         type="text"
         value={mapState.heading}
@@ -108,7 +120,7 @@ const PlaceComponent = () => {
         }}
       >
         Apply
-      </Button>
+      </Button> */}
     </>
   );
 };
