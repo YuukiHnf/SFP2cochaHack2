@@ -68,4 +68,14 @@ export type OBJECTPARAM = {
   weight?: number;
 };
 
-export type TaskBlock = {};
+export type ObjectLocation = {
+  objectId: string;
+  location: Location;
+};
+
+export type TaskBlock = {
+  timeSpan: DateSchedule[];
+  taskIds: string[];
+  objectLocatioin: ObjectLocation[];
+  initParam: ObjectLocation;
+};

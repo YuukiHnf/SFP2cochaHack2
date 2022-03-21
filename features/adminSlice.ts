@@ -14,7 +14,7 @@ import {
 export type AdminState = {
   place: PLACE;
   timeSche: DateSchedule;
-  taskBlock?: TaskBlock | null;
+  taskBlock?: TaskBlock;
   objects: OBJECTPARAM[]; //後でかえる
 };
 
@@ -31,7 +31,7 @@ const initMapState: PLACE = {
 const initialState: AdminState = {
   place: initMapState,
   timeSche: { start: null, end: null },
-  taskBlock: null,
+  taskBlock: {} as TaskBlock,
   objects: [],
 };
 
@@ -51,7 +51,12 @@ export const adminSlice = createSlice({
         objects: action.payload,
       };
     },
-    adminTaskSetter: (state, action: PayloadAction<TaskBlock>) => {},
+    adminTaskSetter: (state, action: PayloadAction<TaskBlock>) => {
+      return {
+        ...state,
+        taskBlock: action.payload,
+      };
+    },
   },
 });
 
@@ -62,5 +67,9 @@ export const selectAdminPlaceState = (state: RootState) =>
   state.adminState.place;
 export const selectAdminObjects = (state: RootState) =>
   state.adminState.objects;
+export const selectAdminTaskBlock = (state: RootState) =>
+  state.adminState.taskBlock;
+export const selectAdminTaskBlockInit = (state: RootState) =>
+  state.adminState.taskBlock?.initParam;
 // exporting the reducer here, as we need to add this to the store
 export default adminSlice.reducer;
