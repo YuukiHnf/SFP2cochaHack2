@@ -40,7 +40,10 @@ export const adminSlice = createSlice({
   initialState,
   // reducerをここに定義する
   reducers: {
-    adminSetter: (state, action: PayloadAction<AdminState>) => {},
+    adminSetter: (state, action: PayloadAction<AdminState>) => {
+      console.log(action.payload);
+      return action.payload;
+    },
   },
 });
 
