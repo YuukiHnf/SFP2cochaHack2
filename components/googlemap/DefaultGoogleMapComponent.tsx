@@ -11,7 +11,7 @@ interface Props {
 const mapContainerStyle = {
   width: "80%",
   height: "600px",
-  margin: "10px 10px 0px auto",
+  margin: "0 auto",
 };
 
 const DefaultGoogleMapComponent: VFC<Props> = ({ children }) => {
@@ -22,12 +22,6 @@ const DefaultGoogleMapComponent: VFC<Props> = ({ children }) => {
     maxZoom: 40,
     rotateControl: true, // 効果なさそう
     gestureHandling: "cooperative",
-    restriction: {
-      latLngBounds: new google.maps.LatLngBounds(
-        new google.maps.LatLng(placeParam.center),
-        new google.maps.LatLng(placeParam.center)
-      ),
-    },
   };
 
   return (
