@@ -10,7 +10,6 @@ import {
   PLACE,
   TEAM,
 } from "../../utils/firebase/FirebaseStore";
-import AdminWrapper2 from "./AdminWrapper2";
 
 interface Props {
   children: React.ReactNode;
