@@ -22,12 +22,6 @@ const DefaultGoogleMapComponent: VFC<Props> = ({ children }) => {
     maxZoom: 40,
     rotateControl: true, // 効果なさそう
     gestureHandling: "cooperative",
-    restriction: {
-      latLngBounds: new google.maps.LatLngBounds(
-        new google.maps.LatLng(placeParam.center),
-        new google.maps.LatLng(placeParam.center)
-      ),
-    },
   };
 
   return (

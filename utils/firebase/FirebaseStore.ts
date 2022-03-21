@@ -66,7 +66,6 @@ export type OBJECTPARAM = {
   num: number;
   iconUrl: string;
   weight?: number;
-  team: string;
 };
 
 export type TaskBlock = {};
