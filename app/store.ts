@@ -33,6 +33,10 @@ export const store = configureStore({
     adminState: adminSlice,
     counter: counterSlice,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 export type AppDispatch = typeof store.dispatch;

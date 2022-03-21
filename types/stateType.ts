@@ -7,7 +7,7 @@ export type UserState = {
   taskId: string | null;
 };
 
-export type Team = {
-  uid: string;
-  name: String;
-};
+// export type Team = {
+//   uid: string;
+//   name: String;
+// };

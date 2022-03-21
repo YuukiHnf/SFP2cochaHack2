@@ -1,13 +1,19 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { serverTimestamp, Timestamp } from "firebase/firestore";
 import { RootState } from "../app/store";
-import { PLACE } from "../utils/firebase/FirebaseStore";
+import {
+  DateSchedule,
+  PLACE,
+  TaskBlock,
+} from "../utils/firebase/FirebaseStore";
 
 /**GuestもAdminも両方使うstate */
 
 // 定義したいState
 export type AdminState = {
   place: PLACE;
-  taskBlock?: null;
+  timeSche: DateSchedule;
+  taskBlock?: TaskBlock | null;
   objects: null; //後でかえる
 };
 
@@ -23,6 +29,7 @@ const initMapState: PLACE = {
 };
 const initialState: AdminState = {
   place: initMapState,
+  timeSche: { start: null, end: null },
   taskBlock: null,
   objects: null,
 };
@@ -39,8 +46,7 @@ export const adminSlice = createSlice({
 
 export const { adminSetter } = adminSlice.actions;
 
-export const selectBasicInfo = (state: RootState) => state.basicInfo;
-export const selectTeamId = (state: RootState) => state.basicInfo.teamId;
+export const selectAdminState = (state: RootState) => state.adminState;
 
 // exporting the reducer here, as we need to add this to the store
 export default adminSlice.reducer;
