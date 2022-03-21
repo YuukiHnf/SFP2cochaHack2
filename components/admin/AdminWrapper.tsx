@@ -17,11 +17,12 @@ const AdminWrapper: VFC<Props> = ({ children }) => {
   const router = useRouter();
 
   useEffect(() => {
-    if (!basicInfo.userId) {
+    if (!basicInfo.userId || !db || !basicInfo.teamId) {
       router.push("/login");
     }
     // // admin用のState入力
-    const unSub = onSnapshot(doc(db, "team", basicInfo.teamId), (doc) => {
+    const teamRef = doc(db, "team", basicInfo.teamId);
+    const unSub = onSnapshot(teamRef, (doc) => {
       //console.log(doc.data());
       if (doc.data()) {
         const _data = doc.data() as TEAM;

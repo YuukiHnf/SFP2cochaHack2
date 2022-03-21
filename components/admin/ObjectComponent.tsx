@@ -1,8 +1,12 @@
 import { VFC } from "react";
-import AdminWrapper from "./AdminWrapper";
-import AppBar1 from "./AppBar1";
+import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
+
 const ObjectComponent: VFC = () => {
-  return <></>;
+  return (
+    <>
+      <DefaultGoogleMapComponent>{}</DefaultGoogleMapComponent>
+    </>
+  );
 };
 
 export default ObjectComponent;
