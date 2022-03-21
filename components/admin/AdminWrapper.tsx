@@ -19,15 +19,18 @@ const AdminWrapper: VFC<Props> = ({ children }) => {
   console.log("ADMINWRAPPER");
 
   useEffect(() => {
-    if (!basicInfo.userId || !basicInfo.teamId) {
+    if (basicInfo.userId.length == 0 || basicInfo.teamId.length == 0) {
       router.push("/login");
+      return;
     }
     if (!db) {
       router.push("/login");
+      return;
     }
     // // admin用のState入力
     //const teamRef = doc(db, `team/${basicInfo.teamId}`);
-    const teamRef = doc(db, "team", basicInfo.teamId);
+    const colRef = collection(db, "team");
+    const teamRef = doc(colRef, basicInfo.teamId);
     const unSub = onSnapshot(teamRef, (doc) => {
       console.log(doc.data());
       if (doc.data()) {
@@ -37,7 +40,7 @@ const AdminWrapper: VFC<Props> = ({ children }) => {
             place: _data.place,
             timeSche: _data.timeSche,
             taskBlock: _data.taskBlock,
-            objects: null,
+            objects: [],
           })
         );
       }

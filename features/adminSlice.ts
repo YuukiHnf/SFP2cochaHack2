@@ -3,6 +3,7 @@ import { serverTimestamp, Timestamp } from "firebase/firestore";
 import { RootState } from "../app/store";
 import {
   DateSchedule,
+  OBJECTPARAM,
   PLACE,
   TaskBlock,
 } from "../utils/firebase/FirebaseStore";
@@ -14,7 +15,7 @@ export type AdminState = {
   place: PLACE;
   timeSche: DateSchedule;
   taskBlock?: TaskBlock | null;
-  objects: null; //後でかえる
+  objects: OBJECTPARAM[]; //後でかえる
 };
 
 // Stateの初期値
@@ -31,7 +32,7 @@ const initialState: AdminState = {
   place: initMapState,
   timeSche: { start: null, end: null },
   taskBlock: null,
-  objects: null,
+  objects: [],
 };
 
 // sliceの設定
