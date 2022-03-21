@@ -1,4 +1,6 @@
 import { useState, VFC } from "react";
+import { useAppSelector } from "../../app/hooks";
+import { selectAdminObjects } from "../../features/adminSlice";
 import { url } from "../../utils/config";
 import { OBJECTPARAM } from "../../utils/firebase/FirebaseStore";
 import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
@@ -33,8 +35,9 @@ const initObjectParam: OBJECTPARAM[] = [
 
 const ObjectComponent: VFC = () => {
   const [ptrObjectId, setPtrObjectId] = useState<string>("");
-  const [objectParams, setObjectParams] =
-    useState<OBJECTPARAM[]>(initObjectParam);
+  // const [objectParams, setObjectParams] =
+  //   useState<OBJECTPARAM[]>(initObjectParam);
+  const objectParams = useAppSelector(selectAdminObjects);
 
   return (
     <>
