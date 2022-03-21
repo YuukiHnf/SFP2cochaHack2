@@ -50,6 +50,8 @@ export const adminSlice = createSlice({
 export const { adminSetter } = adminSlice.actions;
 
 export const selectAdminState = (state: RootState) => state.adminState;
+export const selectAdminPlaceState = (state: RootState) =>
+  state.adminState.place;
 
 // exporting the reducer here, as we need to add this to the store
 export default adminSlice.reducer;

@@ -2,6 +2,7 @@ import { Button, Input } from "@mui/material";
 import { GoogleMap, LoadScript, useLoadScript } from "@react-google-maps/api";
 import React, { useCallback, useRef, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
+import { selectAdminPlaceState } from "../../features/adminSlice";
 import { selectTeamId } from "../../features/basicInfoSlice";
 import usePlaceHooks from "../../hooks/usePlaceHooks";
 import { PLACE } from "../../utils/firebase/FirebaseStore";
@@ -11,15 +12,15 @@ const initContainerStyle = {
   height: "600px",
 };
 
-const initMapState: PLACE = {
-  zoom: 19.5,
-  center: {
-    lat: 43.08014911998283,
-    lng: 141.34006823521992,
-  },
-  tilt: 0,
-  heading: 90,
-};
+// const initMapState: PLACE = {
+//   zoom: 19.5,
+//   center: {
+//     lat: 43.08014911998283,
+//     lng: 141.34006823521992,
+//   },
+//   tilt: 0,
+//   heading: 90,
+// };
 const options = {
   //disableDefaultUI: true,
   zoomControl: true,
@@ -30,6 +31,7 @@ const options = {
 };
 
 const PlaceComponent = () => {
+  const initMapState = useAppSelector(selectAdminPlaceState);
   const [mapState, setMapState] = useState(initMapState);
   const teamId = useAppSelector(selectTeamId);
   const { saveMapState } = usePlaceHooks({ teamId: teamId });
