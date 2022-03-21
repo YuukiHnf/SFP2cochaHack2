@@ -17,7 +17,7 @@ const AdminWrapper: VFC<Props> = ({ children }) => {
   const router = useRouter();
 
   useEffect(() => {
-    if (!basicInfo.userId) {
+    if (!basicInfo.userId || !db || !basicInfo.teamId) {
       router.push("/login");
     }
     // // admin用のState入力

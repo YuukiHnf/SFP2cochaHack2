@@ -45,43 +45,41 @@ const PlaceComponent = () => {
 
   return (
     <>
-      <LoadScript
+      {/* <LoadScript
         googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_APIKEY ?? ""}
-      >
-        <div style={{ transform: "rotate(0deg)" }}>
-          <GoogleMap
-            mapContainerStyle={initContainerStyle}
-            center={mapState.center}
-            zoom={mapState.zoom}
-            tilt={mapState.tilt}
-            heading={mapState.heading}
-            options={options}
-            onLoad={onMapLoad}
-            onZoomChanged={() => {
-              setMapState({
-                ...mapState,
-                zoom: mapRef.current?.getZoom() ?? initMapState.zoom,
-              });
-            }}
-            onDragEnd={() => {
-              setMapState({
-                ...mapState,
-                center: {
-                  lat:
-                    mapRef.current?.getCenter()?.lat() ??
-                    initMapState.center.lat,
-                  lng:
-                    mapRef.current?.getCenter()?.lng() ??
-                    initMapState.center.lng,
-                },
-              });
-            }}
-            onHeadingChanged={() => {
-              console.log("head Change");
-            }}
-          ></GoogleMap>
-        </div>
-      </LoadScript>
+      > */}
+      <div style={{ transform: "rotate(0deg)" }}>
+        <GoogleMap
+          mapContainerStyle={initContainerStyle}
+          center={mapState.center}
+          zoom={mapState.zoom}
+          tilt={mapState.tilt}
+          heading={mapState.heading}
+          options={options}
+          onLoad={onMapLoad}
+          onZoomChanged={() => {
+            setMapState({
+              ...mapState,
+              zoom: mapRef.current?.getZoom() ?? initMapState.zoom,
+            });
+          }}
+          onDragEnd={() => {
+            setMapState({
+              ...mapState,
+              center: {
+                lat:
+                  mapRef.current?.getCenter()?.lat() ?? initMapState.center.lat,
+                lng:
+                  mapRef.current?.getCenter()?.lng() ?? initMapState.center.lng,
+              },
+            });
+          }}
+          onHeadingChanged={() => {
+            console.log("head Change");
+          }}
+        ></GoogleMap>
+      </div>
+      {/* </LoadScript> */}
       <p>zoom:{mapState.zoom}</p>
       <p>
         loc:[ lat: {mapState.center.lat}, lng: {mapState.center.lng}]
