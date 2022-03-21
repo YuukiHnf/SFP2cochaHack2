@@ -7,12 +7,6 @@ export type UserState = {
   taskId: string | null;
 };
 
-export type AdminState = {
-  userState: UserState;
-  team: Team;
-  taskIds: string[];
-};
-
 export type Team = {
   uid: string;
   name: String;
