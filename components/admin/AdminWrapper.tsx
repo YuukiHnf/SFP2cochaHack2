@@ -1,4 +1,5 @@
-import { doc, onSnapshot } from "firebase/firestore";
+import { collection, doc, onSnapshot, query } from "firebase/firestore";
+import { route } from "next/dist/server/router";
 import { useRouter } from "next/router";
 import React, { useEffect, VFC } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
@@ -15,15 +16,20 @@ const AdminWrapper: VFC<Props> = ({ children }) => {
   const dispatch = useAppDispatch();
 
   const router = useRouter();
+  console.log("ADMINWRAPPER");
 
   useEffect(() => {
-    if (!basicInfo.userId || !db || !basicInfo.teamId) {
+    if (!basicInfo.userId || !basicInfo.teamId) {
+      router.push("/login");
+    }
+    if (!db) {
       router.push("/login");
     }
     // // admin用のState入力
+    //const teamRef = doc(db, `team/${basicInfo.teamId}`);
     const teamRef = doc(db, "team", basicInfo.teamId);
     const unSub = onSnapshot(teamRef, (doc) => {
-      //console.log(doc.data());
+      console.log(doc.data());
       if (doc.data()) {
         const _data = doc.data() as TEAM;
         dispatch(

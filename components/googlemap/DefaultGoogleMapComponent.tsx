@@ -11,7 +11,7 @@ interface Props {
 const mapContainerStyle = {
   width: "80%",
   height: "600px",
-  margin: "10px 10px 0px auto",
+  margin: "0 auto",
 };
 
 const DefaultGoogleMapComponent: VFC<Props> = ({ children }) => {

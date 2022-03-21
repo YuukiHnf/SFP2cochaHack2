@@ -60,4 +60,13 @@ export type PLACE = {
   heading?: number; // 設定できるようになったら入れる
 };
 
+export type OBJECTPARAM = {
+  id: string;
+  name: string;
+  num: number;
+  iconUrl: string;
+  weight?: number;
+  team: string;
+};
+
 export type TaskBlock = {};

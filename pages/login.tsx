@@ -1,13 +1,24 @@
 import { Button, FormControlLabel, Switch, TextField } from "@mui/material";
-import { useState, VFC } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useState, VFC } from "react";
 import { StyledFirebaseAuth } from "react-firebaseui";
+import { useAppSelector } from "../app/hooks";
 import SignInForm from "../components/SignInForm";
 import SignInForm2 from "../components/SignInForm2";
+import { selectBasicInfo } from "../features/basicInfoSlice";
 
 const login: VFC = () => {
   const [loginAdmin, setLoginAdmin] = useState<boolean>(true);
   const [signUp, setSignUp] = useState<boolean>(false);
   //console.log(loginAdmin ? "Admin" : "Guest");
+  const basicInfo = useAppSelector(selectBasicInfo);
+  const route = useRouter();
+
+  useEffect(() => {
+    if (basicInfo) {
+      route.push(loginAdmin ? "/admin/" : "/guest/");
+    }
+  }, [basicInfo]);
 
   return (
     <>
