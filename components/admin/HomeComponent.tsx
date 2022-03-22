@@ -1,8 +1,12 @@
-import { Polygon } from "@react-google-maps/api";
+import { Marker, Polygon } from "@react-google-maps/api";
 import React, { useState } from "react";
 import { useAppSelector } from "../../app/hooks";
-import { selectAdminTaskBlockInit } from "../../features/adminSlice";
-import { TaskBlock } from "../../utils/firebase/FirebaseStore";
+import {
+  selectAdminObjects,
+  selectAdminTaskBlock,
+  selectAdminTaskBlockInit,
+} from "../../features/adminSlice";
+import { ObjectLocation, TaskBlock } from "../../utils/firebase/FirebaseStore";
 import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
 import TimeTable from "./TimeTable";
 
@@ -28,18 +32,44 @@ const rectAngleOption = {
 
 const HomeComponent = () => {
   const initTaskBlock = useAppSelector(selectAdminTaskBlockInit);
-  const [selectedTaskBlock, setSelectedTaskBlock] =
-    useState<TaskBlock>(initTaskBlock);
+  const taskBlock = useAppSelector(selectAdminTaskBlock);
+  const objectParams = useAppSelector(selectAdminObjects);
+  const [selectedTaskBlockId, setSelectedTaskBlockId] = useState<string>(
+    initTaskBlock.id
+  );
+  const markerJSX = (obj: ObjectLocation) => (
+    <Marker
+      key={obj.objectId}
+      position={obj.location}
+      icon={{
+        url:
+          objectParams.find((value) => value.id === obj.objectId)?.iconUrl ??
+          "",
+        origin: new window.google.maps.Point(0, 0),
+        anchor: new window.google.maps.Point(15, 15),
+        scaledSize: new window.google.maps.Size(30, 30),
+      }}
+    />
+  );
 
-  console.log(selectedTaskBlock);
+  console.log(selectedTaskBlockId);
 
   return (
     <>
       <div style={{ overflow: "hidden" }}>
         <div style={_tableStyle}>
-          <TimeTable setter={setSelectedTaskBlock} />
+          <TimeTable setter={setSelectedTaskBlockId} />
         </div>
         <DefaultGoogleMapComponent mapContainerStyle={_mapContainerStyle}>
+          {selectedTaskBlockId === initTaskBlock.id ? ( // if init
+            initTaskBlock.objectLocations.map(markerJSX)
+          ) : selectedTaskBlockId ? ( // select taskBlock
+            taskBlock
+              ?.filter((block) => block.id === selectedTaskBlockId)[0]
+              .objectLocations.map(markerJSX)
+          ) : (
+            <></>
+          )}
           <Polygon
             path={[
               new google.maps.LatLng(43.080180692594475, 141.34037284277449),

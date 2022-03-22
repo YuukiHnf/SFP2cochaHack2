@@ -5,7 +5,7 @@ import {
   GridSelectionModel,
 } from "@mui/x-data-grid";
 import { serverTimestamp, Timestamp } from "firebase/firestore";
-import React, { VFC } from "react";
+import React, { useEffect, useState, VFC } from "react";
 import { useAppSelector } from "../../app/hooks";
 import {
   selectAdminTaskBlock,
@@ -21,43 +21,49 @@ import { MobileTimePicker } from "@mui/lab";
 const tmpTaskBlock = [] as TaskBlock[];
 
 interface Props {
-  setter?: React.Dispatch<React.SetStateAction<TaskBlock>>;
+  setter?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const TimeTable: VFC<Props> = ({ setter }) => {
   const initTaskBlock = useAppSelector(selectAdminTaskBlockInit);
   const taskBlock = tmpTaskBlock; //useAppSelector(selectAdminTaskBlock);
   const timeSche = useAppSelector(selectAdminTimeSche);
-  const columns: GridColumns = [
-    {
-      field: "time",
-      headerName: "TIME",
-      renderCell: (params: GridRenderCellParams<Timestamp>) => {
-        //console.log(params.value);
-        return (
-          <MobileTimePicker
-            label="初期位置"
-            value={params.value.toDate()}
-            onChange={(newValue) => {
-              //console.log(newValue);
-              // ここでtaskBlockのtimeを変更する
-            }}
-            disabled={
-              timeSche.start
-                ? timeSche.start?.toDate() >= params.value.toDate()
-                : true
-            }
-            minTime={timeSche.start?.toDate()}
-            maxTime={timeSche.end?.toDate()}
-            renderInput={(p) => (
-              <TextField variant="filled" {...p} color="info" />
-            )}
-          />
-        );
+  const [columns, setColumns] = useState<GridColumns>([]);
+
+  useEffect(() => {
+    setColumns([
+      {
+        field: "time",
+        headerName: "TIME",
+        renderCell: (params: GridRenderCellParams<Timestamp>) => {
+          //console.log(params.value);
+          return params.value ? (
+            <MobileTimePicker
+              label="初期位置"
+              value={params.value.toDate() ?? ""}
+              onChange={(newValue) => {
+                //console.log(newValue);
+                // ここでtaskBlockのtimeを変更する
+              }}
+              disabled={
+                timeSche.start
+                  ? timeSche.start?.toDate() >= params.value.toDate()
+                  : true
+              }
+              minTime={timeSche.start?.toDate()}
+              maxTime={timeSche.end?.toDate()}
+              renderInput={(p) => (
+                <TextField variant="filled" {...p} color="info" />
+              )}
+            />
+          ) : (
+            <div>Loading...</div>
+          );
+        },
+        width: 150,
       },
-      width: 150,
-    },
-  ];
+    ]);
+  }, [initTaskBlock, timeSche]);
 
   return (
     <>
@@ -67,15 +73,8 @@ const TimeTable: VFC<Props> = ({ setter }) => {
             columns={columns}
             rows={[initTaskBlock]}
             onSelectionModelChange={(selectionModel: GridSelectionModel) => {
-              console.log(selectionModel);
-              if (!setter) return;
-              selectionModel[0] === initTaskBlock.id
-                ? setter(initTaskBlock)
-                : setter(
-                    taskBlock.filter(
-                      (block) => block.id === selectionModel[0]
-                    )[0]
-                  );
+              //console.log(selectionModel);
+              //setter && setter(selectionModel[0]);
             }}
           />
         </LocalizationProvider>
