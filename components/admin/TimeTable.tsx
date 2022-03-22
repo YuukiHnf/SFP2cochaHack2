@@ -16,7 +16,7 @@ import { TaskBlock } from "../../utils/firebase/FirebaseStore";
 // date-fns
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import { TextField } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { MobileTimePicker } from "@mui/lab";
 const tmpTaskBlock = [] as TaskBlock[];
 
@@ -61,6 +61,13 @@ const TimeTable: VFC<Props> = ({ setter }) => {
           );
         },
         width: 150,
+        sortable: false,
+      },
+      {
+        field: "add",
+        headerName: "+",
+        sortable: false,
+        type: "string",
       },
     ]);
   }, [initTaskBlock, timeSche]);
@@ -76,6 +83,10 @@ const TimeTable: VFC<Props> = ({ setter }) => {
               //console.log(selectionModel);
               //setter && setter(selectionModel[0]);
             }}
+            onColumnHeaderClick={(params) =>
+              params.field === "add" && console.log("add action")
+            }
+            hideFooter
           />
         </LocalizationProvider>
       </div>
