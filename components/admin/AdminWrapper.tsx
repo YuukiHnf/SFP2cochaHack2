@@ -2,15 +2,19 @@ import { collection, doc, onSnapshot, query } from "firebase/firestore";
 import { useRouter } from "next/router";
 import React, { useEffect, VFC } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { adminObjectSetter, adminSetter } from "../../features/adminSlice";
+import {
+  adminObjectSetter,
+  adminSetter,
+  adminTaskSetter,
+} from "../../features/adminSlice";
 import { selectBasicInfo } from "../../features/basicInfoSlice";
 import {
   db,
   OBJECTPARAM,
   PLACE,
+  TaskBlock,
   TEAM,
 } from "../../utils/firebase/FirebaseStore";
-import AdminWrapper2 from "./AdminWrapper2";
 
 interface Props {
   children: React.ReactNode;
@@ -23,11 +27,12 @@ const AdminWrapper: VFC<Props> = ({ children }) => {
   const router = useRouter();
 
   useEffect(() => {
-    if (basicInfo.userId.length == 0 || basicInfo.teamId.length == 0) {
-      router.push("/login");
-      return;
-    }
-    if (!db) {
+    // if (basicInfo.userId.length == 0 || basicInfo.teamId.length == 0) {
+    //   router.push("/login");
+    //   return;
+    // }
+    if (!db || basicInfo.userId.length == 0 || basicInfo.teamId.length == 0) {
+      console.log("AdminWrapper");
       router.push("/login");
       return;
     }
@@ -43,13 +48,12 @@ const AdminWrapper: VFC<Props> = ({ children }) => {
           adminSetter({
             place: _data.place,
             timeSche: _data.timeSche,
-            taskBlock: _data.taskBlock,
-            objects: [],
           })
         );
       }
     });
 
+    // Object Collection
     const unSubObj = onSnapshot(
       collection(doc(db, "team", basicInfo.teamId), "objects"),
       (objectSnaps) => {
@@ -63,9 +67,26 @@ const AdminWrapper: VFC<Props> = ({ children }) => {
         console.log("[unSubObj]", objectSnaps.docs);
       }
     );
+
+    // TaskBlockCollection
+    const unSubTaskBlock = onSnapshot(
+      collection(doc(db, "team", basicInfo.teamId), "taskBlock"),
+      (blockSnaps) => {
+        if (!blockSnaps.empty) {
+          dispatch(
+            adminTaskSetter(
+              blockSnaps.docs.map(
+                (snap) => ({ ...snap.data(), id: snap.id } as TaskBlock)
+              )
+            )
+          );
+        }
+      }
+    );
     return () => {
       unSub();
       unSubObj();
+      unSubTaskBlock();
     };
   }, [basicInfo]);
 

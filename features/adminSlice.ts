@@ -14,7 +14,8 @@ import {
 export type AdminState = {
   place: PLACE;
   timeSche: DateSchedule;
-  taskBlock?: TaskBlock | null;
+  taskBlock?: TaskBlock[];
+  initTaskBlock: TaskBlock;
   objects: OBJECTPARAM[]; //後でかえる
 };
 
@@ -31,7 +32,13 @@ const initMapState: PLACE = {
 const initialState: AdminState = {
   place: initMapState,
   timeSche: { start: null, end: null },
-  taskBlock: null,
+  taskBlock: [],
+  initTaskBlock: {
+    id: "",
+    time: null,
+    taskIds: [],
+    objectLocations: [],
+  },
   objects: [],
 };
 
@@ -41,9 +48,19 @@ export const adminSlice = createSlice({
   initialState,
   // reducerをここに定義する
   reducers: {
-    adminSetter: (state, action: PayloadAction<AdminState>) => {
+    adminSetter: (
+      state,
+      action: PayloadAction<
+        Omit<AdminState, "taskBlock" | "initTaskBlock" | "objects">
+      >
+    ) => {
       //console.log(action.payload);
-      return action.payload;
+      return {
+        ...action.payload,
+        taskBlock: state.taskBlock,
+        initTaskBlock: state.initTaskBlock,
+        objects: state.objects,
+      };
     },
     adminObjectSetter: (state, action: PayloadAction<OBJECTPARAM[]>) => {
       return {
@@ -51,16 +68,27 @@ export const adminSlice = createSlice({
         objects: action.payload,
       };
     },
-    adminTaskSetter: (state, action: PayloadAction<TaskBlock>) => {},
+    adminTaskSetter: (state, action: PayloadAction<TaskBlock[]>) => {
+      return {
+        ...state,
+        taskBlock: action.payload.filter((block) => !block.isInit),
+        initTaskBlock: action.payload.filter((block) => block.isInit)[0],
+      };
+    },
   },
 });
 
-export const { adminSetter, adminObjectSetter } = adminSlice.actions;
+export const { adminSetter, adminObjectSetter, adminTaskSetter } =
+  adminSlice.actions;
 
 export const selectAdminState = (state: RootState) => state.adminState;
 export const selectAdminPlaceState = (state: RootState) =>
   state.adminState.place;
 export const selectAdminObjects = (state: RootState) =>
   state.adminState.objects;
+export const selectAdminTaskBlock = (state: RootState) =>
+  state.adminState.taskBlock;
+export const selectAdminTaskBlockInitObjectLocation = (state: RootState) =>
+  state.adminState.initTaskBlock;
 // exporting the reducer here, as we need to add this to the store
 export default adminSlice.reducer;
