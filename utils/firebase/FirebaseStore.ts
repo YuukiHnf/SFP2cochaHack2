@@ -66,6 +66,7 @@ export type OBJECTPARAM = {
   num: number;
   iconUrl: string;
   weight?: number;
+  semiIconUrl: string;
 };
 
 export type ObjectLocation = {

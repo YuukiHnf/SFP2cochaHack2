@@ -75,24 +75,24 @@ const ObjectComponent: VFC = () => {
         objectParams={objectParams}
         setPtrObjectId={setPtrObjectId}
       />
-      <p>{ptrObjectId}</p>
       <DefaultGoogleMapComponent
         onClick={(e: google.maps.MapMouseEvent) => {
           console.log(e.latLng?.lat(), e.latLng?.lng());
           onClickOnMap(e);
         }}
       >
-        <DrawingManager
-          drawingMode={google.maps.drawing.OverlayType.RECTANGLE}
-        />
+        <DrawingManager drawingMode={google.maps.drawing.OverlayType.MARKER} />
         {objectInit?.objectLocations.map((obj) => (
           <Marker
             key={obj.objectId}
             position={obj.location}
             icon={{
               url:
-                objectParams.find((value) => value.id === obj.objectId)
-                  ?.iconUrl ?? "",
+                obj.objectId === ptrObjectId
+                  ? objectParams.find((value) => value.id === obj.objectId)
+                      ?.iconUrl ?? ""
+                  : objectParams.find((value) => value.id === obj.objectId)
+                      ?.semiIconUrl ?? "",
               origin: new window.google.maps.Point(0, 0),
               anchor: new window.google.maps.Point(15, 15),
               scaledSize: new window.google.maps.Size(30, 30),
