@@ -1,4 +1,10 @@
-import { Marker } from "@react-google-maps/api";
+import {
+  DrawingManager,
+  InfoWindow,
+  Marker,
+  Polygon,
+  Rectangle,
+} from "@react-google-maps/api";
 import { useState, VFC } from "react";
 import { useAppSelector } from "../../app/hooks";
 import {
@@ -42,10 +48,26 @@ const ObjectComponent: VFC = () => {
           : _obj;
       }),
     });
-    console.log("[Click]:", e.latLng);
 
     ptrObjectId !== "" && setPtrObjectId("");
   };
+
+  const rectAngleOption = {
+    fillColor: "teal",
+    fillOpactiy: 0.3,
+    strokeColor: "teal",
+    strokeOpacity: 0.3,
+  };
+
+  const drawControllOption = {
+    drawingControl: true,
+    drawingControlOptions: {
+      position: google.maps.ControlPosition.TOP_CENTER,
+      drawingModes: ["marker", "circle", "polygon", "polyline", "rectangle"],
+    },
+  };
+
+  const PolygonOption = {};
 
   return (
     <>
@@ -56,10 +78,13 @@ const ObjectComponent: VFC = () => {
       <p>{ptrObjectId}</p>
       <DefaultGoogleMapComponent
         onClick={(e: google.maps.MapMouseEvent) => {
-          console.log(e.latLng?.lat());
+          console.log(e.latLng?.lat(), e.latLng?.lng());
           onClickOnMap(e);
         }}
       >
+        <DrawingManager
+          drawingMode={google.maps.drawing.OverlayType.RECTANGLE}
+        />
         {objectInit?.objectLocations.map((obj) => (
           <Marker
             key={obj.objectId}
@@ -74,6 +99,19 @@ const ObjectComponent: VFC = () => {
             }}
           />
         ))}
+        {/* // ここにまたPolygonなどを置いていく */}
+        <Polygon
+          path={[
+            new google.maps.LatLng(43.080180692594475, 141.34037284277449),
+            new google.maps.LatLng(43.07991425690792, 141.34044258020887),
+            new google.maps.LatLng(43.07994560234294, 141.34059814833174),
+            new google.maps.LatLng(43.08020666961666, 141.3405176820613),
+          ]}
+          options={rectAngleOption}
+        />
+        <InfoWindow position={new google.maps.LatLng(43.0802, 141.34045)}>
+          <div>特設ステージ</div>
+        </InfoWindow>
       </DefaultGoogleMapComponent>
     </>
   );

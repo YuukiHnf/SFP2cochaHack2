@@ -14,7 +14,8 @@ const index = () => {
     "home"
   );
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_APIKEY ?? "",
+    googleMapsApiKey:
+      `${process.env.NEXT_PUBLIC_GOOGLE_MAPS_APIKEY}&libraries=drawing` ?? "",
   });
 
   if (loadError) {
