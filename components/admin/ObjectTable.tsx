@@ -1,5 +1,10 @@
 import { Button } from "@mui/material";
-import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridColDef,
+  GridSelectionModel,
+  GridValueGetterParams,
+} from "@mui/x-data-grid";
 import { Dispatch, SetStateAction, VFC } from "react";
 import { OBJECTPARAM } from "../../utils/firebase/FirebaseStore";
 
@@ -12,7 +17,7 @@ const ObjectTable: VFC<Props> = ({ objectParams, setPtrObjectId }) => {
   const columns: GridColDef[] = [
     {
       field: "selectedButton",
-      headerName: "編集",
+      headerName: "Select",
       sortable: false,
       width: 90,
       renderCell: (params) => (
@@ -32,7 +37,7 @@ const ObjectTable: VFC<Props> = ({ objectParams, setPtrObjectId }) => {
       headerName: "Image",
       width: 90,
       renderCell: (params) => {
-        console.log(params);
+        //console.log(params);
         return <img src={params.row.iconUrl} width={16} height={16} />;
       },
     },
@@ -50,7 +55,7 @@ const ObjectTable: VFC<Props> = ({ objectParams, setPtrObjectId }) => {
     },
     {
       field: "editBtn",
-      headerName: "編集",
+      headerName: "Edit",
       sortable: false,
       width: 90,
       renderCell: (params) => (
@@ -58,7 +63,7 @@ const ObjectTable: VFC<Props> = ({ objectParams, setPtrObjectId }) => {
           variant="contained"
           color="success"
           onClick={() => {
-            console.log(params.id);
+            //console.log(params.id);
           }}
         >
           Edit
@@ -67,7 +72,7 @@ const ObjectTable: VFC<Props> = ({ objectParams, setPtrObjectId }) => {
     },
     {
       field: "deleteBtn",
-      headerName: "削除",
+      headerName: "Delete",
       sortable: false,
       width: 90,
       renderCell: (params) => (
@@ -90,6 +95,9 @@ const ObjectTable: VFC<Props> = ({ objectParams, setPtrObjectId }) => {
         columns={columns}
         pageSize={3}
         rowsPerPageOptions={[5]}
+        onSelectionModelChange={(selectionModel: GridSelectionModel) => {
+          setPtrObjectId(selectionModel[0]);
+        }}
       />
     </div>
   );
