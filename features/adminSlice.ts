@@ -31,7 +31,34 @@ const initMapState: PLACE = {
 const initialState: AdminState = {
   place: initMapState,
   timeSche: { start: null, end: null },
-  taskBlock: {} as TaskBlock,
+  taskBlock: {
+    timeSpan: null,
+    taskIds: [],
+    objectLocations: [],
+    initObjectLocation: [
+      {
+        location: {
+          lat: 43.08021007881248,
+          lng: 141.34057847732373,
+        },
+        objectId: "0DG90slZJK924NL8ptCc",
+      },
+      {
+        location: {
+          lat: 43.08021007881248,
+          lng: 141.34057847732373,
+        },
+        objectId: "EvXJ53FpI7rp7D9mpMVb",
+      },
+      {
+        location: {
+          lat: 43.08021007881248,
+          lng: 141.34057847732373,
+        },
+        objectId: "sU8ekQYFa3xHflkVvhBZ",
+      },
+    ],
+  },
   objects: [],
 };
 
@@ -69,7 +96,7 @@ export const selectAdminObjects = (state: RootState) =>
   state.adminState.objects;
 export const selectAdminTaskBlock = (state: RootState) =>
   state.adminState.taskBlock;
-export const selectAdminTaskBlockInit = (state: RootState) =>
-  state.adminState.taskBlock?.initParam;
+export const selectAdminTaskBlockInitObjectLocation = (state: RootState) =>
+  state.adminState.taskBlock?.initObjectLocation;
 // exporting the reducer here, as we need to add this to the store
 export default adminSlice.reducer;

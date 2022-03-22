@@ -74,8 +74,8 @@ export type ObjectLocation = {
 };
 
 export type TaskBlock = {
-  timeSpan: DateSchedule[];
+  timeSpan: Timestamp | null;
   taskIds: string[];
-  objectLocatioin: ObjectLocation[];
-  initParam: ObjectLocation;
+  objectLocations: ObjectLocation[];
+  initObjectLocation: ObjectLocation[];
 };

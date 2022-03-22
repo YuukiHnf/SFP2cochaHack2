@@ -25,7 +25,7 @@ const DefaultGoogleMapComponent: VFC<Props> = ({ children }) => {
   };
 
   return (
-    <div>
+    <div style={{ margin: "0 0 500 0" }}>
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
         zoom={placeParam.zoom}

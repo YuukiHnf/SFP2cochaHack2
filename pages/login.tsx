@@ -15,7 +15,7 @@ const login: VFC = () => {
   const route = useRouter();
 
   useEffect(() => {
-    if (basicInfo) {
+    if (basicInfo.userId.length !== 0 && basicInfo.teamId.length !== 0) {
       route.push(loginAdmin ? "/admin/" : "/guest/");
     }
   }, [basicInfo]);

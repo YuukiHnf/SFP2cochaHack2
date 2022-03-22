@@ -22,11 +22,12 @@ const AdminWrapper: VFC<Props> = ({ children }) => {
   const router = useRouter();
 
   useEffect(() => {
-    if (basicInfo.userId.length == 0 || basicInfo.teamId.length == 0) {
-      router.push("/login");
-      return;
-    }
-    if (!db) {
+    // if (basicInfo.userId.length == 0 || basicInfo.teamId.length == 0) {
+    //   router.push("/login");
+    //   return;
+    // }
+    if (!db || basicInfo.userId.length == 0 || basicInfo.teamId.length == 0) {
+      console.log("AdminWrapper");
       router.push("/login");
       return;
     }
