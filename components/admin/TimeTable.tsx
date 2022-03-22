@@ -25,17 +25,20 @@ const TimeTable = () => {
       field: "time",
       headerName: "TIME",
       renderCell: (params: GridRenderCellParams<Timestamp>) => {
-        console.log(params.value);
+        //console.log(params.value);
         return (
           <MobileTimePicker
             label="初期位置"
             value={params.value.toDate()}
             onChange={(newValue) => {
-              console.log(newValue);
+              //console.log(newValue);
+              // ここでtaskBlockのtimeを変更する
             }}
             minTime={timeSche.start?.toDate()}
             maxTime={timeSche.end?.toDate()}
-            renderInput={(p) => <TextField variant="filled" {...p} />}
+            renderInput={(p) => (
+              <TextField variant="filled" {...p} color="info" />
+            )}
           />
         );
       },
