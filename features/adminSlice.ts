@@ -34,31 +34,10 @@ const initialState: AdminState = {
   timeSche: { start: null, end: null },
   taskBlock: [],
   initTaskBlock: {
+    id: "",
     timeSpan: null,
     taskIds: [],
-    objectLocations: [
-      {
-        location: {
-          lat: 43.08021007881248,
-          lng: 141.34057847732373,
-        },
-        objectId: "0DG90slZJK924NL8ptCc",
-      },
-      {
-        location: {
-          lat: 43.08021007881248,
-          lng: 141.34057847732373,
-        },
-        objectId: "EvXJ53FpI7rp7D9mpMVb",
-      },
-      {
-        location: {
-          lat: 43.08021007881248,
-          lng: 141.34057847732373,
-        },
-        objectId: "sU8ekQYFa3xHflkVvhBZ",
-      },
-    ],
+    objectLocations: [],
   },
   objects: [],
 };
@@ -99,7 +78,8 @@ export const adminSlice = createSlice({
   },
 });
 
-export const { adminSetter, adminObjectSetter } = adminSlice.actions;
+export const { adminSetter, adminObjectSetter, adminTaskSetter } =
+  adminSlice.actions;
 
 export const selectAdminState = (state: RootState) => state.adminState;
 export const selectAdminPlaceState = (state: RootState) =>

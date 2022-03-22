@@ -2,12 +2,17 @@ import { collection, doc, onSnapshot, query } from "firebase/firestore";
 import { useRouter } from "next/router";
 import React, { useEffect, VFC } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { adminObjectSetter, adminSetter } from "../../features/adminSlice";
+import {
+  adminObjectSetter,
+  adminSetter,
+  adminTaskSetter,
+} from "../../features/adminSlice";
 import { selectBasicInfo } from "../../features/basicInfoSlice";
 import {
   db,
   OBJECTPARAM,
   PLACE,
+  TaskBlock,
   TEAM,
 } from "../../utils/firebase/FirebaseStore";
 
@@ -48,6 +53,7 @@ const AdminWrapper: VFC<Props> = ({ children }) => {
       }
     });
 
+    // Object Collection
     const unSubObj = onSnapshot(
       collection(doc(db, "team", basicInfo.teamId), "objects"),
       (objectSnaps) => {
@@ -61,9 +67,26 @@ const AdminWrapper: VFC<Props> = ({ children }) => {
         console.log("[unSubObj]", objectSnaps.docs);
       }
     );
+
+    // TaskBlockCollection
+    const unSubTaskBlock = onSnapshot(
+      collection(doc(db, "team", basicInfo.teamId), "taskBlock"),
+      (blockSnaps) => {
+        if (!blockSnaps.empty) {
+          dispatch(
+            adminTaskSetter(
+              blockSnaps.docs.map(
+                (snap) => ({ ...snap.data(), id: snap.id } as TaskBlock)
+              )
+            )
+          );
+        }
+      }
+    );
     return () => {
       unSub();
       unSubObj();
+      unSubTaskBlock();
     };
   }, [basicInfo]);
 
