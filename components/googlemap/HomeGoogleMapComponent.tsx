@@ -22,7 +22,7 @@ const _mapContainerStyle = {
   margin: "0 auto",
 };
 
-const DefaultGoogleMapComponent: VFC<Props> = ({
+const HomeGoogleMapComponent: VFC<Props> = ({
   children,
   mapContainerStyle = _mapContainerStyle,
   onMouseOver,
@@ -53,4 +53,4 @@ const DefaultGoogleMapComponent: VFC<Props> = ({
   );
 };
 
-export default DefaultGoogleMapComponent;
+export default HomeGoogleMapComponent;
