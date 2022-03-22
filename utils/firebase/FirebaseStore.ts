@@ -16,7 +16,7 @@ if (isEmulating) {
 }
 
 export const getUserCollection = collection(db, "users");
-export const getObjectCollection = collection(db, "objects");
+//export const getObjectCollection = collection(db, "objects");
 export const getTeamCollection = collection(db, "team");
 export const getPlaceCollection = (teamId: string) =>
   collection(doc(collection(db, "users"), teamId), "place");
@@ -60,4 +60,23 @@ export type PLACE = {
   heading?: number; // 設定できるようになったら入れる
 };
 
-export type TaskBlock = {};
+export type OBJECTPARAM = {
+  id: string;
+  name: string;
+  num: number;
+  iconUrl: string;
+  weight?: number;
+};
+
+export type ObjectLocation = {
+  objectId: string;
+  location: Location;
+};
+
+export type TaskBlock = {
+  id: string;
+  time: Timestamp | null;
+  taskIds: string[];
+  objectLocations: ObjectLocation[];
+  isInit?: boolean;
+};
