@@ -18,6 +18,9 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { Button, TextField } from "@mui/material";
 import { MobileTimePicker } from "@mui/lab";
+import useTaskBlock from "../../hooks/useTaskBlock";
+import { selectBasicInfo } from "../../features/basicInfoSlice";
+import { TimeDialog } from "./TimeDialog";
 const tmpTaskBlock = [] as TaskBlock[];
 
 interface Props {
@@ -25,10 +28,26 @@ interface Props {
 }
 
 const TimeTable: VFC<Props> = ({ setter }) => {
+  const basicInfo = useAppSelector(selectBasicInfo);
   const initTaskBlock = useAppSelector(selectAdminTaskBlockInit);
   const taskBlock = tmpTaskBlock; //useAppSelector(selectAdminTaskBlock);
   const timeSche = useAppSelector(selectAdminTimeSche);
   const [columns, setColumns] = useState<GridColumns>([]);
+  const { createBlockTime, updateBlockTime } = useTaskBlock({
+    teamId: basicInfo.teamId,
+  });
+
+  // dialog用
+  const [addOpen, setAddOpen] = useState<boolean>(false);
+  const handleClickOpen = () => {
+    setAddOpen(true);
+  };
+
+  const handleClose = (newTime: Date | null, title: string) => {
+    //console.log(newTime);
+    //console.log(title);
+    setAddOpen(false);
+  };
 
   useEffect(() => {
     setColumns([
@@ -84,10 +103,11 @@ const TimeTable: VFC<Props> = ({ setter }) => {
               //setter && setter(selectionModel[0]);
             }}
             onColumnHeaderClick={(params) =>
-              params.field === "add" && console.log("add action")
+              params.field === "add" && setAddOpen(true)
             }
             hideFooter
           />
+          <TimeDialog open={addOpen} onClose={handleClose} />
         </LocalizationProvider>
       </div>
     </>
