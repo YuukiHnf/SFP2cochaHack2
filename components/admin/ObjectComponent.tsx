@@ -11,29 +11,7 @@ import ObjectTable from "./ObjectTable";
 const ObjectComponent: VFC = () => {
   const [ptrObjectId, setPtrObjectId] = useState<string>("");
   const objectParams = useAppSelector(selectAdminObjects);
-  const objectInit = [
-    {
-      location: {
-        lat: 43.08023007881248,
-        lng: 141.34057847732373,
-      },
-      objectId: "0DG90slZJK924NL8ptCc",
-    },
-    {
-      location: {
-        lat: 43.08021027881248,
-        lng: 141.34057847732373,
-      },
-      objectId: "EvXJ53FpI7rp7D9mpMVb",
-    },
-    {
-      location: {
-        lat: 43.08021307881248,
-        lng: 141.34057847732373,
-      },
-      objectId: "sU8ekQYFa3xHflkVvhBZ",
-    },
-  ]; //useAppSelector(selectAdminTaskBlockInitObjectLocation);
+  const objectInit = useAppSelector(selectAdminTaskBlockInitObjectLocation);
 
   return (
     <>
@@ -43,7 +21,7 @@ const ObjectComponent: VFC = () => {
       />
       <p>{ptrObjectId}</p>
       <DefaultGoogleMapComponent>
-        {objectInit?.map((obj) => (
+        {objectInit?.objectLocations.map((obj) => (
           <Marker
             key={obj.objectId}
             position={obj.location}
@@ -61,7 +39,7 @@ const ObjectComponent: VFC = () => {
             onMouseOver={() => {
               ptrObjectId !== "" && setPtrObjectId("");
             }}
-            onMouseUp={() => {
+            onMouseUp={(e: google.maps.MapMouseEvent) => {
               ptrObjectId !== "" && setPtrObjectId("");
             }}
           />

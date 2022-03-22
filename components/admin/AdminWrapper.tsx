@@ -43,8 +43,6 @@ const AdminWrapper: VFC<Props> = ({ children }) => {
           adminSetter({
             place: _data.place,
             timeSche: _data.timeSche,
-            taskBlock: _data.taskBlock,
-            objects: [],
           })
         );
       }

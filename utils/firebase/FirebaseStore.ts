@@ -16,7 +16,7 @@ if (isEmulating) {
 }
 
 export const getUserCollection = collection(db, "users");
-export const getObjectCollection = collection(db, "objects");
+//export const getObjectCollection = collection(db, "objects");
 export const getTeamCollection = collection(db, "team");
 export const getPlaceCollection = (teamId: string) =>
   collection(doc(collection(db, "users"), teamId), "place");
@@ -77,5 +77,5 @@ export type TaskBlock = {
   timeSpan: Timestamp | null;
   taskIds: string[];
   objectLocations: ObjectLocation[];
-  initObjectLocation: ObjectLocation[];
+  isInit?: boolean;
 };

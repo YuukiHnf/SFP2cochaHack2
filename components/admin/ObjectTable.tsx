@@ -1,10 +1,5 @@
 import { Button } from "@mui/material";
-import {
-  DataGrid,
-  GridColDef,
-  GridSelectionModel,
-  GridValueGetterParams,
-} from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridSelectionModel } from "@mui/x-data-grid";
 import { Dispatch, SetStateAction, VFC } from "react";
 import { OBJECTPARAM } from "../../utils/firebase/FirebaseStore";
 
