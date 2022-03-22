@@ -11,7 +11,6 @@ import { TaskBlock } from "../../utils/firebase/FirebaseStore";
 // date-fns
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import TimePicker from "@mui/lab/TimePicker";
 import { TextField } from "@mui/material";
 import { MobileTimePicker } from "@mui/lab";
 const tmpTaskBlock = [] as TaskBlock[];
@@ -42,7 +41,7 @@ const TimeTable = () => {
           />
         );
       },
-      width: 200,
+      width: 150,
     },
   ];
 
