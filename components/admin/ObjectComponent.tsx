@@ -1,43 +1,51 @@
+import { Marker } from "@react-google-maps/api";
 import { useState, VFC } from "react";
 import { useAppSelector } from "../../app/hooks";
-import { selectAdminObjects } from "../../features/adminSlice";
-import { url } from "../../utils/config";
-import { OBJECTPARAM } from "../../utils/firebase/FirebaseStore";
+import {
+  selectAdminObjects,
+  selectAdminTaskBlockInitObjectLocation,
+} from "../../features/adminSlice";
+import { selectTeamId } from "../../features/basicInfoSlice";
+import useObjectHooks from "../../hooks/useObjectHooks";
+import { ObjectLocation } from "../../utils/firebase/FirebaseStore";
 import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
 import ObjectTable from "./ObjectTable";
 
-const initObjectParam: OBJECTPARAM[] = [
-  {
-    id: "0001",
-    name: "コーン",
-    iconUrl:
-      "http://localhost:9199/v0/b/default-bucket/o/cornIcon.svg?alt=media&token=f7f517ca-9ccd-4a89-a970-8c7b0a6200c0",
-    weight: 10,
-    num: 3,
-  },
-  {
-    id: "0002",
-    name: "マイク",
-    iconUrl:
-      "http://localhost:9199/v0/b/default-bucket/o/micIcon.svg?alt=media&token=6b199d98-1a0c-4024-82e9-685c34b4c747",
-    weight: 10,
-    num: 1,
-  },
-  {
-    id: "0003",
-    name: "テーブル",
-    iconUrl:
-      "http://localhost:9199/v0/b/default-bucket/o/tableIcon.svg?alt=media&token=fa033838-5158-469e-a09a-d9ea2aadf2dc",
-    weight: 10,
-    num: 3,
-  },
-];
-
 const ObjectComponent: VFC = () => {
   const [ptrObjectId, setPtrObjectId] = useState<string>("");
-  // const [objectParams, setObjectParams] =
-  //   useState<OBJECTPARAM[]>(initObjectParam);
+  const teamId = useAppSelector(selectTeamId);
+  const { saveTaskBlock } = useObjectHooks({ teamId: teamId });
   const objectParams = useAppSelector(selectAdminObjects);
+  const objectInit = useAppSelector(selectAdminTaskBlockInitObjectLocation);
+
+  const onClickOnMap = (e: google.maps.MapMouseEvent) => {
+    if (ptrObjectId === "") {
+      //何も選択されていない時
+      return;
+    }
+    // 今のObject
+    const obj = objectInit.objectLocations.filter(
+      (param) => param.objectId === ptrObjectId
+    )[0];
+
+    saveTaskBlock({
+      ...objectInit,
+      objectLocations: objectInit.objectLocations.map((_obj) => {
+        return _obj.objectId === obj.objectId
+          ? ({
+              ..._obj,
+              location: {
+                lat: e.latLng?.lat() ?? _obj.location.lat,
+                lng: e.latLng?.lng() ?? _obj.location.lng,
+              },
+            } as ObjectLocation)
+          : _obj;
+      }),
+    });
+    console.log("[Click]:", e.latLng);
+
+    ptrObjectId !== "" && setPtrObjectId("");
+  };
 
   return (
     <>
@@ -46,7 +54,27 @@ const ObjectComponent: VFC = () => {
         setPtrObjectId={setPtrObjectId}
       />
       <p>{ptrObjectId}</p>
-      <DefaultGoogleMapComponent>{}</DefaultGoogleMapComponent>
+      <DefaultGoogleMapComponent
+        onClick={(e: google.maps.MapMouseEvent) => {
+          console.log(e.latLng?.lat());
+          onClickOnMap(e);
+        }}
+      >
+        {objectInit?.objectLocations.map((obj) => (
+          <Marker
+            key={obj.objectId}
+            position={obj.location}
+            icon={{
+              url:
+                objectParams.find((value) => value.id === obj.objectId)
+                  ?.iconUrl ?? "",
+              origin: new window.google.maps.Point(0, 0),
+              anchor: new window.google.maps.Point(15, 15),
+              scaledSize: new window.google.maps.Size(30, 30),
+            }}
+          />
+        ))}
+      </DefaultGoogleMapComponent>
     </>
   );
 };

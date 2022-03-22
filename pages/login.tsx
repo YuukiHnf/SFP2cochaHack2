@@ -1,7 +1,6 @@
 import { Button, FormControlLabel, Switch, TextField } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useState, VFC } from "react";
-import { StyledFirebaseAuth } from "react-firebaseui";
 import { useAppSelector } from "../app/hooks";
 import SignInForm from "../components/SignInForm";
 import SignInForm2 from "../components/SignInForm2";
@@ -15,7 +14,7 @@ const login: VFC = () => {
   const route = useRouter();
 
   useEffect(() => {
-    if (basicInfo) {
+    if (basicInfo.userId.length !== 0 && basicInfo.teamId.length !== 0) {
       route.push(loginAdmin ? "/admin/" : "/guest/");
     }
   }, [basicInfo]);
