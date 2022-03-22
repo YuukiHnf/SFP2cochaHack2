@@ -1,5 +1,8 @@
 import { Polygon } from "@react-google-maps/api";
-import React from "react";
+import React, { useState } from "react";
+import { useAppSelector } from "../../app/hooks";
+import { selectAdminTaskBlockInit } from "../../features/adminSlice";
+import { TaskBlock } from "../../utils/firebase/FirebaseStore";
 import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
 import TimeTable from "./TimeTable";
 
@@ -24,11 +27,17 @@ const rectAngleOption = {
 };
 
 const HomeComponent = () => {
+  const initTaskBlock = useAppSelector(selectAdminTaskBlockInit);
+  const [selectedTaskBlock, setSelectedTaskBlock] =
+    useState<TaskBlock>(initTaskBlock);
+
+  console.log(selectedTaskBlock);
+
   return (
     <>
       <div style={{ overflow: "hidden" }}>
         <div style={_tableStyle}>
-          <TimeTable />
+          <TimeTable setter={setSelectedTaskBlock} />
         </div>
         <DefaultGoogleMapComponent mapContainerStyle={_mapContainerStyle}>
           <Polygon

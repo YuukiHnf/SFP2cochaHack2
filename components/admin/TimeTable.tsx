@@ -1,6 +1,11 @@
-import { DataGrid, GridColumns, GridRenderCellParams } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridColumns,
+  GridRenderCellParams,
+  GridSelectionModel,
+} from "@mui/x-data-grid";
 import { serverTimestamp, Timestamp } from "firebase/firestore";
-import React from "react";
+import React, { VFC } from "react";
 import { useAppSelector } from "../../app/hooks";
 import {
   selectAdminTaskBlock,
@@ -15,7 +20,11 @@ import { TextField } from "@mui/material";
 import { MobileTimePicker } from "@mui/lab";
 const tmpTaskBlock = [] as TaskBlock[];
 
-const TimeTable = () => {
+interface Props {
+  setter?: React.Dispatch<React.SetStateAction<TaskBlock>>;
+}
+
+const TimeTable: VFC<Props> = ({ setter }) => {
   const initTaskBlock = useAppSelector(selectAdminTaskBlockInit);
   const taskBlock = tmpTaskBlock; //useAppSelector(selectAdminTaskBlock);
   const timeSche = useAppSelector(selectAdminTimeSche);
@@ -54,25 +63,23 @@ const TimeTable = () => {
     <>
       <div style={{ height: "600px", width: "100%" }}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DataGrid columns={columns} rows={[initTaskBlock]} />
+          <DataGrid
+            columns={columns}
+            rows={[initTaskBlock]}
+            onSelectionModelChange={(selectionModel: GridSelectionModel) => {
+              console.log(selectionModel);
+              if (!setter) return;
+              selectionModel[0] === initTaskBlock.id
+                ? setter(initTaskBlock)
+                : setter(
+                    taskBlock.filter(
+                      (block) => block.id === selectionModel[0]
+                    )[0]
+                  );
+            }}
+          />
         </LocalizationProvider>
       </div>
-      {/* <TimePicker
-          label="初期位置"
-          value={Date.now()}
-          onChange={(newValue) => {
-            console.log(newValue);
-          }}
-          renderInput={(params) => <TextField {...params} />}
-        />
-        <TimePicker
-          label="初期位置"
-          value={Date.now()}
-          onChange={(newValue) => {
-            console.log(newValue);
-          }}
-          renderInput={(params) => <TextField {...params} />}
-        /> */}
     </>
   );
 };
