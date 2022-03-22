@@ -33,6 +33,11 @@ const TimeTable = () => {
               //console.log(newValue);
               // ここでtaskBlockのtimeを変更する
             }}
+            disabled={
+              timeSche.start
+                ? timeSche.start?.toDate() >= params.value.toDate()
+                : true
+            }
             minTime={timeSche.start?.toDate()}
             maxTime={timeSche.end?.toDate()}
             renderInput={(p) => (
