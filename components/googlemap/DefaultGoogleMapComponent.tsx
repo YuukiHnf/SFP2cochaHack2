@@ -6,6 +6,8 @@ import { selectAdminPlaceState } from "../../features/adminSlice";
 
 interface Props {
   children: ReactNode;
+  onMouseOver?: (e: google.maps.MapMouseEvent) => void;
+  onClick?: (e: google.maps.MapMouseEvent) => void;
 }
 
 const mapContainerStyle = {
@@ -14,7 +16,11 @@ const mapContainerStyle = {
   margin: "0 auto",
 };
 
-const DefaultGoogleMapComponent: VFC<Props> = ({ children }) => {
+const DefaultGoogleMapComponent: VFC<Props> = ({
+  children,
+  onMouseOver,
+  onClick,
+}) => {
   const placeParam = useAppSelector(selectAdminPlaceState);
   const mapOption: google.maps.MapOptions = {
     disableDefaultUI: true, // button無くす
@@ -31,6 +37,8 @@ const DefaultGoogleMapComponent: VFC<Props> = ({ children }) => {
         zoom={placeParam.zoom}
         center={placeParam.center}
         options={mapOption}
+        onMouseOver={onMouseOver}
+        onClick={onClick}
       >
         {children}
       </GoogleMap>

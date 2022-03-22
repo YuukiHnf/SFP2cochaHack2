@@ -35,7 +35,7 @@ const initialState: AdminState = {
   taskBlock: [],
   initTaskBlock: {
     id: "",
-    timeSpan: null,
+    time: null,
     taskIds: [],
     objectLocations: [],
   },
