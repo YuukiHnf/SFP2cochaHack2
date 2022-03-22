@@ -9,7 +9,7 @@ import { useState, VFC } from "react";
 import { useAppSelector } from "../../app/hooks";
 import {
   selectAdminObjects,
-  selectAdminTaskBlockInitObjectLocation,
+  selectAdminTaskBlockInit,
 } from "../../features/adminSlice";
 import { selectTeamId } from "../../features/basicInfoSlice";
 import useObjectHooks from "../../hooks/useObjectHooks";
@@ -22,7 +22,7 @@ const ObjectComponent: VFC = () => {
   const teamId = useAppSelector(selectTeamId);
   const { saveTaskBlock } = useObjectHooks({ teamId: teamId });
   const objectParams = useAppSelector(selectAdminObjects);
-  const objectInit = useAppSelector(selectAdminTaskBlockInitObjectLocation);
+  const objectInit = useAppSelector(selectAdminTaskBlockInit);
 
   const onClickOnMap = (e: google.maps.MapMouseEvent) => {
     if (ptrObjectId === "") {

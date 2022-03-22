@@ -1,6 +1,7 @@
 import { Polygon } from "@react-google-maps/api";
 import React from "react";
 import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
+import TimeTable from "./TimeTable";
 
 const _mapContainerStyle = {
   width: "80%",
@@ -26,7 +27,9 @@ const HomeComponent = () => {
   return (
     <>
       <div style={{ overflow: "hidden" }}>
-        <div style={_tableStyle}>HomeComponent</div>
+        <div style={_tableStyle}>
+          <TimeTable />
+        </div>
         <DefaultGoogleMapComponent mapContainerStyle={_mapContainerStyle}>
           <Polygon
             path={[

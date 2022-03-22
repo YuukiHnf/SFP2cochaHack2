@@ -75,6 +75,7 @@ export type ObjectLocation = {
 
 export type TaskBlock = {
   id: string;
+  title: string;
   time: Timestamp | null;
   taskIds: string[];
   objectLocations: ObjectLocation[];
