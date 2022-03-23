@@ -80,7 +80,7 @@ const HomeComponent = () => {
               ))) ?? <></>}
           {/* この時のObject用の描画ツール */}
           {/* 設営時 */}
-          {selectedTaskBlockId == "Y7WAfI45mwPBjJhsCQmk" &&
+          {selectedTaskBlockId === "Y7WAfI45mwPBjJhsCQmk" &&
             initTaskBlock.objectLocations.map((obj) => (
               <Marker
                 key={obj.objectId}
@@ -99,6 +99,10 @@ const HomeComponent = () => {
           {/* Objectを指定した時間ごとに描画する */}
           {selectedTaskBlockId === initTaskBlock.id ? ( // if init
             initTaskBlock.objectLocations.map(markerJSX)
+          ) : selectedTaskBlockId === "Y7WAfI45mwPBjJhsCQmk" ? (
+            taskBlock
+              ?.filter((block) => block.id === selectedTaskBlockId)[0]
+              .objectLocations.map(markerJSX)
           ) : selectedTaskBlockId ? ( // select taskBlock
             taskBlock
               ?.filter((block) => block.id === "Y7WAfI45mwPBjJhsCQmk")[0]
