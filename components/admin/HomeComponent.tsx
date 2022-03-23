@@ -10,6 +10,7 @@ import { ObjectLocation, TaskBlock } from "../../utils/firebase/FirebaseStore";
 import ArgumentDrawingManage from "../googlemap/ArgumentDrawingManage";
 import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
 import MapSettingComponent from "../googlemap/MapSettingComponent";
+import TaskViewComponents from "./TaskViewComponents";
 import TimeTable from "./TimeTable";
 
 const _mapContainerStyle = {
@@ -57,6 +58,9 @@ const HomeComponent = () => {
   );
 
   console.log(selectedTaskBlockId);
+  // console.log(
+  //   taskBlock?.filter((block) => block.id === selectedTaskBlockId)[0]
+  // );
 
   return (
     <>
@@ -65,7 +69,15 @@ const HomeComponent = () => {
           <TimeTable setter={setSelectedTaskBlockId} />
         </div>
         <DefaultGoogleMapComponent mapContainerStyle={_mapContainerStyle}>
+          {/* 描画用のComponent */}
           <ArgumentDrawingManage />
+          {/* タスク提示用のComponent */}
+          {(taskBlock?.filter((block) => block.id === selectedTaskBlockId)[0] &&
+            taskBlock
+              ?.filter((block) => block.id === selectedTaskBlockId)[0]
+              .taskIds?.map((_id) => <TaskViewComponents taskId={_id} />)) ?? (
+            <></>
+          )}
           {/* Objectを指定した時間ごとに描画する */}
           {selectedTaskBlockId === initTaskBlock.id ? ( // if init
             initTaskBlock.objectLocations.map(markerJSX)
