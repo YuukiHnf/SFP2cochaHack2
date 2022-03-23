@@ -8,6 +8,7 @@ import {
 } from "../../features/adminSlice";
 import { ObjectLocation, TaskBlock } from "../../utils/firebase/FirebaseStore";
 import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
+import MapSettingComponent from "../googlemap/MapSettingComponent";
 import TimeTable from "./TimeTable";
 
 const _mapContainerStyle = {
@@ -73,15 +74,7 @@ const HomeComponent = () => {
             <></>
           )}
           {/* 擬似的な全体説明用オブジェクト、後々、ここもDBからとってくるようにする or statusに入れる */}
-          <Polygon
-            path={[
-              new google.maps.LatLng(43.080180692594475, 141.34037284277449),
-              new google.maps.LatLng(43.07991425690792, 141.34044258020887),
-              new google.maps.LatLng(43.07994560234294, 141.34059814833174),
-              new google.maps.LatLng(43.08020666961666, 141.3405176820613),
-            ]}
-            options={rectAngleOption}
-          />
+          <MapSettingComponent />
         </DefaultGoogleMapComponent>
       </div>
     </>
