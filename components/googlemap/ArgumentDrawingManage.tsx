@@ -10,7 +10,21 @@ import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SwipeLeftIcon from "@mui/icons-material/SwipeLeft";
 
-type MarkerType = "HumanPos" | "Up" | "Down" | "Left" | "Right" | null;
+export type MarkerType = "HumanPos" | "Up" | "Down" | "Left" | "Right" | null;
+
+export const humanPosUrl = `http://localhost:9199/v0/b/default-bucket/o/humanTaskIcon.png?alt=media&token=389a05b0-c6d7-4de2-86da-1559154b17f8`;
+export const upUrl = `http://localhost:9199/v0/b/default-bucket/o/upIcon.png?alt=media&token=4fef015d-c9c5-43c5-8a5b-06671d2c6a61`;
+export const rightUrl = `http://localhost:9199/v0/b/default-bucket/o/rightIcon.png?alt=media&token=0de0d1a4-06f3-49f8-9971-df1fd0f7709e`;
+export const downUrl = `http://localhost:9199/v0/b/default-bucket/o/downIcon.png?alt=media&token=e6f3bb0e-7687-42fd-a7e1-d0543c78d1fd`;
+export const leftUrl = `http://localhost:9199/v0/b/default-bucket/o/leftIcon.png?alt=media&token=1a605b22-b3c4-4fe5-9e63-694b98186af6`;
+
+export const marker2Url = {
+  HumanPos: humanPosUrl,
+  Up: upUrl,
+  Down: downUrl,
+  Left: leftUrl,
+  Right: rightUrl,
+};
 
 const ArgumentDrawingManage: VFC = () => {
   // drawing Mode の切り替え
@@ -21,31 +35,31 @@ const ArgumentDrawingManage: VFC = () => {
   const markerOptions = {
     HumanPos: {
       icon: {
-        url: `http://localhost:9199/v0/b/default-bucket/o/humanTaskIcon.png?alt=media&token=389a05b0-c6d7-4de2-86da-1559154b17f8`,
+        url: humanPosUrl,
         scaledSize: new google.maps.Size(40, 40),
       },
     },
     Up: {
       icon: {
-        url: `http://localhost:9199/v0/b/default-bucket/o/upIcon.png?alt=media&token=4fef015d-c9c5-43c5-8a5b-06671d2c6a61`,
+        url: upUrl,
         scaledSize: new google.maps.Size(35, 35),
       },
     },
     Right: {
       icon: {
-        url: `http://localhost:9199/v0/b/default-bucket/o/rightIcon.png?alt=media&token=0de0d1a4-06f3-49f8-9971-df1fd0f7709e`,
+        url: rightUrl,
         scaledSize: new google.maps.Size(35, 35),
       },
     },
     Down: {
       icon: {
-        url: `http://localhost:9199/v0/b/default-bucket/o/downIcon.png?alt=media&token=e6f3bb0e-7687-42fd-a7e1-d0543c78d1fd`,
+        url: downUrl,
         scaledSize: new google.maps.Size(35, 35),
       },
     },
     Left: {
       icon: {
-        url: `http://localhost:9199/v0/b/default-bucket/o/leftIcon.png?alt=media&token=1a605b22-b3c4-4fe5-9e63-694b98186af6`,
+        url: leftUrl,
         scaledSize: new google.maps.Size(35, 35),
       },
     },

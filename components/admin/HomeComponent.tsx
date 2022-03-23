@@ -75,9 +75,9 @@ const HomeComponent = () => {
           {(taskBlock?.filter((block) => block.id === selectedTaskBlockId)[0] &&
             taskBlock
               ?.filter((block) => block.id === selectedTaskBlockId)[0]
-              .taskIds?.map((_id) => <TaskViewComponents taskId={_id} />)) ?? (
-            <></>
-          )}
+              .taskIds?.map((_id) => (
+                <TaskViewComponents key={_id} taskId={_id} />
+              ))) ?? <></>}
           {/* Objectを指定した時間ごとに描画する */}
           {selectedTaskBlockId === initTaskBlock.id ? ( // if init
             initTaskBlock.objectLocations.map(markerJSX)
