@@ -33,7 +33,7 @@ const TimeTable: VFC<Props> = ({ setter }) => {
   const taskBlock = useAppSelector(selectAdminTaskBlock);
   const timeSche = useAppSelector(selectAdminTimeSche);
   const [columns, setColumns] = useState<GridColumns>([]);
-  const { createBlockTime, updateBlockTime } = useTaskBlock({
+  const { createBlockTime, updateBlockTime, deleteBlockTime } = useTaskBlock({
     teamId: basicInfo.teamId,
   });
 
@@ -51,7 +51,8 @@ const TimeTable: VFC<Props> = ({ setter }) => {
     setAddOpen(false);
   };
 
-  const handleDelete = async () => {
+  const handleDelete = (taskBlockId: string) => {
+    //deleteBlockTime(taskBlockId);
     console.log("[未実装]");
   };
 
@@ -99,7 +100,6 @@ const TimeTable: VFC<Props> = ({ setter }) => {
         field: "title",
         headerName: "+",
         sortable: false,
-        type: "string",
       },
     ]);
   }, [initTaskBlock, timeSche]);
@@ -125,7 +125,7 @@ const TimeTable: VFC<Props> = ({ setter }) => {
             open={addOpen}
             onClose={handleClose}
             onSave={handleSave}
-            onDelete={handleDelete}
+            onDelete={() => handleDelete("")}
           />
         </LocalizationProvider>
       </div>

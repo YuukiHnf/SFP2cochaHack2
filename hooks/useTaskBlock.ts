@@ -4,6 +4,7 @@
 
 import {
   collection,
+  deleteDoc,
   doc,
   setDoc,
   Timestamp,
@@ -32,7 +33,12 @@ const useTaskBlock = ({ teamId }: Props) => {
     });
   };
 
-  const deleteBlockTime = () => {};
+  const deleteBlockTime = async (taskBlockId: string) => {
+    const teamRef = doc(db, "team", teamId);
+    const blockRef = doc(collection(teamRef, "taskBlock"), taskBlockId);
+
+    await deleteDoc(blockRef);
+  };
 
   const createBlockTime = async (newTime: Date, newTitle: string) => {
     const teamRef = doc(db, "team", teamId);
@@ -49,7 +55,7 @@ const useTaskBlock = ({ teamId }: Props) => {
     await setDoc(blockRef, newData, { merge: true });
   };
 
-  return { updateBlockTime, createBlockTime };
+  return { updateBlockTime, createBlockTime, deleteBlockTime };
 };
 
 export default useTaskBlock;
