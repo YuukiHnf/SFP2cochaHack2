@@ -32,7 +32,7 @@ const DefaultGoogleMapComponent: VFC<Props> = ({
   const mapOption: google.maps.MapOptions = {
     disableDefaultUI: true, // button無くす
     minZoom: placeParam.zoom,
-    maxZoom: 40,
+    maxZoom: 50,
     rotateControl: true, // 効果なさそう
     gestureHandling: "cooperative",
   };
