@@ -9,6 +9,7 @@ import {
 } from "firebase/auth";
 import { addDoc, doc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
+import { useAppDispatch } from "../app/hooks";
 import { auth } from "../utils/firebase/FirebaseAuth";
 import {
   DateSchedule,
@@ -16,7 +17,7 @@ import {
   getUserCollection,
   USER,
 } from "../utils/firebase/FirebaseStore";
-
+import { basicInfologout } from "../features/basicInfoSlice";
 interface Props {
   LoginType: "admin" | "guest";
 }
@@ -26,6 +27,7 @@ interface Props {
  */
 const useAuthState = ({ LoginType }: Props) => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const signInEmail = async (
     email: string,
@@ -84,6 +86,7 @@ const useAuthState = ({ LoginType }: Props) => {
   const logout = async () => {
     try {
       await signOut(auth);
+      dispatch(basicInfologout());
       router.push(`/login`);
     } catch (e: any) {
       alert(`[Myerror] authLogout : ${e}`);
