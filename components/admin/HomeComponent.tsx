@@ -70,6 +70,7 @@ const HomeComponent = () => {
           ) : (
             <></>
           )}
+          {/* 擬似的な全体説明用オブジェクト、後々、ここもDBからとってくるようにする or statusに入れる */}
           <Polygon
             path={[
               new google.maps.LatLng(43.080180692594475, 141.34037284277449),

@@ -30,7 +30,7 @@ interface Props {
 const TimeTable: VFC<Props> = ({ setter }) => {
   const basicInfo = useAppSelector(selectBasicInfo);
   const initTaskBlock = useAppSelector(selectAdminTaskBlockInit);
-  const taskBlock = tmpTaskBlock; //useAppSelector(selectAdminTaskBlock);
+  const taskBlock = useAppSelector(selectAdminTaskBlock);
   const timeSche = useAppSelector(selectAdminTimeSche);
   const [columns, setColumns] = useState<GridColumns>([]);
   const { createBlockTime, updateBlockTime } = useTaskBlock({
@@ -43,10 +43,23 @@ const TimeTable: VFC<Props> = ({ setter }) => {
     setAddOpen(true);
   };
 
-  const handleClose = (newTime: Date | null, title: string) => {
+  const handleClose = async () => {
+    // DialogがCloseした時の処理
     //console.log(newTime);
     //console.log(title);
+
     setAddOpen(false);
+  };
+
+  const handleDelete = async () => {
+    console.log("[未実装]");
+  };
+
+  const handleSave = (newTime: Date | null, title: string) => {
+    if (newTime && title.length !== 0) {
+      createBlockTime(newTime, title);
+    }
+    handleClose();
   };
 
   useEffect(() => {
@@ -58,7 +71,7 @@ const TimeTable: VFC<Props> = ({ setter }) => {
           //console.log(params.value);
           return params.value ? (
             <MobileTimePicker
-              label="初期位置"
+              label="from"
               value={params.value.toDate() ?? ""}
               onChange={(newValue) => {
                 //console.log(newValue);
@@ -79,11 +92,11 @@ const TimeTable: VFC<Props> = ({ setter }) => {
             <div>Loading...</div>
           );
         },
-        width: 150,
+        width: 110,
         sortable: false,
       },
       {
-        field: "add",
+        field: "title",
         headerName: "+",
         sortable: false,
         type: "string",
@@ -97,17 +110,23 @@ const TimeTable: VFC<Props> = ({ setter }) => {
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DataGrid
             columns={columns}
-            rows={[initTaskBlock]}
+            rows={[initTaskBlock].concat(taskBlock ?? [])}
             onSelectionModelChange={(selectionModel: GridSelectionModel) => {
+              //選択された時
               //console.log(selectionModel);
-              //setter && setter(selectionModel[0]);
+              setter && setter(selectionModel[0] as string);
             }}
-            onColumnHeaderClick={(params) =>
-              params.field === "add" && setAddOpen(true)
-            }
+            onColumnHeaderClick={(
+              params // dialogがOpenする
+            ) => params.field === "add" && setAddOpen(true)}
             hideFooter
           />
-          <TimeDialog open={addOpen} onClose={handleClose} />
+          <TimeDialog
+            open={addOpen}
+            onClose={handleClose}
+            onSave={handleSave}
+            onDelete={handleDelete}
+          />
         </LocalizationProvider>
       </div>
     </>

@@ -9,7 +9,7 @@ import {
   ListItemButton,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { MobileTimePicker } from "@mui/lab";
 import { useAppSelector } from "../../app/hooks";
 import { selectAdminTimeSche } from "../../features/adminSlice";
@@ -18,24 +18,31 @@ const emails = ["username@gmail.com", "user02@gmail.com"];
 
 export interface SimpleDialogProps {
   open: boolean;
-  onClose: (newTime: Date | null, title: string) => void;
+  onClose: () => void;
+  onSave: (newTime: Date | null, title: string) => void;
+  onDelete?: () => void;
 }
 
 export const TimeDialog = (props: SimpleDialogProps) => {
-  const { onClose, open } = props;
+  const { onClose, open, onSave, onDelete } = props;
   const [inputTitle, setInputTitle] = useState("");
   const timeSche = useAppSelector(selectAdminTimeSche);
   const [inputTime, setInputTime] = useState<Date | null>(
     new Date(timeSche.start?.toDate() ?? "December 17, 1995 03:24:00")
   );
 
-  const handleClose = (
-    event: {},
-    reason: "backdropClick" | "escapeKeyDown"
-  ) => {
-    if (reason && reason == "backdropClick") onClose(inputTime, inputTitle);
-    onClose(inputTime, inputTitle);
-  };
+  useEffect(() => {
+    timeSche.start && setInputTime(timeSche.start.toDate());
+  }, [timeSche]);
+
+  const handleClose = useCallback(
+    (event: {}, reason: "backdropClick" | "escapeKeyDown") => {
+      setInputTitle("");
+      if (reason && reason == "backdropClick") onClose();
+      onClose();
+    },
+    []
+  );
 
   return (
     <Dialog onClose={handleClose} open={open}>
@@ -66,10 +73,18 @@ export const TimeDialog = (props: SimpleDialogProps) => {
           />
         </ListItem>
         <ListItem alignItems="center">
-          <Button variant="contained">{" SAVE "}</Button>
+          <Button
+            variant="contained"
+            onClick={() => {
+              onSave(inputTime, inputTitle);
+              onClose();
+            }}
+          >
+            {" SAVE "}
+          </Button>
         </ListItem>
         <ListItem alignItems="center">
-          <Button variant="outlined" color="error">
+          <Button variant="outlined" color="error" onClick={() => onClose()}>
             DELETE
           </Button>
         </ListItem>
