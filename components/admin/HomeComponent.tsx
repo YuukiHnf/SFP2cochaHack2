@@ -1,4 +1,4 @@
-import { Marker, Polygon } from "@react-google-maps/api";
+import { DrawingManager, Marker, Polygon } from "@react-google-maps/api";
 import React, { useState } from "react";
 import { useAppSelector } from "../../app/hooks";
 import {
@@ -7,6 +7,7 @@ import {
   selectAdminTaskBlockInit,
 } from "../../features/adminSlice";
 import { ObjectLocation, TaskBlock } from "../../utils/firebase/FirebaseStore";
+import ArgumentDrawingManage from "../googlemap/ArgumentDrawingManage";
 import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
 import MapSettingComponent from "../googlemap/MapSettingComponent";
 import TimeTable from "./TimeTable";
@@ -64,6 +65,8 @@ const HomeComponent = () => {
           <TimeTable setter={setSelectedTaskBlockId} />
         </div>
         <DefaultGoogleMapComponent mapContainerStyle={_mapContainerStyle}>
+          <ArgumentDrawingManage />
+          {/* Objectを指定した時間ごとに描画する */}
           {selectedTaskBlockId === initTaskBlock.id ? ( // if init
             initTaskBlock.objectLocations.map(markerJSX)
           ) : selectedTaskBlockId ? ( // select taskBlock
