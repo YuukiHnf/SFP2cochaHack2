@@ -78,13 +78,44 @@ const HomeComponent = () => {
               .taskIds?.map((_id) => (
                 <TaskViewComponents key={_id} taskId={_id} />
               ))) ?? <></>}
+          {/* この時のObject用の描画ツール */}
+          {/* 設営時 */}
+          {selectedTaskBlockId == "Y7WAfI45mwPBjJhsCQmk" &&
+            initTaskBlock.objectLocations.map((obj) => (
+              <Marker
+                key={obj.objectId}
+                position={obj.location}
+                icon={{
+                  url:
+                    objectParams.find((value) => value.id === obj.objectId)
+                      ?.semiIconUrl ?? "",
+                  origin: new window.google.maps.Point(0, 0),
+                  anchor: new window.google.maps.Point(15, 15),
+                  scaledSize: new window.google.maps.Size(30, 30),
+                }}
+              />
+            ))}
+
           {/* Objectを指定した時間ごとに描画する */}
           {selectedTaskBlockId === initTaskBlock.id ? ( // if init
             initTaskBlock.objectLocations.map(markerJSX)
           ) : selectedTaskBlockId ? ( // select taskBlock
             taskBlock
-              ?.filter((block) => block.id === selectedTaskBlockId)[0]
-              .objectLocations.map(markerJSX)
+              ?.filter((block) => block.id === "Y7WAfI45mwPBjJhsCQmk")[0]
+              .objectLocations.map((obj) => (
+                <Marker
+                  key={obj.objectId}
+                  position={obj.location}
+                  icon={{
+                    url:
+                      objectParams.find((value) => value.id === obj.objectId)
+                        ?.semiIconUrl ?? "",
+                    origin: new window.google.maps.Point(0, 0),
+                    anchor: new window.google.maps.Point(15, 15),
+                    scaledSize: new window.google.maps.Size(30, 30),
+                  }}
+                />
+              ))
           ) : (
             <></>
           )}
