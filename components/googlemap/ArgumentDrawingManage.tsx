@@ -9,6 +9,7 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SwipeLeftIcon from "@mui/icons-material/SwipeLeft";
+import { TaskDialog } from "../admin/TaskDialog";
 
 export type MarkerType = "HumanPos" | "Up" | "Down" | "Left" | "Right" | null;
 
@@ -85,6 +86,29 @@ const ArgumentDrawingManage: VFC = () => {
       //普通の指
       setDrawingMode(null);
     }
+  };
+
+  // dialog用
+  const [addOpen, setAddOpen] = useState<boolean>(false);
+  const handleClickOpen = () => {
+    setAddOpen(true);
+  };
+
+  const handleClose = async () => {
+    // DialogがCloseした時の処理
+    setAddOpen(false);
+  };
+
+  const handleDelete = (taskBlockId: string) => {
+    //deleteBlockTime(taskBlockId);
+    console.log("[未実装]");
+  };
+
+  const handleSave = (title: string) => {
+    if (title.length !== 0) {
+      //createBlockTime(newTime, title); taskの追加をする
+    }
+    handleClose();
   };
 
   return (
@@ -169,8 +193,19 @@ const ArgumentDrawingManage: VFC = () => {
       </Box>
       <DrawingManager
         drawingMode={drawingMode} //ここを変えれば、切り替えができる！！
-        onMarkerComplete={/**markerが完了したタイミング */ () => {}}
+        onMarkerComplete={
+          /**markerが完了したタイミング */ () => {
+            setAddOpen(true);
+          }
+        }
         options={drawingManagerOption}
+      />
+      {/* Dialog用 */}
+      <TaskDialog
+        open={addOpen}
+        onClose={handleClose}
+        onSave={handleSave}
+        onDelete={() => handleDelete("")}
       />
     </>
   );
