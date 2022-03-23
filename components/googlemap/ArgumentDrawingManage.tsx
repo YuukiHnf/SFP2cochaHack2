@@ -8,15 +8,15 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import SwipeLeftIcon from "@mui/icons-material/SwipeLeft";
 
-type markerType = "HumanPos" | "Up" | "Down" | "Left" | "Right";
-
-type markerOptions = {};
+type MarkerType = "HumanPos" | "Up" | "Down" | "Left" | "Right" | null;
 
 const ArgumentDrawingManage: VFC = () => {
   // drawing Mode の切り替え
   const [drawingMode, setDrawingMode] =
     useState<google.maps.drawing.OverlayType.MARKER | null>(null);
+  const [marker, setMarker] = useState<MarkerType>(null);
   // DrawingManagerに付与するiConについて
   const markerOptions = {
     HumanPos: {
@@ -39,7 +39,7 @@ const ArgumentDrawingManage: VFC = () => {
     },
     Down: {
       icon: {
-        url: `hhttp://localhost:9199/v0/b/default-bucket/o/downIcon.png?alt=media&token=e6f3bb0e-7687-42fd-a7e1-d0543c78d1fd`,
+        url: `http://localhost:9199/v0/b/default-bucket/o/downIcon.png?alt=media&token=e6f3bb0e-7687-42fd-a7e1-d0543c78d1fd`,
         scaledSize: new google.maps.Size(35, 35),
       },
     },
@@ -56,10 +56,22 @@ const ArgumentDrawingManage: VFC = () => {
    *
    */
   const drawingManagerOption: google.maps.drawing.DrawingManagerOptions = {
-    markerOptions: markerOptions["Up"],
+    markerOptions: markerOptions[marker ?? "Down"],
     drawingControlOptions: {
       drawingModes: [google.maps.drawing.OverlayType.MARKER],
+      position: google.maps.ControlPosition.TOP_RIGHT,
     },
+  };
+
+  // iconを表示されるように取り替える
+  const setIconMode = (marker: MarkerType) => {
+    if (marker) {
+      setDrawingMode(google.maps.drawing.OverlayType.MARKER);
+      setMarker(marker);
+    } else {
+      //普通の指
+      setDrawingMode(null);
+    }
   };
 
   return (
@@ -86,6 +98,16 @@ const ArgumentDrawingManage: VFC = () => {
           variant="outlined"
           fullWidth={false}
           color="inherit"
+          onClick={() => setIconMode(null)}
+        >
+          <SwipeLeftIcon />
+        </Button>
+        <Button
+          size="small"
+          variant="outlined"
+          fullWidth={false}
+          color="inherit"
+          onClick={() => setIconMode("Up")}
         >
           <ArrowUpwardIcon />
         </Button>
@@ -94,6 +116,7 @@ const ArgumentDrawingManage: VFC = () => {
           variant="outlined"
           fullWidth={false}
           color="inherit"
+          onClick={() => setIconMode("Down")}
         >
           <ArrowDownwardIcon />
         </Button>
@@ -102,6 +125,7 @@ const ArgumentDrawingManage: VFC = () => {
           variant="outlined"
           fullWidth={false}
           color="inherit"
+          onClick={() => setIconMode("Left")}
         >
           <ArrowBackIcon />
         </Button>
@@ -110,6 +134,7 @@ const ArgumentDrawingManage: VFC = () => {
           variant="outlined"
           fullWidth={false}
           color="inherit"
+          onClick={() => setIconMode("Right")}
         >
           <ArrowRightAltIcon />
         </Button>
@@ -118,6 +143,7 @@ const ArgumentDrawingManage: VFC = () => {
           variant="outlined"
           fullWidth={false}
           color="inherit"
+          onClick={() => setIconMode("HumanPos")}
         >
           <img
             src={
@@ -128,29 +154,6 @@ const ArgumentDrawingManage: VFC = () => {
           ></img>
         </Button>
       </Box>
-      {/* <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          width: "fit-content",
-          border: (theme) => `1px solid ${theme.palette.divider}`,
-          borderRadius: 1,
-          bgcolor: "background.paper",
-          color: "text.secondary",
-          "& svg": {
-            m: 1.5,
-          },
-          "& hr": {
-            mx: 0.5,
-          },
-        }}
-      >
-        <ArrowUpwardIcon />
-        <ArrowUpwardIcon />
-        <Divider orientation="vertical" flexItem />
-        <ArrowUpwardIcon />
-        <ArrowUpwardIcon />
-      </Box> */}
       <DrawingManager
         drawingMode={drawingMode} //ここを変えれば、切り替えができる！！
         onMarkerComplete={/**markerが完了したタイミング */ () => {}}
