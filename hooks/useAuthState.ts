@@ -84,6 +84,7 @@ const useAuthState = ({ LoginType }: Props) => {
   const logout = async () => {
     try {
       await signOut(auth);
+      router.push(`/login`);
     } catch (e: any) {
       alert(`[Myerror] authLogout : ${e}`);
     }
