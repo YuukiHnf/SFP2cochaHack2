@@ -45,9 +45,6 @@ const TimeTable: VFC<Props> = ({ setter }) => {
 
   const handleClose = async () => {
     // DialogがCloseした時の処理
-    //console.log(newTime);
-    //console.log(title);
-
     setAddOpen(false);
   };
 
@@ -118,7 +115,10 @@ const TimeTable: VFC<Props> = ({ setter }) => {
             }}
             onColumnHeaderClick={(
               params // dialogがOpenする
-            ) => params.field === "add" && setAddOpen(true)}
+            ) => {
+              console.log(params);
+              params.field === "title" && setAddOpen(true);
+            }}
             hideFooter
           />
           <TimeDialog

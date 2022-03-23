@@ -1,4 +1,10 @@
-import { collection, doc, onSnapshot, query } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import { useRouter } from "next/router";
 import React, { useEffect, VFC } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
@@ -69,20 +75,22 @@ const AdminWrapper: VFC<Props> = ({ children }) => {
     );
 
     // TaskBlockCollection
-    const unSubTaskBlock = onSnapshot(
-      collection(doc(db, "team", basicInfo.teamId), "taskBlock"),
-      (blockSnaps) => {
-        if (!blockSnaps.empty) {
-          dispatch(
-            adminTaskSetter(
-              blockSnaps.docs.map(
-                (snap) => ({ ...snap.data(), id: snap.id } as TaskBlock)
-              )
-            )
-          );
-        }
-      }
+    const taskBlockRef = collection(
+      doc(db, "team", basicInfo.teamId),
+      "taskBlock"
     );
+    const blockQuery = query(taskBlockRef, orderBy("time", "asc"));
+    const unSubTaskBlock = onSnapshot(blockQuery, (blockSnaps) => {
+      if (!blockSnaps.empty) {
+        dispatch(
+          adminTaskSetter(
+            blockSnaps.docs.map(
+              (snap) => ({ ...snap.data(), id: snap.id } as TaskBlock)
+            )
+          )
+        );
+      }
+    });
     return () => {
       unSub();
       unSubObj();
