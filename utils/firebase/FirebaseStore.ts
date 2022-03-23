@@ -7,6 +7,7 @@ import {
   getFirestore,
   Timestamp,
 } from "firebase/firestore";
+import { MarkerType } from "../../components/googlemap/ArgumentDrawingManage";
 import { isEmulating, storePort } from "./FirebaseInit";
 
 export const db = getFirestore(getApp());
@@ -81,4 +82,27 @@ export type TaskBlock = {
   taskIds: string[];
   objectLocations: ObjectLocation[];
   isInit?: boolean;
+};
+
+export type TaskProgressState = "UNDO" | "DOING" | "CHECK" | "DONE";
+
+export type TaskContentType = {
+  move: {
+    location: Location;
+    desc: string;
+  }[];
+  explaing: {
+    iconId: MarkerType;
+    location: Location;
+    desc: string;
+  }[];
+};
+
+export type TaskType = {
+  id: string;
+  title: string;
+  taskState: TaskProgressState;
+  team: string;
+  by: string;
+  content: TaskContentType;
 };

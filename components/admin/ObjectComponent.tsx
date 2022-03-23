@@ -15,6 +15,7 @@ import { selectTeamId } from "../../features/basicInfoSlice";
 import useObjectHooks from "../../hooks/useObjectHooks";
 import { ObjectLocation } from "../../utils/firebase/FirebaseStore";
 import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
+import MapSettingComponent from "../googlemap/MapSettingComponent";
 import ObjectTable from "./ObjectTable";
 
 const ObjectComponent: VFC = () => {
@@ -100,17 +101,16 @@ const ObjectComponent: VFC = () => {
           />
         ))}
         {/* // ここにまたPolygonなどを置いていく */}
-        <Polygon
-          path={[
-            new google.maps.LatLng(43.080180692594475, 141.34037284277449),
-            new google.maps.LatLng(43.07991425690792, 141.34044258020887),
-            new google.maps.LatLng(43.07994560234294, 141.34059814833174),
-            new google.maps.LatLng(43.08020666961666, 141.3405176820613),
-          ]}
-          options={rectAngleOption}
-        />
+        <MapSettingComponent />
         <InfoWindow position={new google.maps.LatLng(43.0802, 141.34045)}>
           <div>特設ステージ</div>
+        </InfoWindow>
+        <InfoWindow
+          position={
+            new google.maps.LatLng(43.080593077898364, 141.34089096515135)
+          }
+        >
+          <div>特設ステージ2</div>
         </InfoWindow>
       </DefaultGoogleMapComponent>
     </>
