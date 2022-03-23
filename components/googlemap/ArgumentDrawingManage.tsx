@@ -53,7 +53,6 @@ const ArgumentDrawingManage: VFC = () => {
 
   /**
    * DrawingManagerOption: https://developers.google.com/maps/documentation/javascript/reference/drawing?hl=en
-   *
    */
   const drawingManagerOption: google.maps.drawing.DrawingManagerOptions = {
     markerOptions: markerOptions[marker ?? "Down"],
