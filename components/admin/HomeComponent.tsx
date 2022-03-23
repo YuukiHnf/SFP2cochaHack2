@@ -37,6 +37,8 @@ const HomeComponent = () => {
   const [selectedTaskBlockId, setSelectedTaskBlockId] = useState<string>(
     initTaskBlock.id
   );
+
+  // Objectのrendering方式
   const markerJSX = (obj: ObjectLocation) => (
     <Marker
       key={obj.objectId}
