@@ -21,9 +21,14 @@ import ObjectTable from "./ObjectTable";
 const ObjectComponent: VFC = () => {
   const [ptrObjectId, setPtrObjectId] = useState<string>("");
   const teamId = useAppSelector(selectTeamId);
-  const { saveInitObjectLocation } = useObjectHooks({ teamId: teamId });
+  const { saveInitObjectLocation, FilteredObjectParam } = useObjectHooks({
+    teamId: teamId,
+  });
   const objectParams = useAppSelector(selectAdminObjects);
   const objectInit = useAppSelector(selectAdminInitObjects);
+
+  const objectInitFilter = FilteredObjectParam();
+  console.log(objectInitFilter);
 
   const onClickOnMap = (e: google.maps.MapMouseEvent) => {
     if (ptrObjectId === "") {
