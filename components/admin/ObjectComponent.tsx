@@ -112,6 +112,13 @@ const ObjectComponent: VFC = () => {
         >
           <div>特設ステージ2</div>
         </InfoWindow>
+        <InfoWindow
+          position={
+            new google.maps.LatLng(43.08028541379676, 141.33959455686127)
+          }
+        >
+          <div>演者待機場所</div>
+        </InfoWindow>
       </DefaultGoogleMapComponent>
     </>
   );
