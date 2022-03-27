@@ -10,7 +10,13 @@ import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SwipeLeftIcon from "@mui/icons-material/SwipeLeft";
 import { TaskDialog } from "../admin/TaskDialog";
-import { Location } from "../../utils/firebase/FirebaseStore";
+import { Location, TaskType } from "../../utils/firebase/FirebaseStore";
+import { title } from "process";
+import useTaskCRUD from "../../hooks/useTaskCRUD";
+import { useAppSelector } from "../../app/hooks";
+import { selectBasicInfo } from "../../features/basicInfoSlice";
+import TaskViewComponents from "../admin/TaskViewComponents";
+import InputTaskViewComponent from "./InputingTaskViewComponents";
 
 export type MarkerType = "HumanPos" | "Up" | "Down" | "Left" | "Right" | null;
 
@@ -28,14 +34,52 @@ export const marker2Url = {
   Right: rightUrl,
 };
 
-const ArgumentDrawingManage: VFC = () => {
-  // drawing Mode の切り替え
-  const [drawingMode, setDrawingMode] =
+type Props = {
+  taskBlockId: string;
+};
+
+const initInputTask: Omit<TaskType, "id"> = {
+  title: "",
+  kindOf: "HUMAN",
+  taskState: "UNDO",
+  team: "",
+  content: { move: [], explaing: [] },
+  by: "",
+};
+
+const initPtrMarker = {
+  makerType: null,
+  location: { lat: 0, lng: 0 },
+  explaingOrMove: null,
+};
+
+/**
+ * HumanタスクのCRUD管理
+ * @param param0
+ * @returns
+ */
+
+const ArgumentDrawingManage: VFC<Props> = ({ taskBlockId }) => {
+  const basicInfo = useAppSelector(selectBasicInfo);
+
+  // drawing Mode の切り替え（Google Maps 純正のDrawingOption用
+  const [googleDrawingMode, setGoogleDrawingMode] =
     useState<google.maps.drawing.OverlayType.MARKER | null>(null);
-  const [marker, setMarker] = useState<{
-    makerType: MarkerType | null;
-    location: Location | null;
-  } | null>(null);
+  // drawing Mode の切り替え（自作のModeを切り替える
+  const [ptrMarker, setPtrMarker] = useState<{
+    makerType: MarkerType;
+    location: Location;
+    explaingOrMove: "Explaing" | "Move" | null;
+  }>(initPtrMarker);
+  console.log(ptrMarker);
+
+  // 現在のデータ
+  const [inputingTask, setInputingTask] = useState<Omit<TaskType, "id">>({
+    ...initInputTask,
+    team: basicInfo.teamId,
+  });
+  // taskを追加するためのCustom Hooks
+  const { addTaskInBlock } = useTaskCRUD();
 
   // DrawingManagerに付与するiConについて
   const markerOptions = {
@@ -75,34 +119,46 @@ const ArgumentDrawingManage: VFC = () => {
    * DrawingManagerOption: https://developers.google.com/maps/documentation/javascript/reference/drawing?hl=en
    */
   const drawingManagerOption: google.maps.drawing.DrawingManagerOptions = {
-    markerOptions: markerOptions[marker?.makerType ?? "Down"],
+    markerOptions: markerOptions[ptrMarker?.makerType ?? "Down"],
     drawingControlOptions: {
       drawingModes: [google.maps.drawing.OverlayType.MARKER],
       position: google.maps.ControlPosition.TOP_RIGHT,
     },
   };
 
-  // iconを表示されるように取り替える
+  /**
+   * Iconを操作して、Dialogを出すまで
+   */
+  // 選択しているIconを切り替えたとき
   const setIconMode = (_marker: MarkerType) => {
     if (_marker) {
-      setDrawingMode(google.maps.drawing.OverlayType.MARKER);
-      setMarker({ makerType: _marker, location: null });
+      setGoogleDrawingMode(google.maps.drawing.OverlayType.MARKER);
+      setPtrMarker({
+        makerType: _marker,
+        location: { lat: 0, lng: 0 },
+        explaingOrMove: _marker === "HumanPos" ? "Move" : "Explaing",
+      });
     } else {
       //普通の指
-      setDrawingMode(null);
+      setGoogleDrawingMode(null);
     }
   };
 
+  // 選択しているIconの場所を決定したとき
   const setIconLocation = (_maker: google.maps.Marker) => {
     const latlng = _maker.getPosition();
     if (latlng) {
-      setMarker({
-        makerType: marker?.makerType ?? null,
+      setPtrMarker({
+        ...ptrMarker,
+        // makerType: ptrMarker?.makerType ?? null,
         location: { lat: latlng.lat(), lng: latlng.lng() },
       });
     }
   };
 
+  /**
+   * Dialogの中身
+   */
   // dialog用
   const [addOpen, setAddOpen] = useState<boolean>(false);
   const handleClickOpen = () => {
@@ -112,7 +168,7 @@ const ArgumentDrawingManage: VFC = () => {
   const handleClose = async () => {
     // DialogがCloseした時の処理
     setAddOpen(false);
-    setMarker(null);
+    setPtrMarker(initPtrMarker);
   };
 
   const handleDelete = (taskBlockId: string) => {
@@ -120,14 +176,75 @@ const ArgumentDrawingManage: VFC = () => {
     console.log("[未実装]");
   };
 
+  /** 全てをSaveさせに行くとき */
   const handleSave = (title: string) => {
-    if (title.length !== 0) {
-      //createBlockTime(newTime, title); taskの追加をする
-      console.log(
-        `try to save ${marker?.makerType} at ${marker?.location?.lat}, ${marker?.location?.lng} by ${title}`
-      );
+    // TaskをDBに追加する
+    if (inputingTask && ptrMarker.explaingOrMove === "Explaing") {
+      addTaskInBlock(taskBlockId, {
+        ...inputingTask,
+        content: {
+          ...inputingTask.content,
+          explaing: [
+            ...inputingTask.content.explaing,
+            {
+              location: ptrMarker.location,
+              desc: title,
+              iconId: ptrMarker.makerType,
+            },
+          ],
+        },
+      });
+    } else if (inputingTask && ptrMarker.explaingOrMove === "Move") {
+      addTaskInBlock(taskBlockId, {
+        ...inputingTask,
+        content: {
+          ...inputingTask.content,
+          move: [
+            ...inputingTask.content.move,
+            { location: ptrMarker.location, desc: title },
+          ],
+        },
+      });
     }
+    // Inputを全て無効にする
+    setInputingTask(initInputTask);
     handleClose();
+    // Drawingの物を全て無くしたい
+  };
+
+  // explaingなObjectを足すとき...,現在の入力をStateに入れ込んで、Explaing Modeにしながら、入力をまつ
+  const handleExplaing = (title: string) => {
+    if (!ptrMarker) return;
+    if (ptrMarker.explaingOrMove === "Explaing") {
+      //Explaingの入力が行われている場合、
+      setInputingTask({
+        ...inputingTask,
+        content: {
+          ...inputingTask.content,
+          explaing: [
+            ...inputingTask.content.explaing,
+            {
+              location: ptrMarker.location,
+              desc: title,
+              iconId: ptrMarker.makerType,
+            },
+          ],
+        },
+      });
+    } else if (ptrMarker.explaingOrMove === "Move") {
+      // Moveの入力が行われている場合
+      setInputingTask({
+        ...inputingTask,
+        content: {
+          ...inputingTask.content,
+          move: [
+            ...inputingTask.content.move,
+            { location: ptrMarker.location, desc: title },
+          ],
+        },
+      });
+    }
+    setGoogleDrawingMode(null);
   };
 
   return (
@@ -211,21 +328,26 @@ const ArgumentDrawingManage: VFC = () => {
         </Button>
       </Box>
       <DrawingManager
-        drawingMode={drawingMode} //ここを変えれば、切り替えができる！！
+        drawingMode={googleDrawingMode} //ここを変えれば、切り替えができる！！
         onMarkerComplete={
           /**markerが完了したタイミング */ (marker: google.maps.Marker) => {
             setAddOpen(true);
             setIconLocation(marker);
+            // markerを消す
+            marker.setMap(null);
           }
         }
         options={drawingManagerOption}
       />
+      {/* StateでInput中のタスクを表示する */}
+      <InputTaskViewComponent taskdata={inputingTask} />
       {/* Dialog用 */}
       <TaskDialog
         open={addOpen}
         onClose={handleClose}
         onSave={handleSave}
         onDelete={() => handleDelete("")}
+        onExplaing={handleExplaing}
       />
     </>
   );

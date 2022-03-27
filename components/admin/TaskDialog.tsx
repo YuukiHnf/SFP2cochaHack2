@@ -8,10 +8,11 @@ export interface SimpleDialogProps {
   onClose: () => void;
   onSave: (title: string) => void;
   onDelete?: () => void;
+  onExplaing: (title: string) => void;
 }
 
 export const TaskDialog = (props: SimpleDialogProps) => {
-  const { onClose, open, onSave, onDelete } = props;
+  const { onClose, open, onSave, onDelete, onExplaing } = props;
   const [inputTitle, setInputTitle] = useState("");
 
   const handleClose = useCallback(
@@ -37,7 +38,18 @@ export const TaskDialog = (props: SimpleDialogProps) => {
             onChange={(e) => setInputTitle(e.target.value)}
           />
         </ListItem>
-        <DialogTitle>{"About Task"}</DialogTitle>
+        <DialogTitle>{"NEXT"}</DialogTitle>
+        <ListItem alignItems="center">
+          <Button
+            variant="contained"
+            onClick={() => {
+              onExplaing(inputTitle);
+              onClose();
+            }}
+          >
+            {"Explaing"}
+          </Button>
+        </ListItem>
         <ListItem alignItems="center">
           <Button
             variant="contained"

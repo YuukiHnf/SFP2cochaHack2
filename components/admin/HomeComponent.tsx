@@ -70,7 +70,7 @@ const HomeComponent = () => {
         </div>
         <DefaultGoogleMapComponent mapContainerStyle={_mapContainerStyle}>
           {/* 描画用のComponent */}
-          <ArgumentDrawingManage />
+          <ArgumentDrawingManage taskBlockId={selectedTaskBlockId} />
           {/* タスク提示用のComponent */}
           {(taskBlock?.filter((block) => block.id === selectedTaskBlockId)[0] &&
             taskBlock
