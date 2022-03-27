@@ -35,6 +35,7 @@ const initialState: AdminState = {
   taskBlock: [],
   initTaskBlock: {
     id: "",
+    title: "初期位置",
     time: null,
     taskIds: [],
     objectLocations: [],
@@ -88,7 +89,9 @@ export const selectAdminObjects = (state: RootState) =>
   state.adminState.objects;
 export const selectAdminTaskBlock = (state: RootState) =>
   state.adminState.taskBlock;
-export const selectAdminTaskBlockInitObjectLocation = (state: RootState) =>
+export const selectAdminTaskBlockInit = (state: RootState) =>
   state.adminState.initTaskBlock;
+export const selectAdminTimeSche = (state: RootState) =>
+  state.adminState.timeSche;
 // exporting the reducer here, as we need to add this to the store
 export default adminSlice.reducer;
