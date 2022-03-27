@@ -88,7 +88,7 @@ const HomeComponent = () => {
                 icon={{
                   url:
                     objectParams.find((value) => value.id === obj.objectId)
-                      ?.semiIconUrl ?? "",
+                      ?.iconUrl ?? "",
                   origin: new window.google.maps.Point(0, 0),
                   anchor: new window.google.maps.Point(15, 15),
                   scaledSize: new window.google.maps.Size(30, 30),
@@ -102,7 +102,20 @@ const HomeComponent = () => {
           ) : selectedTaskBlockId === "Y7WAfI45mwPBjJhsCQmk" ? (
             taskBlock
               ?.filter((block) => block.id === selectedTaskBlockId)[0]
-              .objectLocations.map(markerJSX)
+              .objectLocations.map((obj) => (
+                <Marker
+                  key={obj.objectId}
+                  position={obj.location}
+                  icon={{
+                    url:
+                      objectParams.find((value) => value.id === obj.objectId)
+                        ?.iconUrl ?? "",
+                    origin: new window.google.maps.Point(0, 0),
+                    anchor: new window.google.maps.Point(15, 15),
+                    scaledSize: new window.google.maps.Size(30, 30),
+                  }}
+                />
+              ))
           ) : selectedTaskBlockId ? ( // select taskBlock
             taskBlock
               ?.filter((block) => block.id === "Y7WAfI45mwPBjJhsCQmk")[0]
