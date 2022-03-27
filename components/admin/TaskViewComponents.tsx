@@ -3,6 +3,7 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { useEffect, useState, VFC } from "react";
 import { db, TaskType } from "../../utils/firebase/FirebaseStore";
 import { marker2Url } from "../googlemap/ArgumentDrawingManage";
+import TaskViewObjectComponents from "./TaskViewObjectComponents";
 
 type Props = {
   taskId: string;
@@ -27,6 +28,8 @@ const TaskViewComponents: VFC<Props> = ({ taskId }) => {
   console.log(taskdata);
 
   if (!taskdata) return <></>;
+  if (taskdata.kindOf === "OBJECT")
+    return <TaskViewObjectComponents taskdata={taskdata} />;
 
   return (
     <>
