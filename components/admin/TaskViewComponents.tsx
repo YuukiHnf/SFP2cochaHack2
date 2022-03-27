@@ -61,7 +61,7 @@ const TaskViewComponents: VFC<Props> = ({ taskId }) => {
       {taskdata.content.explaing.map((ex, index) => (
         <>
           <Marker
-            key={ex.location.lat * ex.location.lng}
+            key={ex.location.lat * ex.location.lng * 0.1}
             position={ex.location}
             icon={{
               url: ex.iconId ? marker2Url[ex.iconId] : "",

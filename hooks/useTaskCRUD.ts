@@ -1,11 +1,5 @@
 import { async } from "@firebase/util";
-import {
-  addDoc,
-  collection,
-  doc,
-  runTransaction,
-  updateDoc,
-} from "firebase/firestore";
+import { addDoc, collection, doc, runTransaction } from "firebase/firestore";
 import { useAppSelector } from "../app/hooks";
 import { selectBasicInfo } from "../features/basicInfoSlice";
 import { db, TaskBlock, TaskType } from "../utils/firebase/FirebaseStore";
