@@ -32,14 +32,21 @@ const ObjectComponent: VFC = () => {
     }
     // 今のObject
     const obj = objectInit.filter((param) => param.objectId === ptrObjectId)[0];
+    const objName = objectParams.filter((param) => param.id === obj.objectId)[0]
+      .objectName;
 
-    saveInitObjectLocation(ptrObjectId, {
-      ...obj,
-      location: {
-        lat: e.latLng?.lat() ?? obj.location.lat,
-        lng: e.latLng?.lng() ?? obj.location.lng,
-      },
-    } as ObjectLocation);
+    saveInitObjectLocation(
+      objectParams
+        .filter((param) => param.objectName === objName)
+        .map((param) => param.id),
+      {
+        ...obj,
+        location: {
+          lat: e.latLng?.lat() ?? obj.location.lat,
+          lng: e.latLng?.lng() ?? obj.location.lng,
+        },
+      } as ObjectLocation
+    );
 
     ptrObjectId !== "" && setPtrObjectId("");
   };

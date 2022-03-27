@@ -67,6 +67,7 @@ export const adminSlice = createSlice({
           iconUrl: obj.iconUrl,
           weight: obj.weight ?? undefined,
           semiIconUrl: obj.semiIconUrl,
+          createAt: obj.createAt,
         })),
         initObjectLocations: action.payload.map(
           (obj) =>
