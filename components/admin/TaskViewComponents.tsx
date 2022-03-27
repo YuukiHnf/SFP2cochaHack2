@@ -28,9 +28,15 @@ const TaskViewComponents: VFC<Props> = ({ taskId }) => {
   console.log(taskdata);
 
   if (!taskdata) return <></>;
+  /**
+   * Objectタスクの表示
+   */
   if (taskdata.kindOf === "OBJECT")
     return <TaskViewObjectComponents taskdata={taskdata} />;
 
+  /**
+   * Humanタスクの表示
+   */
   return (
     <>
       {/* moveの表示を出力する */}
