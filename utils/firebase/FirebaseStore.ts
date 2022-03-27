@@ -63,11 +63,12 @@ export type PLACE = {
 
 export type OBJECTPARAM = {
   id: string;
-  name: string;
-  num: number;
+  objectName: string;
+  //num: number;
   iconUrl: string;
   weight?: number;
   semiIconUrl: string;
+  initLocation: Location;
 };
 
 export type ObjectLocation = {
@@ -80,7 +81,7 @@ export type TaskBlock = {
   title: string;
   time: Timestamp | null;
   taskIds: string[];
-  objectLocations: ObjectLocation[];
+  //objectLocations: ObjectLocation[];
   isInit?: boolean;
 };
 

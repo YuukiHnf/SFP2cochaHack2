@@ -3,7 +3,12 @@
  */
 
 import { collection, doc, query, updateDoc, where } from "firebase/firestore";
-import { db, PLACE, TaskBlock } from "../utils/firebase/FirebaseStore";
+import {
+  db,
+  ObjectLocation,
+  PLACE,
+  TaskBlock,
+} from "../utils/firebase/FirebaseStore";
 
 type Props = {
   teamId: string;
@@ -12,19 +17,21 @@ type Props = {
 //const path = "place";
 
 const useObjectHooks = ({ teamId }: Props) => {
-  const saveTaskBlock = async (value: TaskBlock) => {
+  // 最初の位置をUpdateする
+  const saveInitObjectLocation = async (
+    objectId: string,
+    value: ObjectLocation
+  ) => {
     const teamRef = doc(db, "team", teamId);
-    const blockRef = doc(collection(teamRef, "taskBlock"), value.id);
-    console.log("useObjectHooks", value);
+    const objectRef = doc(collection(teamRef, "objects"), objectId);
+    //console.log("useObjectHooks", value);
 
-    await updateDoc(blockRef, {
-      time: value.time,
-      taskIds: value.taskIds,
-      objectLocations: value.objectLocations,
+    await updateDoc(objectRef, {
+      initLocation: value.location,
     });
   };
 
-  return { saveTaskBlock };
+  return { saveInitObjectLocation };
 };
 
 export default useObjectHooks;

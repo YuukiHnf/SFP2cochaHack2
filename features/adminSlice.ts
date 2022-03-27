@@ -3,6 +3,7 @@ import { serverTimestamp, Timestamp } from "firebase/firestore";
 import { RootState } from "../app/store";
 import {
   DateSchedule,
+  ObjectLocation,
   OBJECTPARAM,
   PLACE,
   TaskBlock,
@@ -15,8 +16,8 @@ export type AdminState = {
   place: PLACE;
   timeSche: DateSchedule;
   taskBlock?: TaskBlock[];
-  initTaskBlock: TaskBlock;
-  objects: OBJECTPARAM[]; //後でかえる
+  initObjectLocations: ObjectLocation[];
+  objects: Omit<OBJECTPARAM, "initLocation">[];
 };
 
 // Stateの初期値
@@ -33,13 +34,7 @@ const initialState: AdminState = {
   place: initMapState,
   timeSche: { start: null, end: null },
   taskBlock: [],
-  initTaskBlock: {
-    id: "",
-    title: "初期位置",
-    time: null,
-    taskIds: [],
-    objectLocations: [],
-  },
+  initObjectLocations: [],
   objects: [],
 };
 
@@ -52,28 +47,37 @@ export const adminSlice = createSlice({
     adminSetter: (
       state,
       action: PayloadAction<
-        Omit<AdminState, "taskBlock" | "initTaskBlock" | "objects">
+        Omit<AdminState, "taskBlock" | "initObjectLocations" | "objects">
       >
     ) => {
       //console.log(action.payload);
       return {
         ...action.payload,
         taskBlock: state.taskBlock,
-        initTaskBlock: state.initTaskBlock,
+        initObjectLocations: state.initObjectLocations,
         objects: state.objects,
       };
     },
     adminObjectSetter: (state, action: PayloadAction<OBJECTPARAM[]>) => {
       return {
         ...state,
-        objects: action.payload,
+        objects: action.payload.map((obj) => ({
+          id: obj.id,
+          objectName: obj.objectName,
+          iconUrl: obj.iconUrl,
+          weight: obj.weight ?? undefined,
+          semiIconUrl: obj.semiIconUrl,
+        })),
+        initObjectLocations: action.payload.map(
+          (obj) =>
+            ({ location: obj.initLocation, objectId: obj.id } as ObjectLocation)
+        ),
       };
     },
     adminTaskSetter: (state, action: PayloadAction<TaskBlock[]>) => {
       return {
         ...state,
-        taskBlock: action.payload.filter((block) => !block.isInit),
-        initTaskBlock: action.payload.filter((block) => block.isInit)[0],
+        taskBlock: action.payload, //action.payload.filter((block) => !block.isInit),
       };
     },
   },
@@ -89,8 +93,8 @@ export const selectAdminObjects = (state: RootState) =>
   state.adminState.objects;
 export const selectAdminTaskBlock = (state: RootState) =>
   state.adminState.taskBlock;
-export const selectAdminTaskBlockInit = (state: RootState) =>
-  state.adminState.initTaskBlock;
+export const selectAdminInitObjects = (state: RootState) =>
+  state.adminState.initObjectLocations;
 export const selectAdminTimeSche = (state: RootState) =>
   state.adminState.timeSche;
 // exporting the reducer here, as we need to add this to the store

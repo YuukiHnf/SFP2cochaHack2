@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction, VFC } from "react";
 import { OBJECTPARAM } from "../../utils/firebase/FirebaseStore";
 
 type Props = {
-  objectParams: OBJECTPARAM[];
+  objectParams: Omit<OBJECTPARAM, "initLocation">[];
   setPtrObjectId: Dispatch<SetStateAction<any>>;
 };
 
@@ -36,7 +36,7 @@ const ObjectTable: VFC<Props> = ({ objectParams, setPtrObjectId }) => {
         return <img src={params.row.iconUrl} width={16} height={16} />;
       },
     },
-    { field: "name", headerName: "Name", width: 130 },
+    { field: "objectName", headerName: "Name", width: 130 },
     {
       field: "num",
       headerName: "Num",

@@ -9,7 +9,7 @@ import { useState, VFC } from "react";
 import { useAppSelector } from "../../app/hooks";
 import {
   selectAdminObjects,
-  selectAdminTaskBlockInit,
+  selectAdminInitObjects,
 } from "../../features/adminSlice";
 import { selectTeamId } from "../../features/basicInfoSlice";
 import useObjectHooks from "../../hooks/useObjectHooks";
@@ -21,9 +21,9 @@ import ObjectTable from "./ObjectTable";
 const ObjectComponent: VFC = () => {
   const [ptrObjectId, setPtrObjectId] = useState<string>("");
   const teamId = useAppSelector(selectTeamId);
-  const { saveTaskBlock } = useObjectHooks({ teamId: teamId });
+  const { saveInitObjectLocation } = useObjectHooks({ teamId: teamId });
   const objectParams = useAppSelector(selectAdminObjects);
-  const objectInit = useAppSelector(selectAdminTaskBlockInit);
+  const objectInit = useAppSelector(selectAdminInitObjects);
 
   const onClickOnMap = (e: google.maps.MapMouseEvent) => {
     if (ptrObjectId === "") {
@@ -31,24 +31,15 @@ const ObjectComponent: VFC = () => {
       return;
     }
     // 今のObject
-    const obj = objectInit.objectLocations.filter(
-      (param) => param.objectId === ptrObjectId
-    )[0];
+    const obj = objectInit.filter((param) => param.objectId === ptrObjectId)[0];
 
-    saveTaskBlock({
-      ...objectInit,
-      objectLocations: objectInit.objectLocations.map((_obj) => {
-        return _obj.objectId === obj.objectId
-          ? ({
-              ..._obj,
-              location: {
-                lat: e.latLng?.lat() ?? _obj.location.lat,
-                lng: e.latLng?.lng() ?? _obj.location.lng,
-              },
-            } as ObjectLocation)
-          : _obj;
-      }),
-    });
+    saveInitObjectLocation(ptrObjectId, {
+      ...obj,
+      location: {
+        lat: e.latLng?.lat() ?? obj.location.lat,
+        lng: e.latLng?.lng() ?? obj.location.lng,
+      },
+    } as ObjectLocation);
 
     ptrObjectId !== "" && setPtrObjectId("");
   };
@@ -83,7 +74,7 @@ const ObjectComponent: VFC = () => {
         }}
       >
         <DrawingManager drawingMode={google.maps.drawing.OverlayType.MARKER} />
-        {objectInit?.objectLocations.map((obj) => (
+        {objectInit.map((obj) => (
           <Marker
             key={obj.objectId}
             position={obj.location}

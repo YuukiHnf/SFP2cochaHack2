@@ -4,7 +4,7 @@ import { useAppSelector } from "../../app/hooks";
 import {
   selectAdminObjects,
   selectAdminTaskBlock,
-  selectAdminTaskBlockInit,
+  selectAdminInitObjects,
 } from "../../features/adminSlice";
 import { ObjectLocation, TaskBlock } from "../../utils/firebase/FirebaseStore";
 import ArgumentDrawingManage from "../googlemap/ArgumentDrawingManage";
@@ -35,12 +35,10 @@ const rectAngleOption = {
 };
 
 const HomeComponent = () => {
-  const initTaskBlock = useAppSelector(selectAdminTaskBlockInit);
+  const initObjectLocations = useAppSelector(selectAdminInitObjects);
   const taskBlock = useAppSelector(selectAdminTaskBlock);
   const objectParams = useAppSelector(selectAdminObjects);
-  const [selectedTaskBlockId, setSelectedTaskBlockId] = useState<string>(
-    initTaskBlock.id
-  );
+  const [selectedTaskBlockId, setSelectedTaskBlockId] = useState<string>("");
 
   // Objectのrendering方式
   const markerJSX = (obj: ObjectLocation) => (
@@ -72,6 +70,7 @@ const HomeComponent = () => {
         <DefaultGoogleMapComponent mapContainerStyle={_mapContainerStyle}>
           {/* 描画用のComponent */}
           <ArgumentDrawingManage taskBlockId={selectedTaskBlockId} />
+
           {/* タスク提示用のComponent */}
           {(taskBlock?.filter(
             (block) => block.id === selectedTaskBlockId
@@ -85,61 +84,14 @@ const HomeComponent = () => {
               taskBlockId={selectedTaskBlockId}
             />
           )) ?? <></>}
-          {/* この時のObject用の描画ツール */}
-          {/* 設営時 */}
-          {selectedTaskBlockId === "Y7WAfI45mwPBjJhsCQmk" &&
-            initTaskBlock.objectLocations.map((obj) => (
-              <Marker
-                key={obj.objectId}
-                position={obj.location}
-                icon={{
-                  url:
-                    objectParams.find((value) => value.id === obj.objectId)
-                      ?.iconUrl ?? "",
-                  origin: new window.google.maps.Point(0, 0),
-                  anchor: new window.google.maps.Point(15, 15),
-                  scaledSize: new window.google.maps.Size(30, 30),
-                }}
-              />
-            ))}
 
+          {/* この時のObject用の描画ツール */}
           {/* Objectを指定した時間ごとに描画する */}
-          {selectedTaskBlockId === initTaskBlock.id ? ( // if init
-            initTaskBlock.objectLocations.map(markerJSX)
-          ) : selectedTaskBlockId === "Y7WAfI45mwPBjJhsCQmk" ? (
-            taskBlock
-              ?.filter((block) => block.id === selectedTaskBlockId)[0]
-              .objectLocations.map((obj) => (
-                <Marker
-                  key={obj.objectId}
-                  position={obj.location}
-                  icon={{
-                    url:
-                      objectParams.find((value) => value.id === obj.objectId)
-                        ?.iconUrl ?? "",
-                    origin: new window.google.maps.Point(0, 0),
-                    anchor: new window.google.maps.Point(15, 15),
-                    scaledSize: new window.google.maps.Size(30, 30),
-                  }}
-                />
-              ))
+          {selectedTaskBlockId ===
+          taskBlock?.filter((block) => block.isInit ?? false)[0].id ? ( // if init
+            initObjectLocations.map(markerJSX)
           ) : selectedTaskBlockId ? ( // select taskBlock
-            taskBlock
-              ?.filter((block) => block.id === "Y7WAfI45mwPBjJhsCQmk")[0]
-              .objectLocations.map((obj) => (
-                <Marker
-                  key={obj.objectId}
-                  position={obj.location}
-                  icon={{
-                    url:
-                      objectParams.find((value) => value.id === obj.objectId)
-                        ?.semiIconUrl ?? "",
-                    origin: new window.google.maps.Point(0, 0),
-                    anchor: new window.google.maps.Point(15, 15),
-                    scaledSize: new window.google.maps.Size(30, 30),
-                  }}
-                />
-              ))
+            <></> //それぞれのObjectを表示させる場所
           ) : (
             <></>
           )}

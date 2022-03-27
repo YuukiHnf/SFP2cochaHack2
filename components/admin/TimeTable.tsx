@@ -9,7 +9,7 @@ import React, { useEffect, useState, VFC } from "react";
 import { useAppSelector } from "../../app/hooks";
 import {
   selectAdminTaskBlock,
-  selectAdminTaskBlockInit,
+  selectAdminInitObjects,
   selectAdminTimeSche,
 } from "../../features/adminSlice";
 import { TaskBlock } from "../../utils/firebase/FirebaseStore";
@@ -29,7 +29,7 @@ interface Props {
 
 const TimeTable: VFC<Props> = ({ setter }) => {
   const basicInfo = useAppSelector(selectBasicInfo);
-  const initTaskBlock = useAppSelector(selectAdminTaskBlockInit);
+  //const initObjectLocations = useAppSelector(selectAdminInitObjects);
   const taskBlock = useAppSelector(selectAdminTaskBlock);
   const timeSche = useAppSelector(selectAdminTimeSche);
   const [columns, setColumns] = useState<GridColumns>([]);
@@ -99,7 +99,7 @@ const TimeTable: VFC<Props> = ({ setter }) => {
         sortable: false,
       },
     ]);
-  }, [initTaskBlock, timeSche]);
+  }, [timeSche]);
 
   return (
     <>
@@ -107,7 +107,7 @@ const TimeTable: VFC<Props> = ({ setter }) => {
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DataGrid
             columns={columns}
-            rows={[initTaskBlock].concat(taskBlock ?? [])}
+            rows={taskBlock ?? []} //{[initObjectLocations].concat(taskBlock ?? [])}
             onSelectionModelChange={(selectionModel: GridSelectionModel) => {
               //選択された時
               //console.log(selectionModel);
