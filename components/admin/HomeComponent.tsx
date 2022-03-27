@@ -82,6 +82,7 @@ const HomeComponent = () => {
                   (block) => block.id === selectedTaskBlockId
                 )[0].taskIds
               }
+              taskBlockId={selectedTaskBlockId}
             />
           )) ?? <></>}
           {/* この時のObject用の描画ツール */}

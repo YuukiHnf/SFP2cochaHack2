@@ -4,6 +4,7 @@ import TaskViewComponents from "./TaskViewComponents";
 
 type Props = {
   taskIds: string[];
+  taskBlockId: string;
 };
 
 /**
@@ -11,7 +12,7 @@ type Props = {
  * @returns
  */
 
-const TaskViewForTaskIdsComponents: VFC<Props> = ({ taskIds }) => {
+const TaskViewForTaskIdsComponents: VFC<Props> = ({ taskIds, taskBlockId }) => {
   const [selectedTaskId, setSelectedTaskId] = useState<string>("");
 
   const hanldeSelectedTask = (_taskId: string) => {
@@ -21,7 +22,12 @@ const TaskViewForTaskIdsComponents: VFC<Props> = ({ taskIds }) => {
     <>
       {taskIds?.map((_id) =>
         selectedTaskId === _id ? ( //現在編集中のtask
-          <EditingTaskViewComponent key={_id} taskId={_id} />
+          <EditingTaskViewComponent
+            key={_id}
+            taskId={_id}
+            onClickSelectedTaskId={hanldeSelectedTask}
+            taskBlockId={taskBlockId}
+          />
         ) : (
           //それ以外
           <TaskViewComponents
