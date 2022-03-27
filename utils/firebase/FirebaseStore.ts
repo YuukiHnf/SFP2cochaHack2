@@ -100,6 +100,7 @@ export type TaskContentType = {
 
 export type TaskType = {
   id: string;
+  kindOf: "HUMAN" | "OBJECT";
   title: string;
   taskState: TaskProgressState;
   team: string;

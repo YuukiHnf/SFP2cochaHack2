@@ -11,6 +11,7 @@ import ArgumentDrawingManage from "../googlemap/ArgumentDrawingManage";
 import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
 import MapSettingComponent from "../googlemap/MapSettingComponent";
 import TaskViewComponents from "./TaskViewComponents";
+import TaskViewForTaskIdsComponents from "./TaskViewForTaskIdsComponents";
 import TimeTable from "./TimeTable";
 
 const _mapContainerStyle = {
@@ -70,14 +71,20 @@ const HomeComponent = () => {
         </div>
         <DefaultGoogleMapComponent mapContainerStyle={_mapContainerStyle}>
           {/* 描画用のComponent */}
-          <ArgumentDrawingManage />
+          <ArgumentDrawingManage taskBlockId={selectedTaskBlockId} />
           {/* タスク提示用のComponent */}
-          {(taskBlock?.filter((block) => block.id === selectedTaskBlockId)[0] &&
-            taskBlock
-              ?.filter((block) => block.id === selectedTaskBlockId)[0]
-              .taskIds?.map((_id) => (
-                <TaskViewComponents key={_id} taskId={_id} />
-              ))) ?? <></>}
+          {(taskBlock?.filter(
+            (block) => block.id === selectedTaskBlockId
+          )[0] && (
+            <TaskViewForTaskIdsComponents
+              taskIds={
+                taskBlock?.filter(
+                  (block) => block.id === selectedTaskBlockId
+                )[0].taskIds
+              }
+              taskBlockId={selectedTaskBlockId}
+            />
+          )) ?? <></>}
           {/* この時のObject用の描画ツール */}
           {/* 設営時 */}
           {selectedTaskBlockId === "Y7WAfI45mwPBjJhsCQmk" &&
