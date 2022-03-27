@@ -7,11 +7,18 @@ import TaskViewObjectComponents from "./TaskViewObjectComponents";
 
 type Props = {
   taskId: string;
+  onClickAnyObject: (_id: string) => void;
 };
 
-const TaskViewComponents: VFC<Props> = ({ taskId }) => {
+/**
+ * 指定のタスクに対する表示をサポートするやつ
+ * @param param0
+ * @returns
+ */
+
+const TaskViewComponents: VFC<Props> = ({ taskId, onClickAnyObject }) => {
   const [taskdata, setTaskdata] = useState<TaskType>();
-  const [selectedExplainIndex, setSelectedExplainIndex] = useState<number>(-1);
+  const [selectedExplainId, setSelectedExplainId] = useState<number>(-1);
   useEffect(() => {
     const unSub = onSnapshot(doc(db, "tasks", taskId), (doc) => {
       //console.log(doc.data());
@@ -51,17 +58,20 @@ const TaskViewComponents: VFC<Props> = ({ taskId }) => {
               anchor: new window.google.maps.Point(15, 15),
               scaledSize: new window.google.maps.Size(30, 30),
             }}
+            onClick={() => onClickAnyObject(taskId)}
           />
-          <InfoWindow position={mv.location}>
-            <div>{mv.desc}</div>
-          </InfoWindow>
+          {false && (
+            <InfoWindow position={mv.location}>
+              <div>{mv.desc}</div>
+            </InfoWindow>
+          )}
         </>
       ))}
       {/* explaingの表示を出力する */}
       {taskdata.content.explaing.map((ex, index) => (
         <>
           <Marker
-            key={ex.location.lat * ex.location.lng}
+            key={ex.location.lat * ex.location.lng * 0.1}
             position={ex.location}
             icon={{
               url: ex.iconId ? marker2Url[ex.iconId] : "",
@@ -69,12 +79,18 @@ const TaskViewComponents: VFC<Props> = ({ taskId }) => {
               anchor: new window.google.maps.Point(15, 15),
               scaledSize: new window.google.maps.Size(30, 30),
             }}
-            onClick={() => setSelectedExplainIndex(index)}
+            onClick={() => {
+              //setSelectedExplainId(index);
+              onClickAnyObject(taskId);
+            }}
           />
-          {selectedExplainIndex === index && (
+          {selectedExplainId === index && (
             <InfoWindow
               position={ex.location}
-              onCloseClick={() => setSelectedExplainIndex(-1)}
+              onCloseClick={() => {
+                setSelectedExplainId(-1);
+                onClickAnyObject("");
+              }}
             >
               <div>{ex.desc}</div>
             </InfoWindow>
