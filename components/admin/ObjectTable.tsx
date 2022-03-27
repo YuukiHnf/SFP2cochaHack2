@@ -26,7 +26,6 @@ const ObjectTable: VFC<Props> = ({ objectParams, setPtrObjectId }) => {
         </Button>
       ),
     },
-    { field: "id", headerName: "ID", width: 70 },
     {
       field: "image",
       headerName: "Image",
@@ -83,10 +82,23 @@ const ObjectTable: VFC<Props> = ({ objectParams, setPtrObjectId }) => {
       ),
     },
   ];
+  var counts = {} as any;
+
+  for (var i = 0; i < objectParams.length; i++) {
+    var key = objectParams[i].objectName;
+    console.log(key);
+    counts[key] = counts[key] ? counts[key] + 1 : 1;
+  }
+
+  console.log(counts);
+
   return (
     <div style={{ height: 280, width: "80%", margin: "0 auto" }}>
       <DataGrid
-        rows={objectParams}
+        rows={objectParams.map((param) => ({
+          ...param,
+          num: counts[param.objectName] ?? 0,
+        }))}
         columns={columns}
         pageSize={3}
         rowsPerPageOptions={[5]}

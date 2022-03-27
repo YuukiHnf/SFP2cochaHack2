@@ -87,7 +87,7 @@ const HomeComponent = () => {
 
           {/* この時のObject用の描画ツール */}
           {/* Objectを指定した時間ごとに描画する */}
-          {selectedTaskBlockId ===
+          {selectedTaskBlockId !== "" &&
           taskBlock?.filter((block) => block.isInit ?? false)[0].id ? ( // if init
             initObjectLocations.map(markerJSX)
           ) : selectedTaskBlockId ? ( // select taskBlock
