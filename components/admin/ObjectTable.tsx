@@ -17,9 +17,10 @@ type Props = {
 
 const ObjectTable: VFC<Props> = ({ objectParams, setPtrObjectId }) => {
   const basicInfo = useAppSelector(selectBasicInfo);
-  const { incrementObjectNum, decrementObjectNum } = useObjectHooks({
-    teamId: basicInfo.teamId,
-  });
+  const { incrementObjectNum, decrementObjectNum, FilteredObjectParam } =
+    useObjectHooks({
+      teamId: basicInfo.teamId,
+    });
   const columns: GridColDef[] = [
     {
       field: "selectedButton",
@@ -130,17 +131,18 @@ const ObjectTable: VFC<Props> = ({ objectParams, setPtrObjectId }) => {
   var counts = {} as any;
   for (var i = 0; i < objectParams.length; i++) {
     var key = objectParams[i].objectName;
-    console.log(key);
+    //console.log(key);
     counts[key] = counts[key] ? counts[key] + 1 : 1;
   }
 
   // 重複フィルタ
-  const objectParamsFilter = objectParams.filter(
-    (element, index, self) =>
-      self.findIndex(
-        (dataElement) => dataElement.objectName === element.objectName
-      ) === index
-  );
+  const objectParamsFilter = FilteredObjectParam();
+  // const objectParamsFilter = objectParams.filter(
+  //   (element, index, self) =>
+  //     self.findIndex(
+  //       (dataElement) => dataElement.objectName === element.objectName
+  //     ) === index
+  // );
 
   return (
     <div style={{ height: 280, width: "80%", margin: "0 auto" }}>

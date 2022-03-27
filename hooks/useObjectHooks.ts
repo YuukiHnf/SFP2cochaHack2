@@ -57,6 +57,16 @@ const useObjectHooks = ({ teamId }: Props) => {
     await batch.commit();
   };
 
+  // objectの重複なし情報
+  const FilteredObjectParam = () => {
+    return globalObjects.filter(
+      (element, index, self) =>
+        self.findIndex(
+          (dataElement) => dataElement.objectName === element.objectName
+        ) === index
+    );
+  };
+
   // objectを一つ足す
   const incrementObjectNum = async (
     objectValue: Omit<OBJECTPARAM, "createAt" | "initLocation">
@@ -91,7 +101,12 @@ const useObjectHooks = ({ teamId }: Props) => {
     );
   };
 
-  return { saveInitObjectLocation, incrementObjectNum, decrementObjectNum };
+  return {
+    saveInitObjectLocation,
+    incrementObjectNum,
+    decrementObjectNum,
+    FilteredObjectParam,
+  };
 };
 
 export default useObjectHooks;
