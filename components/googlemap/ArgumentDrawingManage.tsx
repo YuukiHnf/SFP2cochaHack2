@@ -10,6 +10,7 @@ import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SwipeLeftIcon from "@mui/icons-material/SwipeLeft";
 import { TaskDialog } from "../admin/TaskDialog";
+import { Location } from "../../utils/firebase/FirebaseStore";
 
 export type MarkerType = "HumanPos" | "Up" | "Down" | "Left" | "Right" | null;
 
@@ -31,7 +32,11 @@ const ArgumentDrawingManage: VFC = () => {
   // drawing Mode の切り替え
   const [drawingMode, setDrawingMode] =
     useState<google.maps.drawing.OverlayType.MARKER | null>(null);
-  const [marker, setMarker] = useState<MarkerType>(null);
+  const [marker, setMarker] = useState<{
+    makerType: MarkerType | null;
+    location: Location | null;
+  } | null>(null);
+
   // DrawingManagerに付与するiConについて
   const markerOptions = {
     HumanPos: {
@@ -70,7 +75,7 @@ const ArgumentDrawingManage: VFC = () => {
    * DrawingManagerOption: https://developers.google.com/maps/documentation/javascript/reference/drawing?hl=en
    */
   const drawingManagerOption: google.maps.drawing.DrawingManagerOptions = {
-    markerOptions: markerOptions[marker ?? "Down"],
+    markerOptions: markerOptions[marker?.makerType ?? "Down"],
     drawingControlOptions: {
       drawingModes: [google.maps.drawing.OverlayType.MARKER],
       position: google.maps.ControlPosition.TOP_RIGHT,
@@ -78,13 +83,23 @@ const ArgumentDrawingManage: VFC = () => {
   };
 
   // iconを表示されるように取り替える
-  const setIconMode = (marker: MarkerType) => {
-    if (marker) {
+  const setIconMode = (_marker: MarkerType) => {
+    if (_marker) {
       setDrawingMode(google.maps.drawing.OverlayType.MARKER);
-      setMarker(marker);
+      setMarker({ makerType: _marker, location: null });
     } else {
       //普通の指
       setDrawingMode(null);
+    }
+  };
+
+  const setIconLocation = (_maker: google.maps.Marker) => {
+    const latlng = _maker.getPosition();
+    if (latlng) {
+      setMarker({
+        makerType: marker?.makerType ?? null,
+        location: { lat: latlng.lat(), lng: latlng.lng() },
+      });
     }
   };
 
@@ -97,6 +112,7 @@ const ArgumentDrawingManage: VFC = () => {
   const handleClose = async () => {
     // DialogがCloseした時の処理
     setAddOpen(false);
+    setMarker(null);
   };
 
   const handleDelete = (taskBlockId: string) => {
@@ -107,6 +123,9 @@ const ArgumentDrawingManage: VFC = () => {
   const handleSave = (title: string) => {
     if (title.length !== 0) {
       //createBlockTime(newTime, title); taskの追加をする
+      console.log(
+        `try to save ${marker?.makerType} at ${marker?.location?.lat}, ${marker?.location?.lng} by ${title}`
+      );
     }
     handleClose();
   };
@@ -194,8 +213,9 @@ const ArgumentDrawingManage: VFC = () => {
       <DrawingManager
         drawingMode={drawingMode} //ここを変えれば、切り替えができる！！
         onMarkerComplete={
-          /**markerが完了したタイミング */ () => {
+          /**markerが完了したタイミング */ (marker: google.maps.Marker) => {
             setAddOpen(true);
+            setIconLocation(marker);
           }
         }
         options={drawingManagerOption}
