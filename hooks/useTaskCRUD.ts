@@ -1,4 +1,3 @@
-import { async } from "@firebase/util";
 import { addDoc, collection, doc, runTransaction } from "firebase/firestore";
 import { useAppSelector } from "../app/hooks";
 import { selectBasicInfo } from "../features/basicInfoSlice";
@@ -42,7 +41,30 @@ const useTaskCRUD = () => {
     }
   };
 
-  return { addTaskInBlock };
+  const deleteTaskInBlock = (taskBlockId: string, taskId: string) => {};
+
+  // task内の一部説明やMoveを編集する
+  const editTaskExplaingOrMoveInBlockId = (
+    taskBlockId: string,
+    taskId: string,
+    moveOrExplaing: "Move" | "Explaing",
+    targetIndex: number
+  ) => {};
+
+  // task内の一部説明やMoveを削除する
+  const deleteTaskExplaingOrMoveInBlockId = (
+    taskBlockId: string,
+    taskId: string,
+    moveOrExplaing: "Move" | "Explaing",
+    targetIndex: number
+  ) => {};
+
+  return {
+    addTaskInBlock,
+    deleteTaskInBlock,
+    editTaskExplaingOrMoveInBlockId,
+    deleteTaskExplaingOrMoveInBlockId,
+  };
 };
 
 export default useTaskCRUD;
