@@ -17,7 +17,9 @@ type Props = {
 
 const ObjectTable: VFC<Props> = ({ objectParams, setPtrObjectId }) => {
   const basicInfo = useAppSelector(selectBasicInfo);
-  const { incrementObjectNum } = useObjectHooks({ teamId: basicInfo.teamId });
+  const { incrementObjectNum, decrementObjectNum } = useObjectHooks({
+    teamId: basicInfo.teamId,
+  });
   const columns: GridColDef[] = [
     {
       field: "selectedButton",
@@ -73,7 +75,7 @@ const ObjectTable: VFC<Props> = ({ objectParams, setPtrObjectId }) => {
                   component={KeyboardArrowDownIcon}
                   onClick={() => {
                     const { createAt, num, ..._row } = params.row;
-                    console.log("Down", _row);
+                    decrementObjectNum(_row);
                   }}
                 />
               </div>
@@ -139,9 +141,6 @@ const ObjectTable: VFC<Props> = ({ objectParams, setPtrObjectId }) => {
         (dataElement) => dataElement.objectName === element.objectName
       ) === index
   );
-
-  console.log(counts);
-  console.log(objectParamsFilter);
 
   return (
     <div style={{ height: 280, width: "80%", margin: "0 auto" }}>

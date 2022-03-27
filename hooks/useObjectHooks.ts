@@ -4,6 +4,7 @@
 
 import {
   collection,
+  deleteDoc,
   doc,
   query,
   serverTimestamp,
@@ -33,6 +34,7 @@ type Props = {
 
 const useObjectHooks = ({ teamId }: Props) => {
   const initObjectLocations = useAppSelector(selectAdminInitObjects);
+  const globalObjects = useAppSelector(selectAdminObjects);
   // 最初の位置をUpdateする
   const saveInitObjectLocation = async (
     objectIds: string[],
@@ -75,9 +77,21 @@ const useObjectHooks = ({ teamId }: Props) => {
   };
 
   // objectを１つ減らす
-  const decrementObjectNum = (objcetName: string, objectId: string) => {};
+  const decrementObjectNum = async (
+    objectValue: Omit<OBJECTPARAM, "createAt" | "initLocation">
+  ) => {
+    const teamRef = doc(db, "team", teamId);
+    await deleteDoc(
+      doc(
+        collection(teamRef, "objects"),
+        globalObjects
+          .filter((obj) => obj.objectName === objectValue.objectName)
+          .slice(-1)[0].id
+      )
+    );
+  };
 
-  return { saveInitObjectLocation, incrementObjectNum };
+  return { saveInitObjectLocation, incrementObjectNum, decrementObjectNum };
 };
 
 export default useObjectHooks;
