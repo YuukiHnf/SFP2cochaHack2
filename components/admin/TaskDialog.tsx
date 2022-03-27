@@ -41,7 +41,8 @@ export const TaskDialog = (props: SimpleDialogProps) => {
         <DialogTitle>{"NEXT"}</DialogTitle>
         <ListItem alignItems="center">
           <Button
-            variant="contained"
+            variant="outlined"
+            color="success"
             onClick={() => {
               onExplaing(inputTitle);
               onClose();

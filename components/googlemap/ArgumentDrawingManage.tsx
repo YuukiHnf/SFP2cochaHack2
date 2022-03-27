@@ -11,11 +11,9 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SwipeLeftIcon from "@mui/icons-material/SwipeLeft";
 import { TaskDialog } from "../admin/TaskDialog";
 import { Location, TaskType } from "../../utils/firebase/FirebaseStore";
-import { title } from "process";
 import useTaskCRUD from "../../hooks/useTaskCRUD";
 import { useAppSelector } from "../../app/hooks";
 import { selectBasicInfo } from "../../features/basicInfoSlice";
-import TaskViewComponents from "../admin/TaskViewComponents";
 import InputTaskViewComponent from "./InputingTaskViewComponents";
 
 export type MarkerType = "HumanPos" | "Up" | "Down" | "Left" | "Right" | null;
