@@ -61,6 +61,11 @@ export type PLACE = {
   heading?: number; // 設定できるようになったら入れる
 };
 
+export type ObjectTimeLocations = {
+  timeStamp: Timestamp;
+  location: Location;
+};
+
 export type OBJECTPARAM = {
   id: string;
   objectName: string;
@@ -70,6 +75,7 @@ export type OBJECTPARAM = {
   semiIconUrl: string;
   initLocation: Location;
   createAt: Timestamp;
+  objectTimeLocations?: ObjectTimeLocations[];
 };
 
 export type ObjectLocation = {

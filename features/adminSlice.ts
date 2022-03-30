@@ -5,6 +5,7 @@ import {
   DateSchedule,
   ObjectLocation,
   OBJECTPARAM,
+  ObjectTimeLocations,
   PLACE,
   TaskBlock,
 } from "../utils/firebase/FirebaseStore";
@@ -68,10 +69,34 @@ export const adminSlice = createSlice({
           weight: obj.weight ?? undefined,
           semiIconUrl: obj.semiIconUrl,
           createAt: obj.createAt,
+          objectTimeLocations:
+            state.objects.filter((_obj) => _obj.id === obj.id)[0]
+              ?.objectTimeLocations ?? [],
         })),
         initObjectLocations: action.payload.map(
           (obj) =>
             ({ location: obj.initLocation, objectId: obj.id } as ObjectLocation)
+        ),
+      };
+    },
+    adminObjectLocationsSetter: (
+      state,
+      action: PayloadAction<{
+        timeLocation: ObjectTimeLocations[];
+        ObjectId: string;
+      }>
+    ) => {
+      const { timeLocation, ObjectId } = action.payload;
+      console.log(timeLocation);
+      return {
+        ...state,
+        objects: state.objects.map((obj) =>
+          obj.id !== ObjectId
+            ? obj
+            : {
+                ...obj,
+                objectTimeLocations: timeLocation,
+              }
         ),
       };
     },
@@ -84,8 +109,12 @@ export const adminSlice = createSlice({
   },
 });
 
-export const { adminSetter, adminObjectSetter, adminTaskSetter } =
-  adminSlice.actions;
+export const {
+  adminSetter,
+  adminObjectSetter,
+  adminObjectLocationsSetter,
+  adminTaskSetter,
+} = adminSlice.actions;
 
 export const selectAdminState = (state: RootState) => state.adminState;
 export const selectAdminPlaceState = (state: RootState) =>
