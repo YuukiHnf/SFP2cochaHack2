@@ -18,10 +18,17 @@ import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
 import MapSettingComponent from "../googlemap/MapSettingComponent";
 import ObjectTable from "./ObjectTable";
 
+/**
+ * 2022/03/30
+ *  初期位置は、全てのObjectをMarkerで表示しているので、無駄がある。変更するべき
+ * @returns
+ */
 const ObjectComponent: VFC = () => {
   const [ptrObjectId, setPtrObjectId] = useState<string>("");
   const teamId = useAppSelector(selectTeamId);
-  const { saveInitObjectLocation } = useObjectHooks({ teamId: teamId });
+  const { saveInitObjectLocation, FilteredObjectParam } = useObjectHooks({
+    teamId: teamId,
+  });
   const objectParams = useAppSelector(selectAdminObjects);
   const objectInit = useAppSelector(selectAdminInitObjects);
 
@@ -32,14 +39,21 @@ const ObjectComponent: VFC = () => {
     }
     // 今のObject
     const obj = objectInit.filter((param) => param.objectId === ptrObjectId)[0];
+    const objName = objectParams.filter((param) => param.id === obj.objectId)[0]
+      .objectName;
 
-    saveInitObjectLocation(ptrObjectId, {
-      ...obj,
-      location: {
-        lat: e.latLng?.lat() ?? obj.location.lat,
-        lng: e.latLng?.lng() ?? obj.location.lng,
-      },
-    } as ObjectLocation);
+    saveInitObjectLocation(
+      objectParams
+        .filter((param) => param.objectName === objName)
+        .map((param) => param.id),
+      {
+        ...obj,
+        location: {
+          lat: e.latLng?.lat() ?? obj.location.lat,
+          lng: e.latLng?.lng() ?? obj.location.lng,
+        },
+      } as ObjectLocation
+    );
 
     ptrObjectId !== "" && setPtrObjectId("");
   };

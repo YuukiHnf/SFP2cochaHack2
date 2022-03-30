@@ -1,7 +1,14 @@
-import { Button } from "@mui/material";
+import { Button, SvgIcon } from "@mui/material";
 import { DataGrid, GridColDef, GridSelectionModel } from "@mui/x-data-grid";
 import { Dispatch, SetStateAction, VFC } from "react";
 import { OBJECTPARAM } from "../../utils/firebase/FirebaseStore";
+
+//icon
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import useObjectHooks from "../../hooks/useObjectHooks";
+import { useAppSelector } from "../../app/hooks";
+import { selectBasicInfo } from "../../features/basicInfoSlice";
 
 type Props = {
   objectParams: Omit<OBJECTPARAM, "initLocation">[];
@@ -9,6 +16,11 @@ type Props = {
 };
 
 const ObjectTable: VFC<Props> = ({ objectParams, setPtrObjectId }) => {
+  const basicInfo = useAppSelector(selectBasicInfo);
+  const { incrementObjectNum, decrementObjectNum, FilteredObjectParam } =
+    useObjectHooks({
+      teamId: basicInfo.teamId,
+    });
   const columns: GridColDef[] = [
     {
       field: "selectedButton",
@@ -40,6 +52,38 @@ const ObjectTable: VFC<Props> = ({ objectParams, setPtrObjectId }) => {
       field: "num",
       headerName: "Num",
       width: 90,
+      renderCell: (params) => {
+        return (
+          <div>
+            <div style={{ float: "left", width: "80%", margin: "0 auto" }}>
+              {params.value}
+            </div>
+            <div
+              style={{
+                float: "right",
+                width: "20%",
+              }}
+            >
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <SvgIcon
+                  component={KeyboardArrowUpIcon}
+                  onClick={() => {
+                    const { createAt, num, ..._row } = params.row;
+                    incrementObjectNum(_row);
+                  }}
+                />
+                <SvgIcon
+                  component={KeyboardArrowDownIcon}
+                  onClick={() => {
+                    const { createAt, num, ..._row } = params.row;
+                    decrementObjectNum(_row);
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        );
+      },
     },
     {
       field: "weight",
@@ -82,20 +126,28 @@ const ObjectTable: VFC<Props> = ({ objectParams, setPtrObjectId }) => {
       ),
     },
   ];
-  var counts = {} as any;
 
+  // countする
+  var counts = {} as any;
   for (var i = 0; i < objectParams.length; i++) {
     var key = objectParams[i].objectName;
-    console.log(key);
+    //console.log(key);
     counts[key] = counts[key] ? counts[key] + 1 : 1;
   }
 
-  console.log(counts);
+  // 重複フィルタ
+  const objectParamsFilter = FilteredObjectParam();
+  // const objectParamsFilter = objectParams.filter(
+  //   (element, index, self) =>
+  //     self.findIndex(
+  //       (dataElement) => dataElement.objectName === element.objectName
+  //     ) === index
+  // );
 
   return (
     <div style={{ height: 280, width: "80%", margin: "0 auto" }}>
       <DataGrid
-        rows={objectParams.map((param) => ({
+        rows={objectParamsFilter.map((param) => ({
           ...param,
           num: counts[param.objectName] ?? 0,
         }))}

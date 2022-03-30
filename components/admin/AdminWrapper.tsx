@@ -61,7 +61,10 @@ const AdminWrapper: VFC<Props> = ({ children }) => {
 
     // Object Collection
     const unSubObj = onSnapshot(
-      collection(doc(db, "team", basicInfo.teamId), "objects"),
+      query(
+        collection(doc(db, "team", basicInfo.teamId), "objects"),
+        orderBy("createAt", "asc")
+      ),
       (objectSnaps) => {
         dispatch(
           adminObjectSetter(

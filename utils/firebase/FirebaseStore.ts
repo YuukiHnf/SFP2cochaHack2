@@ -69,6 +69,7 @@ export type OBJECTPARAM = {
   weight?: number;
   semiIconUrl: string;
   initLocation: Location;
+  createAt: Timestamp;
 };
 
 export type ObjectLocation = {
