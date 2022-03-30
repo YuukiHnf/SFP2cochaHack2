@@ -10,6 +10,7 @@ import { ObjectLocation, TaskBlock } from "../../utils/firebase/FirebaseStore";
 import ArgumentDrawingManage from "../googlemap/ArgumentDrawingManage";
 import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
 import MapSettingComponent from "../googlemap/MapSettingComponent";
+import HomeObjectComponent from "./HomeObjectComponent";
 import TaskViewComponents from "./TaskViewComponents";
 import TaskViewForTaskIdsComponents from "./TaskViewForTaskIdsComponents";
 import TimeTable from "./TimeTable";
@@ -71,7 +72,6 @@ const HomeComponent = () => {
         <DefaultGoogleMapComponent mapContainerStyle={_mapContainerStyle}>
           {/* 描画用のComponent */}
           <ArgumentDrawingManage taskBlockId={selectedTaskBlockId} />
-
           {/* タスク提示用のComponent */}
           {(taskBlock?.filter(
             (block) => block.id === selectedTaskBlockId
@@ -85,16 +85,18 @@ const HomeComponent = () => {
               taskBlockId={selectedTaskBlockId}
             />
           )) ?? <></>}
-
           {/* この時のObject用の描画ツール */}
           {/* Objectを指定した時間ごとに描画する */}
           {selectedTaskBlockId === initTaskBlockId ? ( // if init
             initObjectLocations.map(markerJSX)
           ) : selectedTaskBlockId ? ( // select taskBlock
-            <></> //それぞれのObjectを表示させる場所
+            <>
+              <HomeObjectComponent selectedTaskBlockId={selectedTaskBlockId} />
+            </>
           ) : (
             <></>
           )}
+          //それぞれのObjectを表示させる場所 ) : (<></>)
           {/* 擬似的な全体説明用オブジェクト、後々、ここもDBからとってくるようにする or statusに入れる */}
           <MapSettingComponent />
         </DefaultGoogleMapComponent>
