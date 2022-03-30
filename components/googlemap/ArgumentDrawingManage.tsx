@@ -69,7 +69,7 @@ const ArgumentDrawingManage: VFC<Props> = ({ taskBlockId }) => {
     location: Location;
     explaingOrMove: "Explaing" | "Move" | null;
   }>(initPtrMarker);
-  console.log(ptrMarker);
+  //console.log(ptrMarker);
 
   // 現在のデータ
   const [inputingTask, setInputingTask] = useState<Omit<TaskType, "id">>({

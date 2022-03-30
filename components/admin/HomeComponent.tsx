@@ -1,5 +1,5 @@
 import { DrawingManager, Marker, Polygon } from "@react-google-maps/api";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
 import {
   selectAdminObjects,
@@ -37,6 +37,7 @@ const rectAngleOption = {
 const HomeComponent = () => {
   const initObjectLocations = useAppSelector(selectAdminInitObjects);
   const taskBlock = useAppSelector(selectAdminTaskBlock);
+  const initTaskBlockId = taskBlock?.find((block) => block.isInit)?.id ?? "";
   const objectParams = useAppSelector(selectAdminObjects);
   const [selectedTaskBlockId, setSelectedTaskBlockId] = useState<string>("");
 
@@ -87,8 +88,7 @@ const HomeComponent = () => {
 
           {/* この時のObject用の描画ツール */}
           {/* Objectを指定した時間ごとに描画する */}
-          {selectedTaskBlockId !== "" &&
-          taskBlock?.filter((block) => block.isInit ?? false)[0].id ? ( // if init
+          {selectedTaskBlockId === initTaskBlockId ? ( // if init
             initObjectLocations.map(markerJSX)
           ) : selectedTaskBlockId ? ( // select taskBlock
             <></> //それぞれのObjectを表示させる場所
