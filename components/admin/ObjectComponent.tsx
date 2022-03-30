@@ -83,7 +83,7 @@ const ObjectComponent: VFC = () => {
       />
       <DefaultGoogleMapComponent
         onClick={(e: google.maps.MapMouseEvent) => {
-          console.log(e.latLng?.lat(), e.latLng?.lng());
+          //console.log(e.latLng?.lat(), e.latLng?.lng());
           onClickOnMap(e);
         }}
       >
