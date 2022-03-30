@@ -42,7 +42,7 @@ const PlaceComponent = () => {
     mapRef.current = map;
   }, []);
 
-  console.log(mapState);
+  //console.log(mapState);
 
   return (
     <>
@@ -76,7 +76,7 @@ const PlaceComponent = () => {
             });
           }}
           onHeadingChanged={() => {
-            console.log("head Change");
+            //console.log("head Change");
           }}
         ></GoogleMap>
       </div>

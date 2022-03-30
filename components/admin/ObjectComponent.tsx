@@ -18,6 +18,11 @@ import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
 import MapSettingComponent from "../googlemap/MapSettingComponent";
 import ObjectTable from "./ObjectTable";
 
+/**
+ * 2022/03/30
+ *  初期位置は、全てのObjectをMarkerで表示しているので、無駄がある。変更するべき
+ * @returns
+ */
 const ObjectComponent: VFC = () => {
   const [ptrObjectId, setPtrObjectId] = useState<string>("");
   const teamId = useAppSelector(selectTeamId);
@@ -26,9 +31,6 @@ const ObjectComponent: VFC = () => {
   });
   const objectParams = useAppSelector(selectAdminObjects);
   const objectInit = useAppSelector(selectAdminInitObjects);
-
-  const objectInitFilter = FilteredObjectParam();
-  console.log(objectInitFilter);
 
   const onClickOnMap = (e: google.maps.MapMouseEvent) => {
     if (ptrObjectId === "") {
