@@ -62,6 +62,7 @@ export type PLACE = {
 };
 
 export type ObjectTimeLocations = {
+  id: string;
   timeStamp: Timestamp;
   location: Location;
 };

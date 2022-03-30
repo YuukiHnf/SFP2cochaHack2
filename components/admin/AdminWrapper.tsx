@@ -95,7 +95,11 @@ const AdminWrapper: VFC<Props> = ({ children }) => {
             dispatch(
               adminObjectLocationsSetter({
                 timeLocation: locationSnaps.docs.map(
-                  (locSnap) => ({ ...locSnap.data() } as ObjectTimeLocations)
+                  (locSnap) =>
+                    ({
+                      ...locSnap.data(),
+                      id: locSnap.id,
+                    } as ObjectTimeLocations)
                 ),
                 ObjectId: param.id,
               })
