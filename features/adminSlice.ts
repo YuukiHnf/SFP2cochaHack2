@@ -17,7 +17,7 @@ export type AdminState = {
   place: PLACE;
   timeSche: DateSchedule;
   taskBlock?: TaskBlock[];
-  initObjectLocations: ObjectLocation[];
+  //initObjectLocations: ObjectLocation[];
   objects: Omit<OBJECTPARAM, "initLocation">[];
 };
 
@@ -35,7 +35,6 @@ const initialState: AdminState = {
   place: initMapState,
   timeSche: { start: null, end: null },
   taskBlock: [],
-  initObjectLocations: [],
   objects: [],
 };
 
@@ -55,7 +54,7 @@ export const adminSlice = createSlice({
       return {
         ...action.payload,
         taskBlock: state.taskBlock,
-        initObjectLocations: state.initObjectLocations,
+        // initObjectLocations: state.initObjectLocations,
         objects: state.objects,
       };
     },
@@ -73,10 +72,6 @@ export const adminSlice = createSlice({
             state.objects.filter((_obj) => _obj.id === obj.id)[0]
               ?.objectTimeLocations ?? [],
         })),
-        initObjectLocations: action.payload.map(
-          (obj) =>
-            ({ location: obj.initLocation, objectId: obj.id } as ObjectLocation)
-        ),
       };
     },
     adminObjectLocationsSetter: (
@@ -123,8 +118,8 @@ export const selectAdminObjects = (state: RootState) =>
   state.adminState.objects;
 export const selectAdminTaskBlock = (state: RootState) =>
   state.adminState.taskBlock;
-export const selectAdminInitObjects = (state: RootState) =>
-  state.adminState.initObjectLocations;
+// export const selectAdminInitObjects = (state: RootState) =>
+//   state.adminState.initObjectLocations;
 export const selectAdminTimeSche = (state: RootState) =>
   state.adminState.timeSche;
 // exporting the reducer here, as we need to add this to the store

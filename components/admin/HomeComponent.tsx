@@ -4,7 +4,7 @@ import { useAppSelector } from "../../app/hooks";
 import {
   selectAdminObjects,
   selectAdminTaskBlock,
-  selectAdminInitObjects,
+  // selectAdminInitObjects,
 } from "../../features/adminSlice";
 import { ObjectLocation, TaskBlock } from "../../utils/firebase/FirebaseStore";
 import ArgumentDrawingManage from "../googlemap/ArgumentDrawingManage";
@@ -36,7 +36,6 @@ const rectAngleOption = {
 };
 
 const HomeComponent = () => {
-  const initObjectLocations = useAppSelector(selectAdminInitObjects);
   const taskBlock = useAppSelector(selectAdminTaskBlock);
   const initTaskBlockId = taskBlock?.find((block) => block.isInit)?.id ?? "";
   const objectParams = useAppSelector(selectAdminObjects);
@@ -87,15 +86,19 @@ const HomeComponent = () => {
           )) ?? <></>}
           {/* この時のObject用の描画ツール */}
           {/* Objectを指定した時間ごとに描画する */}
-          {selectedTaskBlockId === initTaskBlockId ? ( // if init
+          {
+            /*selectedTaskBlockId === initTaskBlockId ? ( // if init
             initObjectLocations.map(markerJSX)
-          ) : selectedTaskBlockId ? ( // select taskBlock
-            <>
-              <HomeObjectComponent selectedTaskBlockId={selectedTaskBlockId} />
-            </>
-          ) : (
-            <></>
-          )}
+          ) :*/ selectedTaskBlockId ? ( // select taskBlock
+              <>
+                <HomeObjectComponent
+                  selectedTaskBlockId={selectedTaskBlockId}
+                />
+              </>
+            ) : (
+              <></>
+            )
+          }
           //それぞれのObjectを表示させる場所 ) : (<></>)
           {/* 擬似的な全体説明用オブジェクト、後々、ここもDBからとってくるようにする or statusに入れる */}
           <MapSettingComponent />

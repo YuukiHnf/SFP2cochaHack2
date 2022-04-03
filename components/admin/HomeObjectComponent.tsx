@@ -2,7 +2,6 @@ import { Marker } from "@react-google-maps/api";
 import { useEffect, useState, VFC } from "react";
 import { useAppSelector } from "../../app/hooks";
 import {
-  selectAdminInitObjects,
   selectAdminObjects,
   selectAdminTaskBlock,
 } from "../../features/adminSlice";
@@ -20,7 +19,6 @@ type Props = {
 const HomeObjectComponent: VFC<Props> = ({ selectedTaskBlockId }) => {
   const taskBlocks = useAppSelector(selectAdminTaskBlock);
   const objectParams = useAppSelector(selectAdminObjects);
-  const initObjectLocations = useAppSelector(selectAdminInitObjects);
 
   const [ptrLocations, setPtrLocations] = useState<ObjectLocation[]>([]);
 
@@ -41,7 +39,7 @@ const HomeObjectComponent: VFC<Props> = ({ selectedTaskBlockId }) => {
             (timeLoc) => timeLoc.timeStamp.toDate() >= ptrDate
           ) ?? 0
       );
-      console.log(targetTimeLocationsIndex);
+      //console.log(targetTimeLocationsIndex);
       setPtrLocations(
         objectParams.map((param, index) => {
           if (!param.objectTimeLocations) {
@@ -52,9 +50,9 @@ const HomeObjectComponent: VFC<Props> = ({ selectedTaskBlockId }) => {
           }
           if (targetTimeLocationsIndex[index] !== -1) {
             // 現在の時刻より後かつ最初のObjectを選択
-            console.log(
-              param.objectTimeLocations[targetTimeLocationsIndex[index]]
-            );
+            // console.log(
+            //   param.objectTimeLocations[targetTimeLocationsIndex[index]]
+            // );
             return {
               objectId: param.id,
               location: {
@@ -62,7 +60,7 @@ const HomeObjectComponent: VFC<Props> = ({ selectedTaskBlockId }) => {
                   .location,
               },
             } as ObjectLocation;
-          } else if (param.objectTimeLocations.length !== 0) {
+          } /*if (param.objectTimeLocations.length !== 0)*/ else {
             // 最新の位置を表示
             return {
               objectId: param.id,
@@ -72,18 +70,10 @@ const HomeObjectComponent: VFC<Props> = ({ selectedTaskBlockId }) => {
             } as ObjectLocation;
           }
           // それ以外
-          return {
-            objectId: param.id,
-            location: initObjectLocations.filter(
-              (_obj) => _obj.objectId === param.id
-            )[0].location,
-          } as ObjectLocation;
         })
       );
     }
   }, [selectedTaskBlockId]);
-
-  console.log(ptrLocations);
 
   // Objectのrendering方式
   const markerJSX = (obj: ObjectLocation) => (
