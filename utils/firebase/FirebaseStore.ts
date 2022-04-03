@@ -74,7 +74,7 @@ export type OBJECTPARAM = {
   iconUrl: string;
   weight?: number;
   semiIconUrl: string;
-  initLocation: Location;
+  //initLocation: Location; objectTimeLocationsに統合
   createAt: Timestamp;
   objectTimeLocations?: ObjectTimeLocations[];
 };

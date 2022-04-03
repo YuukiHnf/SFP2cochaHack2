@@ -7,13 +7,14 @@ import {
 } from "@react-google-maps/api";
 import { useState, VFC } from "react";
 import { useAppSelector } from "../../app/hooks";
-import {
-  selectAdminObjects,
-  selectAdminInitObjects,
-} from "../../features/adminSlice";
+import { selectAdminObjects } from "../../features/adminSlice";
 import { selectTeamId } from "../../features/basicInfoSlice";
 import useObjectHooks from "../../hooks/useObjectHooks";
-import { ObjectLocation } from "../../utils/firebase/FirebaseStore";
+import {
+  Location,
+  ObjectLocation,
+  ObjectTimeLocations,
+} from "../../utils/firebase/FirebaseStore";
 import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
 import MapSettingComponent from "../googlemap/MapSettingComponent";
 import ObjectTable from "./ObjectTable";
@@ -26,11 +27,18 @@ import ObjectTable from "./ObjectTable";
 const ObjectComponent: VFC = () => {
   const [ptrObjectId, setPtrObjectId] = useState<string>("");
   const teamId = useAppSelector(selectTeamId);
-  const { saveInitObjectLocation, FilteredObjectParam } = useObjectHooks({
+  const { saveInitObjectLocation } = useObjectHooks({
     teamId: teamId,
   });
   const objectParams = useAppSelector(selectAdminObjects);
-  const objectInit = useAppSelector(selectAdminInitObjects);
+  // const objectInit = useAppSelector(selectAdminInitObjects);
+
+  // const objectInit = objectParams.map((obj) =>
+  //   obj.objectTimeLocations
+  //     ? obj.objectTimeLocations[0]
+  //     : ({} as ObjectTimeLocations)
+  // );
+  // console.log(objectInit);
 
   const onClickOnMap = (e: google.maps.MapMouseEvent) => {
     if (ptrObjectId === "") {
@@ -38,21 +46,29 @@ const ObjectComponent: VFC = () => {
       return;
     }
     // 今のObject
-    const obj = objectInit.filter((param) => param.objectId === ptrObjectId)[0];
-    const objName = objectParams.filter((param) => param.id === obj.objectId)[0]
-      .objectName;
+    const obj = objectParams.filter((param) => param.id === ptrObjectId)[0];
+    const objName = obj.objectName;
+    const targetObject = objectParams.filter(
+      (param) => param.objectName === objName
+    );
 
     saveInitObjectLocation(
-      objectParams
-        .filter((param) => param.objectName === objName)
-        .map((param) => param.id),
+      targetObject.map((_obj) => _obj.id),
+      targetObject.map((_obj) =>
+        _obj.objectTimeLocations ? _obj.objectTimeLocations[0].id : ""
+      ),
       {
-        ...obj,
-        location: {
-          lat: e.latLng?.lat() ?? obj.location.lat,
-          lng: e.latLng?.lng() ?? obj.location.lng,
-        },
-      } as ObjectLocation
+        lat:
+          e.latLng?.lat() ??
+          (obj.objectTimeLocations
+            ? obj.objectTimeLocations[0].location.lat
+            : 0),
+        lng:
+          e.latLng?.lng() ??
+          (obj.objectTimeLocations
+            ? obj.objectTimeLocations[0].location.lng
+            : 0),
+      } as Location
     );
 
     ptrObjectId !== "" && setPtrObjectId("");
@@ -88,23 +104,31 @@ const ObjectComponent: VFC = () => {
         }}
       >
         <DrawingManager drawingMode={google.maps.drawing.OverlayType.MARKER} />
-        {objectInit.map((obj) => (
-          <Marker
-            key={obj.objectId}
-            position={obj.location}
-            icon={{
-              url:
-                obj.objectId === ptrObjectId
-                  ? objectParams.find((value) => value.id === obj.objectId)
-                      ?.iconUrl ?? ""
-                  : objectParams.find((value) => value.id === obj.objectId)
-                      ?.semiIconUrl ?? "",
-              origin: new window.google.maps.Point(0, 0),
-              anchor: new window.google.maps.Point(15, 15),
-              scaledSize: new window.google.maps.Size(30, 30),
-            }}
-          />
-        ))}
+        {objectParams.map((obj) =>
+          obj.objectTimeLocations && obj.objectTimeLocations.length !== 0 ? (
+            <Marker
+              key={obj.id}
+              position={
+                obj.objectTimeLocations
+                  ? obj.objectTimeLocations[0].location
+                  : { lat: 0, lng: 0 }
+              }
+              icon={{
+                url:
+                  obj.id === ptrObjectId
+                    ? objectParams.find((value) => value.id === obj.id)
+                        ?.iconUrl ?? ""
+                    : objectParams.find((value) => value.id === obj.id)
+                        ?.semiIconUrl ?? "",
+                origin: new window.google.maps.Point(0, 0),
+                anchor: new window.google.maps.Point(15, 15),
+                scaledSize: new window.google.maps.Size(30, 30),
+              }}
+            />
+          ) : (
+            <></>
+          )
+        )}
         {/* // ここにまたPolygonなどを置いていく */}
         <MapSettingComponent />
         <InfoWindow position={new google.maps.LatLng(43.0802, 141.34045)}>
