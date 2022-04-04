@@ -1,15 +1,16 @@
 import { DrawingManager, Marker, Polygon } from "@react-google-maps/api";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
 import {
   selectAdminObjects,
   selectAdminTaskBlock,
-  selectAdminTaskBlockInit,
+  // selectAdminInitObjects,
 } from "../../features/adminSlice";
 import { ObjectLocation, TaskBlock } from "../../utils/firebase/FirebaseStore";
 import ArgumentDrawingManage from "../googlemap/ArgumentDrawingManage";
 import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
 import MapSettingComponent from "../googlemap/MapSettingComponent";
+import HomeObjectComponent from "./HomeObjectComponent";
 import TaskViewComponents from "./TaskViewComponents";
 import TaskViewForTaskIdsComponents from "./TaskViewForTaskIdsComponents";
 import TimeTable from "./TimeTable";
@@ -35,18 +36,16 @@ const rectAngleOption = {
 };
 
 const HomeComponent = () => {
-  const initTaskBlock = useAppSelector(selectAdminTaskBlockInit);
   const taskBlock = useAppSelector(selectAdminTaskBlock);
+  const initTaskBlockId = taskBlock?.find((block) => block.isInit)?.id ?? "";
   const objectParams = useAppSelector(selectAdminObjects);
-  const [selectedTaskBlockId, setSelectedTaskBlockId] = useState<string>(
-    initTaskBlock.id
-  );
+  const [selectedTaskBlockId, setSelectedTaskBlockId] = useState<string>("");
 
   // Objectのrendering方式
   const markerJSX = (obj: ObjectLocation) => (
     <Marker
       key={obj.objectId}
-      position={obj.location}
+      position={obj.locationTime.location}
       icon={{
         url:
           objectParams.find((value) => value.id === obj.objectId)?.iconUrl ??
@@ -86,63 +85,21 @@ const HomeComponent = () => {
             />
           )) ?? <></>}
           {/* この時のObject用の描画ツール */}
-          {/* 設営時 */}
-          {selectedTaskBlockId === "Y7WAfI45mwPBjJhsCQmk" &&
-            initTaskBlock.objectLocations.map((obj) => (
-              <Marker
-                key={obj.objectId}
-                position={obj.location}
-                icon={{
-                  url:
-                    objectParams.find((value) => value.id === obj.objectId)
-                      ?.iconUrl ?? "",
-                  origin: new window.google.maps.Point(0, 0),
-                  anchor: new window.google.maps.Point(15, 15),
-                  scaledSize: new window.google.maps.Size(30, 30),
-                }}
-              />
-            ))}
-
           {/* Objectを指定した時間ごとに描画する */}
-          {selectedTaskBlockId === initTaskBlock.id ? ( // if init
-            initTaskBlock.objectLocations.map(markerJSX)
-          ) : selectedTaskBlockId === "Y7WAfI45mwPBjJhsCQmk" ? (
-            taskBlock
-              ?.filter((block) => block.id === selectedTaskBlockId)[0]
-              .objectLocations.map((obj) => (
-                <Marker
-                  key={obj.objectId}
-                  position={obj.location}
-                  icon={{
-                    url:
-                      objectParams.find((value) => value.id === obj.objectId)
-                        ?.iconUrl ?? "",
-                    origin: new window.google.maps.Point(0, 0),
-                    anchor: new window.google.maps.Point(15, 15),
-                    scaledSize: new window.google.maps.Size(30, 30),
-                  }}
+          {
+            /*selectedTaskBlockId === initTaskBlockId ? ( // if init
+            initObjectLocations.map(markerJSX)
+          ) :*/ selectedTaskBlockId ? ( // select taskBlock
+              <>
+                <HomeObjectComponent
+                  selectedTaskBlockId={selectedTaskBlockId}
                 />
-              ))
-          ) : selectedTaskBlockId ? ( // select taskBlock
-            taskBlock
-              ?.filter((block) => block.id === "Y7WAfI45mwPBjJhsCQmk")[0]
-              .objectLocations.map((obj) => (
-                <Marker
-                  key={obj.objectId}
-                  position={obj.location}
-                  icon={{
-                    url:
-                      objectParams.find((value) => value.id === obj.objectId)
-                        ?.semiIconUrl ?? "",
-                    origin: new window.google.maps.Point(0, 0),
-                    anchor: new window.google.maps.Point(15, 15),
-                    scaledSize: new window.google.maps.Size(30, 30),
-                  }}
-                />
-              ))
-          ) : (
-            <></>
-          )}
+              </>
+            ) : (
+              <></>
+            )
+          }
+          //それぞれのObjectを表示させる場所 ) : (<></>)
           {/* 擬似的な全体説明用オブジェクト、後々、ここもDBからとってくるようにする or statusに入れる */}
           <MapSettingComponent />
         </DefaultGoogleMapComponent>

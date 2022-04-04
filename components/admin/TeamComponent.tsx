@@ -16,7 +16,7 @@ const TeamComponent = () => {
       setMemeber(
         querySnapshot.docs.map((snap) => {
           const _data = snap.data();
-          console.log(_data);
+          //console.log(_data);
           return {
             ..._data,
             uid: snap.id,

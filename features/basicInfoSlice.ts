@@ -32,9 +32,9 @@ export const basicInfoSlice = createSlice({
       state.username = action.payload.username;
       state.avaterUrl = action.payload.avaterUrl;
     },
-    basicInfologout: (state) => {
-      state = initialState;
-    },
+    basicInfologout: (state) => ({
+      ...initialState,
+    }),
   },
 });
 

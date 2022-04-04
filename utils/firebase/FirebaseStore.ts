@@ -61,18 +61,27 @@ export type PLACE = {
   heading?: number; // 設定できるようになったら入れる
 };
 
+export type ObjectTimeLocations = {
+  id: string;
+  timeStamp: Timestamp;
+  location: Location;
+};
+
 export type OBJECTPARAM = {
   id: string;
-  name: string;
-  num: number;
+  objectName: string;
+  //num: number;
   iconUrl: string;
   weight?: number;
   semiIconUrl: string;
+  //initLocation: Location; objectTimeLocationsに統合
+  createAt: Timestamp;
+  objectTimeLocations?: ObjectTimeLocations[];
 };
 
 export type ObjectLocation = {
   objectId: string;
-  location: Location;
+  locationTime: ObjectTimeLocations;
 };
 
 export type TaskBlock = {
@@ -80,7 +89,7 @@ export type TaskBlock = {
   title: string;
   time: Timestamp | null;
   taskIds: string[];
-  objectLocations: ObjectLocation[];
+  //objectLocations: ObjectLocation[];
   isInit?: boolean;
 };
 

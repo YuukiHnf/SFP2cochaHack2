@@ -32,7 +32,7 @@ const TaskViewComponents: VFC<Props> = ({ taskId, onClickAnyObject }) => {
     return () => unSub();
   }, [taskId]);
 
-  console.log(taskdata);
+  //  wconsole.log(taskdata);
 
   if (!taskdata) return <></>;
   /**
@@ -50,7 +50,7 @@ const TaskViewComponents: VFC<Props> = ({ taskId, onClickAnyObject }) => {
       {taskdata.content.move.map((mv) => (
         <>
           <Marker
-            key={mv.location.lat * mv.location.lng}
+            key={mv.location.lat * mv.location.lng * 0.7}
             position={mv.location}
             icon={{
               url: marker2Url["HumanPos"],
