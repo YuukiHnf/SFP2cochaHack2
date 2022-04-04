@@ -94,10 +94,9 @@ const ObjectComponent: VFC = () => {
         setPtrObjectId={setPtrObjectId}
       />
       <DefaultGoogleMapComponent
-      // onClick={(e: google.maps.MapMouseEvent) => {
-      //   console.log(e.latLng?.lat(), e.latLng?.lng());
-      //   onClickOnMap(e);
-      // }}
+        onClick={(e: google.maps.MapMouseEvent) => {
+          console.log(e.latLng?.lat(), e.latLng?.lng());
+        }}
       >
         <DrawingManager drawingMode={google.maps.drawing.OverlayType.MARKER} />
         {filterObjects.map((obj) =>
@@ -144,6 +143,13 @@ const ObjectComponent: VFC = () => {
           }
         >
           <div>演者待機場所</div>
+        </InfoWindow>
+        <InfoWindow
+          position={
+            new google.maps.LatLng(43.080355705899384, 141.34019584247977)
+          }
+        >
+          <div>物品置き場</div>
         </InfoWindow>
       </DefaultGoogleMapComponent>
     </>

@@ -21,13 +21,20 @@ const rectAngleOption3 = {
   strokeOpacity: 0.3,
 };
 
+const rectAngleOption4 = {
+  fillColor: "darkgreen",
+  fillOpactiy: 0.3,
+  strokeColor: "darkgreen",
+  strokeOpacity: 0.3,
+};
+
 /**
  * 常に表示するObjectを表示
  */
 const MapSettingComponent = () => {
-  const [tapping, setTapping] = useState<"Stage1" | "Stage2" | "Stage3" | null>(
-    null
-  );
+  const [tapping, setTapping] = useState<
+    "Stage1" | "Stage2" | "Stage3" | "Souko4" | null
+  >(null);
   return (
     <>
       <Polygon
@@ -87,6 +94,27 @@ const MapSettingComponent = () => {
           }
         >
           <div>演者待機場所</div>
+        </InfoWindow>
+      )}
+      <Polygon
+        path={[
+          new google.maps.LatLng(43.08034329615737, 141.34010956194692),
+          new google.maps.LatLng(43.08030803277074, 141.34011760857396),
+          new google.maps.LatLng(43.08032008806707, 141.34019818358428),
+          new google.maps.LatLng(43.080355705899384, 141.34019584247977),
+        ]}
+        options={rectAngleOption4}
+        onClick={() => {
+          setTapping("Stage3");
+        }}
+      />
+      {tapping === "Souko4" && (
+        <InfoWindow
+          position={
+            new google.maps.LatLng(43.080355705899384, 141.34019584247977)
+          }
+        >
+          <div>物品置き場</div>
         </InfoWindow>
       )}
     </>
