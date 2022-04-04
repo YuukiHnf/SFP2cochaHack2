@@ -102,6 +102,7 @@ const ObjectComponent: VFC = () => {
         {filterObjects.map((obj) =>
           obj.objectTimeLocations && obj.objectTimeLocations.length !== 0 ? (
             <DragDropMarker
+              key={obj.id}
               position={
                 obj.objectTimeLocations
                   ? obj.objectTimeLocations[0].location
