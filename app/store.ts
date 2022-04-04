@@ -19,7 +19,6 @@ const rootReducer = combineReducers({
   guestState: guestSlice,
   // admin用
   adminState: adminSlice,
-  counter: counterSlice,
 });
 
 export const store = configureStore({
@@ -31,7 +30,6 @@ export const store = configureStore({
     guestState: guestSlice,
     // admin用
     adminState: adminSlice,
-    counter: counterSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

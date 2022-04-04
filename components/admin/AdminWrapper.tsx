@@ -1,16 +1,25 @@
-import { collection, doc, onSnapshot, query } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import { useRouter } from "next/router";
 import React, { useEffect, VFC } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
+  adminObjectLocationsSetter,
   adminObjectSetter,
   adminSetter,
   adminTaskSetter,
+  selectAdminObjects,
 } from "../../features/adminSlice";
 import { selectBasicInfo } from "../../features/basicInfoSlice";
 import {
   db,
   OBJECTPARAM,
+  ObjectTimeLocations,
   PLACE,
   TaskBlock,
   TEAM,
@@ -22,6 +31,7 @@ interface Props {
 
 const AdminWrapper: VFC<Props> = ({ children }) => {
   const basicInfo = useAppSelector(selectBasicInfo);
+  //const objectParams = useAppSelector(selectAdminObjects);
   const dispatch = useAppDispatch();
 
   const router = useRouter();
@@ -55,7 +65,10 @@ const AdminWrapper: VFC<Props> = ({ children }) => {
 
     // Object Collection
     const unSubObj = onSnapshot(
-      collection(doc(db, "team", basicInfo.teamId), "objects"),
+      query(
+        collection(doc(db, "team", basicInfo.teamId), "objects"),
+        orderBy("createAt", "asc")
+      ),
       (objectSnaps) => {
         dispatch(
           adminObjectSetter(
@@ -64,31 +77,90 @@ const AdminWrapper: VFC<Props> = ({ children }) => {
             )
           )
         );
-        console.log("[unSubObj]", objectSnaps.docs);
+        objectSnaps.docs.forEach((param) => {
+          // Locationを時間でソートして保持する
+          const locationQuery = query(
+            collection(
+              doc(
+                collection(doc(db, "team", basicInfo.teamId), "objects"),
+                param.id
+              ),
+              "Locations"
+            ),
+            orderBy("timeStamp", "asc")
+          );
+          onSnapshot(locationQuery, (locationSnaps) => {
+            //console.log(locationSnaps.docs.map((_s) => _s.data()));
+            //if (locationSnaps.empty) return;
+            dispatch(
+              adminObjectLocationsSetter({
+                timeLocation: locationSnaps.docs.map(
+                  (locSnap) =>
+                    ({
+                      ...locSnap.data(),
+                      id: locSnap.id,
+                    } as ObjectTimeLocations)
+                ),
+                ObjectId: param.id,
+              })
+            );
+          });
+        });
       }
     );
+    // location Collectionをとってくる
 
     // TaskBlockCollection
-    const unSubTaskBlock = onSnapshot(
-      collection(doc(db, "team", basicInfo.teamId), "taskBlock"),
-      (blockSnaps) => {
-        if (!blockSnaps.empty) {
-          dispatch(
-            adminTaskSetter(
-              blockSnaps.docs.map(
-                (snap) => ({ ...snap.data(), id: snap.id } as TaskBlock)
-              )
-            )
-          );
-        }
-      }
+    const taskBlockRef = collection(
+      doc(db, "team", basicInfo.teamId),
+      "taskBlock"
     );
+    const blockQuery = query(taskBlockRef, orderBy("time", "asc"));
+    const unSubTaskBlock = onSnapshot(blockQuery, (blockSnaps) => {
+      if (!blockSnaps.empty) {
+        dispatch(
+          adminTaskSetter(
+            blockSnaps.docs.map(
+              (snap) => ({ ...snap.data(), id: snap.id } as TaskBlock)
+            )
+          )
+        );
+      }
+    });
     return () => {
       unSub();
       unSubObj();
       unSubTaskBlock();
     };
   }, [basicInfo]);
+
+  // useEffect(() => {
+  //   objectParams.forEach((param) => {
+  //     // Locationを時間でソートして保持する
+  //     const locationQuery = query(
+  //       collection(
+  //         doc(
+  //           collection(doc(db, "team", basicInfo.teamId), "objects"),
+  //           param.id
+  //         ),
+  //         "Locations"
+  //       ),
+  //       orderBy("timeStamp", "asc")
+  //     );
+  //     onSnapshot(locationQuery, (locationSnaps) => {
+  //       console.log(locationSnaps.docs.map((_s) => _s.data()));
+  //       //if (locationSnaps.empty) return;
+  //       dispatch(
+  //         adminObjectLocationsSetter({
+  //           timeLocation: locationSnaps.docs.map(
+  //             (locSnap) => ({ ...locSnap.data() } as ObjectTimeLocations)
+  //           ),
+  //           ObjectId: param.id,
+  //         })
+  //       );
+  //     });
+  //   });
+  // }, [objectParams]);
 
   return <div>{children}</div>;
 };

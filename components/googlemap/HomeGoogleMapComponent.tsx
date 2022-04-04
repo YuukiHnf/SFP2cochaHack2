@@ -22,7 +22,7 @@ const _mapContainerStyle = {
   margin: "0 auto",
 };
 
-const DefaultGoogleMapComponent: VFC<Props> = ({
+const HomeGoogleMapComponent: VFC<Props> = ({
   children,
   mapContainerStyle = _mapContainerStyle,
   onMouseOver,
@@ -32,7 +32,7 @@ const DefaultGoogleMapComponent: VFC<Props> = ({
   const mapOption: google.maps.MapOptions = {
     disableDefaultUI: true, // button無くす
     minZoom: placeParam.zoom,
-    maxZoom: 50,
+    maxZoom: 40,
     rotateControl: true, // 効果なさそう
     gestureHandling: "cooperative",
   };
@@ -53,4 +53,4 @@ const DefaultGoogleMapComponent: VFC<Props> = ({
   );
 };
 
-export default DefaultGoogleMapComponent;
+export default HomeGoogleMapComponent;

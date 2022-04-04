@@ -10,6 +10,7 @@ import { PLACE } from "../../utils/firebase/FirebaseStore";
 const initContainerStyle = {
   width: "80%",
   height: "600px",
+  margin: "0 auto",
 };
 
 // const initMapState: PLACE = {
@@ -41,14 +42,14 @@ const PlaceComponent = () => {
     mapRef.current = map;
   }, []);
 
-  console.log(mapState);
+  //console.log(mapState);
 
   return (
     <>
       {/* <LoadScript
         googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_APIKEY ?? ""}
       > */}
-      <div style={{ transform: "rotate(0deg)" }}>
+      <div style={{ margin: "0 auto" }}>
         <GoogleMap
           mapContainerStyle={initContainerStyle}
           center={mapState.center}
@@ -75,22 +76,24 @@ const PlaceComponent = () => {
             });
           }}
           onHeadingChanged={() => {
-            console.log("head Change");
+            //console.log("head Change");
           }}
         ></GoogleMap>
       </div>
       {/* </LoadScript> */}
-      <p>zoom:{mapState.zoom}</p>
-      <p>
-        loc:[ lat: {mapState.center.lat}, lng: {mapState.center.lng}]
-      </p>
-      <Button
-        onClick={() => {
-          saveMapState(mapState);
-        }}
-      >
-        SAVE
-      </Button>
+      <div style={{ margin: "0 auto" }}>
+        <p>zoom:{mapState.zoom}</p>
+        <p>
+          loc:[ lat: {mapState.center.lat}, lng: {mapState.center.lng}]
+        </p>
+        <Button
+          onClick={() => {
+            saveMapState(mapState);
+          }}
+        >
+          SAVE
+        </Button>
+      </div>
       {/* <p>tilt:0-45</p>
       <Input
         type="text"

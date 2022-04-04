@@ -127,7 +127,13 @@ const AppBar2 = ({ setState }: any) => {
                 {page}
               </Button>
             ))}
-            <Button onClick={() => logout()}>LOGOUT</Button>
+            <Button
+              onClick={() => logout()}
+              variant="contained"
+              color="success"
+            >
+              LOGOUT
+            </Button>
           </Box>
 
           {/* <Box sx={{ flexGrow: 0 }}>

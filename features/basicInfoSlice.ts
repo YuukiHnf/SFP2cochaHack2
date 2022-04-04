@@ -32,13 +32,13 @@ export const basicInfoSlice = createSlice({
       state.username = action.payload.username;
       state.avaterUrl = action.payload.avaterUrl;
     },
-    logout: (state) => {
-      state = initialState;
-    },
+    basicInfologout: (state) => ({
+      ...initialState,
+    }),
   },
 });
 
-export const { login, logout } = basicInfoSlice.actions;
+export const { login, basicInfologout } = basicInfoSlice.actions;
 
 export const selectBasicInfo = (state: RootState) => state.basicInfo;
 export const selectTeamId = (state: RootState) => state.basicInfo.teamId;

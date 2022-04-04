@@ -1,5 +1,6 @@
 import { useLoadScript } from "@react-google-maps/api";
 import React, { useState } from "react";
+import HomeComponnent from "../../components/admin/HomeComponent";
 import { useAppSelector } from "../../app/hooks";
 import AdminWrapper from "../../components/admin/AdminWrapper";
 import AppBar1 from "../../components/admin/AppBar1";
@@ -33,7 +34,7 @@ const index = () => {
       case "object":
         return <ObjectComponent />;
       default:
-        return <p>home</p>;
+        return <HomeComponnent />;
     }
   };
   return (

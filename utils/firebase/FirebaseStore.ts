@@ -7,6 +7,7 @@ import {
   getFirestore,
   Timestamp,
 } from "firebase/firestore";
+import { MarkerType } from "../../components/googlemap/ArgumentDrawingManage";
 import { isEmulating, storePort } from "./FirebaseInit";
 
 export const db = getFirestore(getApp());
@@ -60,23 +61,58 @@ export type PLACE = {
   heading?: number; // 設定できるようになったら入れる
 };
 
+export type ObjectTimeLocations = {
+  id: string;
+  timeStamp: Timestamp;
+  location: Location;
+};
+
 export type OBJECTPARAM = {
   id: string;
-  name: string;
-  num: number;
+  objectName: string;
+  //num: number;
   iconUrl: string;
   weight?: number;
+  semiIconUrl: string;
+  //initLocation: Location; objectTimeLocationsに統合
+  createAt: Timestamp;
+  objectTimeLocations?: ObjectTimeLocations[];
 };
 
 export type ObjectLocation = {
   objectId: string;
-  location: Location;
+  locationTime: ObjectTimeLocations;
 };
 
 export type TaskBlock = {
   id: string;
+  title: string;
   time: Timestamp | null;
   taskIds: string[];
-  objectLocations: ObjectLocation[];
+  //objectLocations: ObjectLocation[];
   isInit?: boolean;
+};
+
+export type TaskProgressState = "UNDO" | "DOING" | "CHECK" | "DONE";
+
+export type TaskContentType = {
+  move: {
+    location: Location;
+    desc: string;
+  }[];
+  explaing: {
+    iconId: MarkerType;
+    location: Location;
+    desc: string;
+  }[];
+};
+
+export type TaskType = {
+  id: string;
+  kindOf: "HUMAN" | "OBJECT";
+  title: string;
+  taskState: TaskProgressState;
+  team: string;
+  by: string;
+  content: TaskContentType;
 };
