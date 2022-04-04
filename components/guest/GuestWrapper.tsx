@@ -1,11 +1,14 @@
-import { collection, doc, onSnapshot } from "firebase/firestore";
+import { collection, doc, onSnapshot, query, where } from "firebase/firestore";
 import { useRouter } from "next/router";
 import React, { useEffect, VFC } from "react";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../app/hooks";
 import { selectBasicInfo } from "../../features/basicInfoSlice";
-import { guestSetter } from "../../features/guestSlice";
-import { db, USER } from "../../utils/firebase/FirebaseStore";
+import {
+  guestSetterTasks,
+  guestSetterWithoutTasks,
+} from "../../features/guestSlice";
+import { db, TaskType, USER } from "../../utils/firebase/FirebaseStore";
 
 interface Props {
   children: React.ReactNode;
@@ -22,6 +25,7 @@ const GuestWrapper: VFC<Props> = ({ children }) => {
       router.push("/login");
     }
     var unSub = () => {};
+    var unSubTask = () => {};
     try {
       unSub = onSnapshot(
         doc(collection(db, "users"), basicInfo.userId),
@@ -30,21 +34,36 @@ const GuestWrapper: VFC<Props> = ({ children }) => {
             const _data = doc.data() as USER;
             console.log(_data);
             dispatch(
-              guestSetter({
+              guestSetterWithoutTasks({
                 isActive: _data.isActive,
                 isGPS: _data.isGPS,
-                taskId: _data.taskId,
+                timeSche: _data.timeSche ?? [],
+                location: _data.location,
               })
             );
           }
         }
       );
+
+      const taskQuery = query(
+        collection(db, "tasks"),
+        where("by", "==", basicInfo.userId)
+      );
+      unSubTask = onSnapshot(taskQuery, (querySnap) => {
+        dispatch(
+          guestSetterTasks(
+            querySnap.docs.map(
+              (_data) => ({ ..._data.data(), id: _data.id } as TaskType)
+            )
+          )
+        );
+      });
     } catch (e) {
       router.push("/login");
     }
 
     return () => unSub();
-  }, [basicInfo, dispatch, guestSetter]);
+  }, [basicInfo, dispatch, guestSetterTasks, guestSetterWithoutTasks]);
 
   return <div>{children}</div>;
 };

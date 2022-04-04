@@ -1,13 +1,17 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../app/store";
-import { DateSchedule, Location } from "../utils/firebase/FirebaseStore";
+import {
+  DateSchedule,
+  Location,
+  TaskType,
+} from "../utils/firebase/FirebaseStore";
 
 // 定義したいState
 export type GuestState = {
   isActive: boolean;
   isGPS: boolean;
   location?: Location;
-  taskIds: string[];
+  tasks: TaskType[];
   timeSche: DateSchedule[];
 };
 
@@ -15,9 +19,11 @@ export type GuestState = {
 const initialState: GuestState = {
   isActive: false,
   isGPS: false,
-  taskIds: [],
+  tasks: [] as TaskType[],
   timeSche: [],
 };
+
+type GuestStateOmitTasks = Omit<GuestState, "tasks">;
 
 // sliceの設定
 export const guestStateSlice = createSlice({
@@ -25,18 +31,27 @@ export const guestStateSlice = createSlice({
   initialState,
   // reducerをここに定義する
   reducers: {
-    guestSetter: (state, action: PayloadAction<GuestState>) => ({
+    guestSetterWithoutTasks: (
+      state,
+      action: PayloadAction<GuestStateOmitTasks>
+    ) => ({
       ...action.payload,
+      tasks: state.tasks,
+    }),
+    guestSetterTasks: (state, action: PayloadAction<TaskType[]>) => ({
+      ...state,
+      tasks: action.payload,
     }),
     cleanGuest: (state) => ({ ...initialState }),
   },
 });
 
-export const { guestSetter, cleanGuest } = guestStateSlice.actions;
+export const { guestSetterWithoutTasks, guestSetterTasks, cleanGuest } =
+  guestStateSlice.actions;
 
 export const selectAllGuestState = (state: RootState) => state.guestState;
 export const selectGuestTaskState = (state: RootState) =>
-  state.guestState.taskIds;
+  state.guestState.tasks;
 export const selectGuestTimeScheduleState = (state: RootState) =>
   state.guestState.timeSche;
 
