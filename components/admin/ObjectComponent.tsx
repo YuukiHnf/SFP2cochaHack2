@@ -33,14 +33,7 @@ const ObjectComponent: VFC = () => {
   });
   const objectParams = useAppSelector(selectAdminObjects);
   const filterObjects = FilteredObjectParam();
-  // const objectInit = useAppSelector(selectAdminInitObjects);
-
-  // const objectInit = objectParams.map((obj) =>
-  //   obj.objectTimeLocations
-  //     ? obj.objectTimeLocations[0]
-  //     : ({} as ObjectTimeLocations)
-  // );
-  // console.log(objectInit);
+  console.log(ptrObjectId);
 
   const onClickOnMap = (e: google.maps.MapMouseEvent) => {
     if (ptrObjectId === "") {
@@ -50,7 +43,7 @@ const ObjectComponent: VFC = () => {
     // 今のObject
     const obj = filterObjects.filter((param) => param.id === ptrObjectId)[0];
     const objName = obj.objectName;
-    const targetObject = filterObjects.filter(
+    const targetObject = objectParams.filter(
       (param) => param.objectName === objName
     );
 
@@ -97,13 +90,14 @@ const ObjectComponent: VFC = () => {
     <>
       <ObjectTable
         objectParams={objectParams}
+        ptrObjectId={ptrObjectId}
         setPtrObjectId={setPtrObjectId}
       />
       <DefaultGoogleMapComponent
-        onClick={(e: google.maps.MapMouseEvent) => {
-          console.log(e.latLng?.lat(), e.latLng?.lng());
-          onClickOnMap(e);
-        }}
+      // onClick={(e: google.maps.MapMouseEvent) => {
+      //   console.log(e.latLng?.lat(), e.latLng?.lng());
+      //   onClickOnMap(e);
+      // }}
       >
         <DrawingManager drawingMode={google.maps.drawing.OverlayType.MARKER} />
         {filterObjects.map((obj) =>
@@ -125,6 +119,8 @@ const ObjectComponent: VFC = () => {
                 anchor: new window.google.maps.Point(15, 15),
                 scaledSize: new window.google.maps.Size(30, 30),
               }}
+              onStartDrag={() => setPtrObjectId(obj.id)}
+              onEndDrag={(e) => onClickOnMap(e)}
             />
           ) : (
             <></>

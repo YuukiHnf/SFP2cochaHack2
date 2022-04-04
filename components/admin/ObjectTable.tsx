@@ -12,10 +12,15 @@ import { selectBasicInfo } from "../../features/basicInfoSlice";
 
 type Props = {
   objectParams: Omit<OBJECTPARAM, "initLocation">[];
+  ptrObjectId: string;
   setPtrObjectId: Dispatch<SetStateAction<any>>;
 };
 
-const ObjectTable: VFC<Props> = ({ objectParams, setPtrObjectId }) => {
+const ObjectTable: VFC<Props> = ({
+  objectParams,
+  ptrObjectId,
+  setPtrObjectId,
+}) => {
   const basicInfo = useAppSelector(selectBasicInfo);
   const { incrementObjectNum, decrementObjectNum, FilteredObjectParam } =
     useObjectHooks({
