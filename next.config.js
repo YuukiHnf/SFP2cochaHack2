@@ -1,5 +1,10 @@
 /** @type {import('next').NextConfig} */
 const urlPrefix = process.env.URL_PREFIX ? "/" + process.env.URL_PREFIX : "";
+const withTM = require("next-transpile-modules")([
+  "@fullcalendar/common",
+  "@fullcalendar/daygrid",
+  "@fullcalendar/react",
+]);
 
 const nextConfig = {
   reactStrictMode: true,
@@ -9,4 +14,4 @@ const nextConfig = {
   publicRuntimeConfig: { urlPrefix },
 };
 
-module.exports = nextConfig;
+module.exports = withTM(nextConfig);
