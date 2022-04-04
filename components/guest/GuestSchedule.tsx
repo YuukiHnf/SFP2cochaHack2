@@ -7,6 +7,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 const GuestSchedule = () => {
   return (
     <FullCalendar
+      height={"auto"}
       plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
       initialView="timeGridDay"
       initialDate={"2022-06-03"}
