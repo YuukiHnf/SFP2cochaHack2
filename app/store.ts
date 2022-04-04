@@ -9,6 +9,7 @@ import {
 import guestSlice from "../features/guestSlice";
 import basicInfoSlice from "../features/basicInfoSlice";
 import counterSlice from "../features/conterSlice";
+import adminSlice from "../features/adminSlice";
 
 const rootReducer = combineReducers({
   // reducerを追加する
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
   basicInfo: basicInfoSlice,
   // guest用
   guestState: guestSlice,
-  counter: counterSlice,
+  // admin用
+  adminState: adminSlice,
 });
 
 export const store = configureStore({
@@ -26,8 +28,13 @@ export const store = configureStore({
     basicInfo: basicInfoSlice,
     // guest用
     guestState: guestSlice,
-    counter: counterSlice,
+    // admin用
+    adminState: adminSlice,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 export type AppDispatch = typeof store.dispatch;

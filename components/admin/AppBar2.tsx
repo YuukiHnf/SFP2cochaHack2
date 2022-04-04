@@ -1,4 +1,3 @@
-import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -14,11 +13,12 @@ import MenuItem from "@mui/material/MenuItem";
 import { useRouter } from "next/router";
 import useAuthState from "../../hooks/useAuthState";
 import Link from "next/link";
+import React from "react";
 
 const pages = ["team", "place", "object"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
-const AppBar1 = () => {
+const AppBar2 = ({ setState }: any) => {
   const router = useRouter();
   const { logout } = useAuthState({ LoginType: "admin" });
 
@@ -58,7 +58,7 @@ const AppBar1 = () => {
             noWrap
             component="div"
             sx={{ mr: 2, display: { xs: "none", md: "flex" } }}
-            onClick={() => router.push("/admin")}
+            onClick={() => setState("home")}
           >
             CochaHack
           </Typography>
@@ -93,17 +93,16 @@ const AppBar1 = () => {
               }}
             >
               {pages.map((page) => (
-                <Link href={`/admin/${page}`} key={page}>
-                  <MenuItem
-                    key={page}
-                    onClick={() => {
-                      handleCloseNavMenu();
-                      // router.push(`/admin/${page}`);
-                    }}
-                  >
-                    <Typography textAlign="center">{page}</Typography>
-                  </MenuItem>
-                </Link>
+                <MenuItem
+                  key={page}
+                  onClick={() => {
+                    handleCloseNavMenu();
+                    setState(page);
+                    // router.push(`/admin/${page}`);
+                  }}
+                >
+                  <Typography textAlign="center">{page}</Typography>
+                </MenuItem>
               ))}
             </Menu>
           </Box>
@@ -117,19 +116,24 @@ const AppBar1 = () => {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
-              <Link href={`/admin/${page}`} key={page}>
-                <Button
-                  key={page}
-                  onClick={() => {
-                    handleCloseNavMenu();
-                  }}
-                  sx={{ my: 2, color: "white", display: "block" }}
-                >
-                  {page}
-                </Button>
-              </Link>
+              <Button
+                key={page}
+                onClick={() => {
+                  handleCloseNavMenu();
+                  setState(page);
+                }}
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                {page}
+              </Button>
             ))}
-            <Button onClick={() => logout()}>LOGOUT</Button>
+            <Button
+              onClick={() => logout()}
+              variant="contained"
+              color="success"
+            >
+              LOGOUT
+            </Button>
           </Box>
 
           {/* <Box sx={{ flexGrow: 0 }}>
@@ -166,4 +170,4 @@ const AppBar1 = () => {
     </AppBar>
   );
 };
-export default AppBar1;
+export default AppBar2;
