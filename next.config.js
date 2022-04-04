@@ -4,6 +4,8 @@ const withTM = require("next-transpile-modules")([
   "@fullcalendar/common",
   "@fullcalendar/daygrid",
   "@fullcalendar/react",
+  "@fullcalendar/timegrid",
+  "@fullcalendar/interaction",
 ]);
 
 const nextConfig = {
