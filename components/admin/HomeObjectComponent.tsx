@@ -5,12 +5,8 @@ import {
   selectAdminObjects,
   selectAdminTaskBlock,
 } from "../../features/adminSlice";
-import { selectBasicInfo } from "../../features/basicInfoSlice";
-import {
-  ObjectLocation,
-  OBJECTPARAM,
-  ObjectTimeLocations,
-} from "../../utils/firebase/FirebaseStore";
+import { ObjectLocation } from "../../utils/firebase/FirebaseStore";
+import DragDropMarker from "../googlemap/DragDropMarker";
 
 type Props = {
   selectedTaskBlockId: string;
@@ -19,7 +15,6 @@ type Props = {
 const HomeObjectComponent: VFC<Props> = ({ selectedTaskBlockId }) => {
   const taskBlocks = useAppSelector(selectAdminTaskBlock);
   const objectParams = useAppSelector(selectAdminObjects);
-
   const [ptrLocations, setPtrLocations] = useState<ObjectLocation[]>([]);
 
   useEffect(() => {
@@ -75,22 +70,29 @@ const HomeObjectComponent: VFC<Props> = ({ selectedTaskBlockId }) => {
     }
   }, [selectedTaskBlockId]);
 
-  // Objectのrendering方式
-  const markerJSX = (obj: ObjectLocation) => (
-    <Marker
-      key={obj.objectId}
-      position={obj.location}
-      icon={{
-        url:
-          objectParams.find((value) => value.id === obj.objectId)?.iconUrl ??
-          "",
-        origin: new window.google.maps.Point(0, 0),
-        anchor: new window.google.maps.Point(15, 15),
-        scaledSize: new window.google.maps.Size(30, 30),
-      }}
-    />
+  return (
+    <>
+      {ptrLocations.map((loc, index) => (
+        <DragDropMarker
+          key={
+            index * loc.objectId.length * loc.location.lat * loc.location.lng
+          }
+          position={loc.location}
+          icon={{
+            url:
+              //loc.id === ptrObjectId
+              objectParams.find((value) => value.id === loc.objectId)
+                ?.iconUrl ?? "",
+            // : objectParams.find((value) => value.id === obj.id)
+            //     ?.semiIconUrl ?? "",
+            origin: new window.google.maps.Point(0, 0),
+            anchor: new window.google.maps.Point(15, 15),
+            scaledSize: new window.google.maps.Size(30, 30),
+          }}
+        />
+      ))}
+    </>
   );
-  return <>{ptrLocations.map((loc) => markerJSX(loc))}</>;
 };
 
 export default HomeObjectComponent;
