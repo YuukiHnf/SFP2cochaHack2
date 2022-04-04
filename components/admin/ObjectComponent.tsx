@@ -28,10 +28,11 @@ import ObjectTable from "./ObjectTable";
 const ObjectComponent: VFC = () => {
   const [ptrObjectId, setPtrObjectId] = useState<string>("");
   const teamId = useAppSelector(selectTeamId);
-  const { saveInitObjectLocation } = useObjectHooks({
+  const { saveInitObjectLocation, FilteredObjectParam } = useObjectHooks({
     teamId: teamId,
   });
   const objectParams = useAppSelector(selectAdminObjects);
+  const filterObjects = FilteredObjectParam();
   // const objectInit = useAppSelector(selectAdminInitObjects);
 
   // const objectInit = objectParams.map((obj) =>
@@ -47,9 +48,9 @@ const ObjectComponent: VFC = () => {
       return;
     }
     // 今のObject
-    const obj = objectParams.filter((param) => param.id === ptrObjectId)[0];
+    const obj = filterObjects.filter((param) => param.id === ptrObjectId)[0];
     const objName = obj.objectName;
-    const targetObject = objectParams.filter(
+    const targetObject = filterObjects.filter(
       (param) => param.objectName === objName
     );
 
@@ -105,7 +106,7 @@ const ObjectComponent: VFC = () => {
         }}
       >
         <DrawingManager drawingMode={google.maps.drawing.OverlayType.MARKER} />
-        {objectParams.map((obj) =>
+        {filterObjects.map((obj) =>
           obj.objectTimeLocations && obj.objectTimeLocations.length !== 0 ? (
             <DragDropMarker
               position={
@@ -116,9 +117,9 @@ const ObjectComponent: VFC = () => {
               icon={{
                 url:
                   obj.id === ptrObjectId
-                    ? objectParams.find((value) => value.id === obj.id)
+                    ? filterObjects.find((value) => value.id === obj.id)
                         ?.iconUrl ?? ""
-                    : objectParams.find((value) => value.id === obj.id)
+                    : filterObjects.find((value) => value.id === obj.id)
                         ?.semiIconUrl ?? "",
                 origin: new window.google.maps.Point(0, 0),
                 anchor: new window.google.maps.Point(15, 15),
