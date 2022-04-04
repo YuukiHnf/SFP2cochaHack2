@@ -1,10 +1,8 @@
 import React from "react";
 import { useAppSelector } from "../../app/hooks";
 import { selectGuestTaskState } from "../../features/guestSlice";
-import TaskViewComponents from "../admin/TaskViewComponents";
 import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
 import TaskViewElementForGuest from "../googlemap/TaskViewElementForGuest";
-import TaskViewElement from "../googlemap/TaskViewElementForGuest";
 
 const _mapContainerStyle = {
   width: "90%",
