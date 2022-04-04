@@ -16,6 +16,7 @@ import {
   ObjectTimeLocations,
 } from "../../utils/firebase/FirebaseStore";
 import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
+import DragDropMarker from "../googlemap/DragDropMarker";
 import MapSettingComponent from "../googlemap/MapSettingComponent";
 import ObjectTable from "./ObjectTable";
 
@@ -106,8 +107,7 @@ const ObjectComponent: VFC = () => {
         <DrawingManager drawingMode={google.maps.drawing.OverlayType.MARKER} />
         {objectParams.map((obj) =>
           obj.objectTimeLocations && obj.objectTimeLocations.length !== 0 ? (
-            <Marker
-              key={obj.id}
+            <DragDropMarker
               position={
                 obj.objectTimeLocations
                   ? obj.objectTimeLocations[0].location

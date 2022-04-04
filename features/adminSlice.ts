@@ -18,7 +18,7 @@ export type AdminState = {
   timeSche: DateSchedule;
   taskBlock?: TaskBlock[];
   //initObjectLocations: ObjectLocation[];
-  objects: Omit<OBJECTPARAM, "initLocation">[];
+  objects: OBJECTPARAM[];
 };
 
 // Stateの初期値
