@@ -4,10 +4,13 @@ import { useAppSelector } from "../../app/hooks";
 import {
   selectAdminObjects,
   selectAdminTaskBlock,
+  selectAdminTimeSche,
 } from "../../features/adminSlice";
+import useTaskCRUD from "../../hooks/useTaskCRUD";
 import {
   ObjectLocation,
   ObjectTimeLocations,
+  TaskType,
 } from "../../utils/firebase/FirebaseStore";
 import DragDropMarker from "../googlemap/DragDropMarker";
 
@@ -28,6 +31,10 @@ const initTimeObject: ObjectTaskstate = {
 const HomeObjectComponent: VFC<Props> = ({ selectedTaskBlockId }) => {
   const taskBlocks = useAppSelector(selectAdminTaskBlock);
   const objectParams = useAppSelector(selectAdminObjects);
+  const ptrDate = taskBlocks
+    ?.filter((block) => block.id === selectedTaskBlockId)[0]
+    .time?.toDate();
+  const timeSchedule = useAppSelector(selectAdminTimeSche);
   // 表示するObjectを時間から算出して保存するState
   const [ptrLocations, setPtrLocations] = useState<ObjectLocation[]>([]);
   useEffect(() => {
@@ -35,9 +42,6 @@ const HomeObjectComponent: VFC<Props> = ({ selectedTaskBlockId }) => {
     if (!taskBlocks) {
       return;
     }
-    const ptrDate = taskBlocks
-      ?.filter((block) => block.id === selectedTaskBlockId)[0]
-      .time?.toDate();
     // 現在選択されているObjectのLocationを算出
     if (ptrDate) {
       // objectTimeLocationがソートされていることに注意
@@ -86,6 +90,23 @@ const HomeObjectComponent: VFC<Props> = ({ selectedTaskBlockId }) => {
     objectId: string;
     timeLocationId: string;
   }>(initTimeObject);
+  const { addObjectTaskInBlock } = useTaskCRUD();
+
+  const onHandleSave = (e: google.maps.MapMouseEvent) => {
+    if (ptrTimeObject === initTimeObject || !ptrDate) {
+      return;
+    }
+
+    addObjectTaskInBlock(
+      e,
+      selectedTaskBlockId,
+      ptrDate,
+      ptrTimeObject.objectId,
+      ptrTimeObject.timeLocationId
+    );
+
+    setPtrTimeObject(initTimeObject);
+  };
 
   return (
     <>
@@ -115,7 +136,8 @@ const HomeObjectComponent: VFC<Props> = ({ selectedTaskBlockId }) => {
               timeLocationId: loc.locationTime.id,
             })
           }
-          onEndDrag={() => setPtrTimeObject(initTimeObject)}
+          onEndDrag={(e) => onHandleSave(e)}
+          draggable={timeSchedule.start?.toDate() !== ptrDate}
         />
       ))}
     </>

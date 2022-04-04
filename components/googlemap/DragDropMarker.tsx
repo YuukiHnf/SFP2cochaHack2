@@ -10,6 +10,7 @@ type Props = {
   icon: google.maps.Icon;
   onStartDrag?: () => void;
   onEndDrag?: (e: google.maps.MapMouseEvent) => void;
+  draggable?: boolean;
 };
 
 /**
@@ -21,6 +22,7 @@ const DragDropMarker: VFC<Props> = ({
   icon,
   onStartDrag,
   onEndDrag,
+  draggable = true,
 }) => {
   // iconの大きさ変換
   const [iconParams, setIconParams] = useState<google.maps.Icon>(icon);
@@ -43,7 +45,7 @@ const DragDropMarker: VFC<Props> = ({
     <Marker
       position={position}
       icon={iconParams}
-      draggable={true}
+      draggable={draggable}
       onDragStart={() => {
         onDragStartUI();
         onStartDrag && onStartDrag();

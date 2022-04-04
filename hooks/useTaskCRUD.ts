@@ -1,8 +1,11 @@
 import {
   addDoc,
+  arrayUnion,
   collection,
   doc,
   runTransaction,
+  Timestamp,
+  updateDoc,
   writeBatch,
 } from "firebase/firestore";
 import { useAppSelector } from "../app/hooks";
@@ -11,6 +14,74 @@ import { db, TaskBlock, TaskType } from "../utils/firebase/FirebaseStore";
 
 const useTaskCRUD = () => {
   const basicInfo = useAppSelector(selectBasicInfo);
+
+  /**
+   * Objectのタスクを追加するためのHooks
+   * @param taskBlockId
+   * @param objectId
+   * @param timeLocationId
+   */
+  const addObjectTaskInBlock = async (
+    e: google.maps.MapMouseEvent,
+    taskBlockId: string,
+    ptrTime: Date,
+    objectId: string,
+    timeLocationIdBefore: string
+  ) => {
+    // objectLocationに新しいLocaitonを追加する
+    const objectRef = doc(
+      collection(doc(db, "team", basicInfo.teamId), "objects"),
+      objectId
+    );
+    try {
+      const newRef = await runTransaction(db, async (transaction) => {
+        // objectの移動の追加
+        const newObjectTimeLocationRef = await addDoc(
+          collection(objectRef, "Locations"),
+          {
+            location: { lat: e.latLng?.lat(), lng: e.latLng?.lng() },
+            timeStamp: Timestamp.fromDate(ptrTime), //ここに移動させるときの時間を入れる
+          }
+        );
+
+        // taskへの追加
+        const newTaskRef = await addDoc(collection(db, "tasks"), {
+          by: "",
+          content: {
+            move: [
+              {
+                desc: newObjectTimeLocationRef.id,
+                location: {},
+              },
+            ],
+            explaing: [
+              {
+                desc: timeLocationIdBefore,
+                iconId: null,
+                location: {},
+              },
+            ],
+          },
+          kindOf: "OBJECT",
+          taskState: "UNDO",
+          team: "hokdaiFesta",
+          title: "物品移動",
+        } as Omit<TaskType, "id">);
+
+        // taskBlockへの追加
+        const taskBlockRef = doc(
+          collection(doc(db, "team", basicInfo.teamId), "taskBlock"),
+          taskBlockId
+        );
+        await updateDoc(taskBlockRef, {
+          taskIds: arrayUnion(newTaskRef.id),
+        });
+      });
+    } catch (e) {
+      console.log("[MyError] OBJECT task Create");
+    }
+  };
+
   /**
    * タスクを新規に作成して、それをIDとして受け取り、TaskBlockに入れる
    * @param taskBlockId
@@ -97,6 +168,7 @@ const useTaskCRUD = () => {
     deleteTaskInBlock,
     editTaskExplaingOrMoveInBlockId,
     deleteTaskExplaingOrMoveInBlockId,
+    addObjectTaskInBlock,
   };
 };
 
