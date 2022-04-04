@@ -1,10 +1,10 @@
 import { useLoadScript } from "@react-google-maps/api";
 import React, { useState } from "react";
-import HomeComponnent from "../../components/admin/HomeComponent";
 import { useAppSelector } from "../../app/hooks";
 import AdminWrapper from "../../components/admin/AdminWrapper";
 import AppBar1 from "../../components/admin/AppBar1";
 import AppBar2 from "../../components/admin/AppBar2";
+import HomeComponent from "../../components/admin/HomeComponent";
 import ObjectComponent from "../../components/admin/ObjectComponent";
 import PlaceComponent from "../../components/admin/PlaceComponent";
 import TeamComponent from "../../components/admin/TeamComponent";
@@ -34,7 +34,7 @@ const index = () => {
       case "object":
         return <ObjectComponent />;
       default:
-        return <HomeComponnent />;
+        return <HomeComponent />;
     }
   };
   return (
