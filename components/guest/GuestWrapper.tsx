@@ -18,25 +18,31 @@ const GuestWrapper: VFC<Props> = ({ children }) => {
   const router = useRouter();
 
   useEffect(() => {
-    if (!db || basicInfo.userId.length == 0 || basicInfo.teamId.length == 0) {
+    if (!db || basicInfo.userId.length === 0 || basicInfo.teamId.length === 0) {
       router.push("/login");
     }
-    const unSub = onSnapshot(
-      doc(collection(db, "users"), basicInfo.userId),
-      (doc) => {
-        if (doc.data()) {
-          const _data = doc.data() as USER;
-          console.log(_data);
-          dispatch(
-            guestSetter({
-              isActive: _data.isActive,
-              isGPS: _data.isGPS,
-              taskId: _data.taskId,
-            })
-          );
+    var unSub = () => {};
+    try {
+      unSub = onSnapshot(
+        doc(collection(db, "users"), basicInfo.userId),
+        (doc) => {
+          if (doc.data()) {
+            const _data = doc.data() as USER;
+            console.log(_data);
+            dispatch(
+              guestSetter({
+                isActive: _data.isActive,
+                isGPS: _data.isGPS,
+                taskId: _data.taskId,
+              })
+            );
+          }
         }
-      }
-    );
+      );
+    } catch (e) {
+      router.push("/login");
+    }
+
     return () => unSub();
   }, [basicInfo, dispatch, guestSetter]);
 
