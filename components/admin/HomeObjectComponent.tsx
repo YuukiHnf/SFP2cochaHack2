@@ -5,18 +5,31 @@ import {
   selectAdminObjects,
   selectAdminTaskBlock,
 } from "../../features/adminSlice";
-import { ObjectLocation } from "../../utils/firebase/FirebaseStore";
+import {
+  ObjectLocation,
+  ObjectTimeLocations,
+} from "../../utils/firebase/FirebaseStore";
 import DragDropMarker from "../googlemap/DragDropMarker";
 
 type Props = {
   selectedTaskBlockId: string;
 };
 
+interface ObjectTaskstate {
+  objectId: string;
+  timeLocationId: string;
+}
+
+const initTimeObject: ObjectTaskstate = {
+  objectId: "",
+  timeLocationId: "",
+};
+
 const HomeObjectComponent: VFC<Props> = ({ selectedTaskBlockId }) => {
   const taskBlocks = useAppSelector(selectAdminTaskBlock);
   const objectParams = useAppSelector(selectAdminObjects);
+  // 表示するObjectを時間から算出して保存するState
   const [ptrLocations, setPtrLocations] = useState<ObjectLocation[]>([]);
-
   useEffect(() => {
     // 現在選択されているtaskBlockの始まる時間
     if (!taskBlocks) {
@@ -40,7 +53,7 @@ const HomeObjectComponent: VFC<Props> = ({ selectedTaskBlockId }) => {
           if (!param.objectTimeLocations) {
             return {
               objectId: param.id,
-              location: {},
+              locationTime: {},
             } as ObjectLocation;
           }
           if (targetTimeLocationsIndex[index] !== -1) {
@@ -50,18 +63,16 @@ const HomeObjectComponent: VFC<Props> = ({ selectedTaskBlockId }) => {
             // );
             return {
               objectId: param.id,
-              location: {
-                ...param.objectTimeLocations[targetTimeLocationsIndex[index]]
-                  .location,
+              locationTime: {
+                ...param.objectTimeLocations[targetTimeLocationsIndex[index]],
               },
             } as ObjectLocation;
           } /*if (param.objectTimeLocations.length !== 0)*/ else {
             // 最新の位置を表示
             return {
               objectId: param.id,
-              location:
-                param.objectTimeLocations[param.objectTimeLocations.length - 1]
-                  .location,
+              locationTime:
+                param.objectTimeLocations[param.objectTimeLocations.length - 1],
             } as ObjectLocation;
           }
           // それ以外
@@ -70,14 +81,23 @@ const HomeObjectComponent: VFC<Props> = ({ selectedTaskBlockId }) => {
     }
   }, [selectedTaskBlockId]);
 
+  // 操作中のObject ID
+  const [ptrTimeObject, setPtrTimeObject] = useState<{
+    objectId: string;
+    timeLocationId: string;
+  }>(initTimeObject);
+
   return (
     <>
       {ptrLocations.map((loc, index) => (
         <DragDropMarker
           key={
-            index * loc.objectId.length * loc.location.lat * loc.location.lng
+            index *
+            loc.objectId.length *
+            loc.locationTime.location.lat *
+            loc.locationTime.location.lng
           }
-          position={loc.location}
+          position={loc.locationTime.location}
           icon={{
             url:
               //loc.id === ptrObjectId
@@ -89,6 +109,13 @@ const HomeObjectComponent: VFC<Props> = ({ selectedTaskBlockId }) => {
             anchor: new window.google.maps.Point(15, 15),
             scaledSize: new window.google.maps.Size(30, 30),
           }}
+          onStartDrag={() =>
+            setPtrTimeObject({
+              objectId: loc.objectId,
+              timeLocationId: loc.locationTime.id,
+            })
+          }
+          onEndDrag={() => setPtrTimeObject(initTimeObject)}
         />
       ))}
     </>

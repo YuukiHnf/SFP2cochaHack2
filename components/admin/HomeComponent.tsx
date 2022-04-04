@@ -45,7 +45,7 @@ const HomeComponent = () => {
   const markerJSX = (obj: ObjectLocation) => (
     <Marker
       key={obj.objectId}
-      position={obj.location}
+      position={obj.locationTime.location}
       icon={{
         url:
           objectParams.find((value) => value.id === obj.objectId)?.iconUrl ??

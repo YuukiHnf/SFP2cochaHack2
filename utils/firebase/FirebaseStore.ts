@@ -81,7 +81,7 @@ export type OBJECTPARAM = {
 
 export type ObjectLocation = {
   objectId: string;
-  location: Location;
+  locationTime: ObjectTimeLocations;
 };
 
 export type TaskBlock = {
