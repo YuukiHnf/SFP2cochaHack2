@@ -1,6 +1,8 @@
-import React from "react";
+import { Marker } from "@react-google-maps/api";
+import React, { useEffect, useState, VFC } from "react";
 import { useAppSelector } from "../../app/hooks";
 import { selectGuestTaskState } from "../../features/guestSlice";
+import { Location } from "../../utils/firebase/FirebaseStore";
 import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
 import TaskViewElementForGuest from "../googlemap/TaskViewElementForGuest";
 
@@ -12,8 +14,20 @@ const _mapContainerStyle = {
   float: "left",
 };
 
-const GuestHome = () => {
+const GuestHome: VFC = () => {
   const guestTaskState = useAppSelector(selectGuestTaskState);
+  const [ptrLocation, setPtrLocation] = useState<Location>({ lat: 0, lng: 0 });
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      setPtrLocation({
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      });
+      console.log(position.coords);
+    });
+  }, []);
+
   return (
     <div>
       <DefaultGoogleMapComponent mapContainerStyle={_mapContainerStyle}>
@@ -24,6 +38,7 @@ const GuestHome = () => {
               taskdata={guestTaskState[0]}
             />
           )}
+          <Marker title={"here"} position={ptrLocation} />
         </>
       </DefaultGoogleMapComponent>
     </div>
