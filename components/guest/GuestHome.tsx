@@ -4,14 +4,13 @@ import { useAppSelector } from "../../app/hooks";
 import { selectGuestTaskState } from "../../features/guestSlice";
 import { Location } from "../../utils/firebase/FirebaseStore";
 import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
+import Direction from "../googlemap/Direction";
 import TaskViewElementForGuest from "../googlemap/TaskViewElementForGuest";
 
 const _mapContainerStyle = {
   width: "90%",
   height: "550px",
-  marginLeft: "auto",
-  marginTop: "0",
-  float: "left",
+  margin: "0 auto",
 };
 
 const GuestHome: VFC = () => {
@@ -29,16 +28,24 @@ const GuestHome: VFC = () => {
   }, []);
 
   return (
-    <div>
+    <div style={{ margin: "0 auto" }}>
       <DefaultGoogleMapComponent mapContainerStyle={_mapContainerStyle}>
         <>
-          {guestTaskState[0] && (
+          {guestTaskState[0] ? (
             <TaskViewElementForGuest
               key={guestTaskState[0].id}
               taskdata={guestTaskState[0]}
             />
+          ) : (
+            <div>休憩</div>
           )}
-          <Marker title={"here"} position={ptrLocation} />
+          {/* <Marker title={"here"} position={ptrLocation} /> */}
+          {guestTaskState[0] && (
+            <Direction
+              origin={ptrLocation}
+              destination={guestTaskState[0].content.move[0].location}
+            />
+          )}
         </>
       </DefaultGoogleMapComponent>
     </div>
