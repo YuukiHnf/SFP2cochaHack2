@@ -6,6 +6,7 @@ import { Location } from "../../utils/firebase/FirebaseStore";
 import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
 import Direction from "../googlemap/Direction";
 import TaskViewElementForGuest from "../googlemap/TaskViewElementForGuest";
+import GuestComment from "./GuestComment";
 
 const _mapContainerStyle = {
   width: "90%",
@@ -48,6 +49,7 @@ const GuestHome: VFC = () => {
           )}
         </>
       </DefaultGoogleMapComponent>
+      {guestTaskState[0] && <GuestComment taskId={guestTaskState[0].id} />}
     </div>
   );
 };
