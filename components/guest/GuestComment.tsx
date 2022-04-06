@@ -5,15 +5,29 @@ import {
   orderBy,
   query,
 } from "firebase/firestore";
-import { memo, useEffect, useState, VFC } from "react";
-import { Comment, db } from "../../utils/firebase/FirebaseStore";
+import {
+  Dispatch,
+  memo,
+  SetStateAction,
+  useEffect,
+  useState,
+  VFC,
+} from "react";
+import { Comment, db, Location } from "../../utils/firebase/FirebaseStore";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import AddLocationIcon from "@mui/icons-material/AddLocation";
 
 type Props = {
   taskId: string;
+  setPointingLocation: React.Dispatch<
+    React.SetStateAction<{
+      location: Location;
+      text: string;
+    } | null>
+  >;
 };
 
-const GuestComment: VFC<Props> = memo(({ taskId }) => {
+const GuestComment: VFC<Props> = memo(({ taskId, setPointingLocation }) => {
   const [comments, setComments] = useState<Comment[]>();
 
   useEffect(() => {
@@ -48,10 +62,25 @@ const GuestComment: VFC<Props> = memo(({ taskId }) => {
               wordBreak: "break-all",
               margin: "12px",
             }}
+            onClick={
+              com.location
+                ? () =>
+                    setPointingLocation(
+                      com.location
+                        ? { location: com.location, text: com.text }
+                        : null
+                    )
+                : () => {}
+            }
           >
             <AccountCircleIcon />
             {/* <span>{`@${com.id}`}</span> */}
             <span>{`${com.text}`}</span>
+            {com.location && (
+              <span>
+                <AddLocationIcon color="error" />
+              </span>
+            )}
             {com.timeStamp && (
               <span style={{ fontSize: "14px", color: "gray" }}>
                 {`  ${com.timeStamp.toDate().toLocaleString()} ` ?? ""}

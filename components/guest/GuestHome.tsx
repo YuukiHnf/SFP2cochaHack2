@@ -45,6 +45,12 @@ const GuestHome: VFC = () => {
   const [guestInput, setGuestInput] = useState<GuestInputType>(initGuestInput);
   const { uploadComment } = useCommentHooks();
 
+  // comment用のposition
+  const [pointingLocation, setPointingLocation] = useState<{
+    location: Location;
+    text: string;
+  } | null>(null);
+
   const handleCommentUpload = (taskId: string) => {
     if (guestInput.commentText.length === 0) {
       return;
@@ -56,17 +62,17 @@ const GuestHome: VFC = () => {
     }
 
     //upload
-    imageUrl === ""
+    guestInput.pointerLocation
       ? uploadComment(
-          { text: guestInput.commentText, sendBy: basicInfo.userId },
-          taskId
-        )
-      : uploadComment(
           {
             text: guestInput.commentText,
             sendBy: basicInfo.userId,
-            photoUrl: imageUrl,
+            location: guestInput.pointerLocation,
           },
+          taskId
+        )
+      : uploadComment(
+          { text: guestInput.commentText, sendBy: basicInfo.userId },
           taskId
         );
 
@@ -131,6 +137,12 @@ const GuestHome: VFC = () => {
               label={guestInput.commentText}
             />
           )}
+          {pointingLocation && (
+            <Marker
+              position={pointingLocation.location}
+              label={pointingLocation.text}
+            />
+          )}
         </>
       </DefaultGoogleMapComponent>
       <div
@@ -153,6 +165,7 @@ const GuestHome: VFC = () => {
               ..._state,
               pointerLocation: initGuestInput.pointerLocation,
             }));
+            setPointingLocation(null);
           }}
         >
           {"場所取り消し"}
@@ -201,7 +214,10 @@ const GuestHome: VFC = () => {
               <SendIcon style={{ width: "90%", flex: "right" }} />
             </Button>
           </div>
-          <GuestComment taskId={guestTaskState[0].id} />
+          <GuestComment
+            taskId={guestTaskState[0].id}
+            setPointingLocation={setPointingLocation}
+          />
         </>
       )}
     </div>
