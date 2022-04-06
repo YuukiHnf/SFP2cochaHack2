@@ -11,6 +11,7 @@ import ArgumentDrawingManage from "../googlemap/ArgumentDrawingManage";
 import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
 import MapSettingComponent from "../googlemap/MapSettingComponent";
 import HomeObjectComponent from "./HomeObjectComponent";
+import MemberLocation from "./MemberLocation";
 import MultiToggleMode from "./MultiToggleMode";
 import TaskViewComponents from "./TaskViewComponents";
 import TaskViewForTaskIdsComponents from "./TaskViewForTaskIdsComponents";
@@ -54,6 +55,19 @@ const HomeComponent = () => {
         </div>
         <DefaultGoogleMapComponent mapContainerStyle={_mapContainerStyle}>
           <MultiToggleMode formats={UIToggle} setFormats={setUIToggle} />
+          {/* UIレイヤーの表示 */}
+          {UIToggle.map((mode) => {
+            switch (mode) {
+              case "MemberPosition":
+                return (
+                  <>
+                    <MemberLocation />
+                  </>
+                );
+              default:
+                return <></>;
+            }
+          })}
           {/* 描画用のComponent */}
           <ArgumentDrawingManage taskBlockId={selectedTaskBlockId} />
           {/* タスク提示用のComponent */}
