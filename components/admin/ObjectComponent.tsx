@@ -76,11 +76,15 @@ const ObjectComponent: VFC = () => {
     strokeOpacity: 0.3,
   };
 
-  const drawControllOption = {
+  const drawControlOption: google.maps.drawing.DrawingManagerOptions = {
     drawingControl: true,
     drawingControlOptions: {
-      position: google.maps.ControlPosition.TOP_CENTER,
-      drawingModes: ["marker", "circle", "polygon", "polyline", "rectangle"],
+      position: google.maps.ControlPosition.TOP_LEFT,
+      drawingModes: [
+        google.maps.drawing.OverlayType.CIRCLE,
+        google.maps.drawing.OverlayType.MARKER,
+        google.maps.drawing.OverlayType.POLYGON,
+      ],
     },
   };
 
@@ -98,7 +102,7 @@ const ObjectComponent: VFC = () => {
           console.log(e.latLng?.lat(), e.latLng?.lng());
         }}
       >
-        <DrawingManager drawingMode={google.maps.drawing.OverlayType.MARKER} />
+        <DrawingManager options={drawControlOption} />
         {filterObjects.map((obj) =>
           obj.objectTimeLocations && obj.objectTimeLocations.length !== 0 ? (
             <DragDropMarker
@@ -128,7 +132,7 @@ const ObjectComponent: VFC = () => {
         )}
         {/* // ここにまたPolygonなどを置いていく */}
         <MapSettingComponent />
-        <InfoWindow position={new google.maps.LatLng(43.0802, 141.34045)}>
+        {/* <InfoWindow position={new google.maps.LatLng(43.0802, 141.34045)}>
           <div>特設ステージ</div>
         </InfoWindow>
         <InfoWindow
@@ -151,7 +155,7 @@ const ObjectComponent: VFC = () => {
           }
         >
           <div>物品置き場</div>
-        </InfoWindow>
+        </InfoWindow> */}
       </DefaultGoogleMapComponent>
     </>
   );

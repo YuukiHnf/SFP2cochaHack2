@@ -105,7 +105,7 @@ const MapSettingComponent = () => {
         ]}
         options={rectAngleOption4}
         onClick={() => {
-          setTapping("Stage3");
+          setTapping("Souko4");
         }}
       />
       {tapping === "Souko4" && (

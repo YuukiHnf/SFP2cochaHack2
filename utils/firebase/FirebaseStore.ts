@@ -125,3 +125,16 @@ export type Comment = {
   location?: Location;
   photoUrl?: string;
 };
+
+export type GoogleDrawingOverlay =
+  | "GooglePolygon"
+  | "GooglePointer"
+  | "GoogleCircle"
+  | "GoogleLine";
+
+export type SetObjectType = {
+  id: string;
+  desc: string;
+  locations: Location[];
+  setObjectType: GoogleDrawingOverlay;
+};

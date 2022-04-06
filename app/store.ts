@@ -10,6 +10,7 @@ import guestSlice from "../features/guestSlice";
 import basicInfoSlice from "../features/basicInfoSlice";
 import counterSlice from "../features/conterSlice";
 import adminSlice from "../features/adminSlice";
+import setObjectSlice from "../features/setObjectSlice";
 
 const rootReducer = combineReducers({
   // reducerを追加する
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   guestState: guestSlice,
   // admin用
   adminState: adminSlice,
+  setObjects: setObjectSlice,
 });
 
 export const store = configureStore({
@@ -30,6 +32,7 @@ export const store = configureStore({
     guestState: guestSlice,
     // admin用
     adminState: adminSlice,
+    setObjects: setObjectSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
