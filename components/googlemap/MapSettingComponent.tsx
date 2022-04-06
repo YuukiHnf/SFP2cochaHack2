@@ -100,8 +100,11 @@ const MapSettingComponent = () => {
               return <></>;
           }
         })}
-      {tappingIndex !== -1 && (
-        <InfoWindow position={setObjects[tappingIndex].locations[0]}>
+      {tappingIndex != -1 && (
+        <InfoWindow
+          position={setObjects[tappingIndex].locations[0]}
+          onCloseClick={() => setTappingIndex(-1)}
+        >
           <>
             <div>{setObjects[tappingIndex].desc}</div>
             <Button
