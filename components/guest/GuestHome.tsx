@@ -13,6 +13,7 @@ import GuestComment from "./GuestComment";
 import { TextField } from "@mui/material";
 import { Button } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+import useUserHooks from "../../hooks/useUserHooks";
 
 const _mapContainerStyle = {
   width: "90%",
@@ -36,6 +37,7 @@ const GuestHome: VFC = () => {
   const guestTaskState = useAppSelector(selectGuestTaskState);
   const basicInfo = useAppSelector(selectBasicInfo);
   const [ptrLocation, setPtrLocation] = useState<Location>({ lat: 0, lng: 0 });
+  const { uploadMyLocation } = useUserHooks();
 
   // UIのMode切り替え
   const [UIMode, setUIMode] = useState<GuestUIMode>("Origin");
@@ -84,6 +86,10 @@ const GuestHome: VFC = () => {
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
       setPtrLocation({
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      });
+      uploadMyLocation({
         lat: position.coords.latitude,
         lng: position.coords.longitude,
       });
