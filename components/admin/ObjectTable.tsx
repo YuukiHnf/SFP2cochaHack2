@@ -1,6 +1,6 @@
 import { Button, SvgIcon } from "@mui/material";
 import { DataGrid, GridColDef, GridSelectionModel } from "@mui/x-data-grid";
-import { Dispatch, SetStateAction, VFC } from "react";
+import { Dispatch, memo, SetStateAction, VFC } from "react";
 import { OBJECTPARAM } from "../../utils/firebase/FirebaseStore";
 
 //icon
@@ -166,4 +166,4 @@ const ObjectTable: VFC<Props> = ({
     </div>
   );
 };
-export default ObjectTable;
+export default memo(ObjectTable);

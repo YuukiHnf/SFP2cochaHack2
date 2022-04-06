@@ -5,7 +5,7 @@ import {
   Polygon,
   useLoadScript,
 } from "@react-google-maps/api";
-import { ReactNode, VFC } from "react";
+import { memo, ReactNode, VFC } from "react";
 import { useAppSelector } from "../../app/hooks";
 import { selectAdminPlaceState } from "../../features/adminSlice";
 import { modestMapStyle } from "../../mapUtils/Modest";
@@ -59,4 +59,4 @@ const DefaultGoogleMapComponent: VFC<Props> = ({
   );
 };
 
-export default DefaultGoogleMapComponent;
+export default memo(DefaultGoogleMapComponent);

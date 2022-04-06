@@ -1,4 +1,3 @@
-import { StringLike } from "@firebase/util";
 import { getApp } from "firebase/app";
 import {
   collection,
@@ -124,4 +123,17 @@ export type Comment = {
   sendBy: string;
   location?: Location;
   photoUrl?: string;
+};
+
+export type GoogleDrawingOverlay =
+  | "GooglePolygon"
+  | "GoogleMarker"
+  | "GoogleCircle"
+  | "GoogleLine";
+
+export type SetObjectType = {
+  id: string;
+  desc: string;
+  locations: Location[];
+  setObjectType: GoogleDrawingOverlay;
 };
