@@ -8,12 +8,16 @@ import {
 import { ReactNode, VFC } from "react";
 import { useAppSelector } from "../../app/hooks";
 import { selectAdminPlaceState } from "../../features/adminSlice";
+import { modestMapStyle } from "../../mapUtils/Modest";
 
+// 表示モード切り替え用
+export type MapMode = "Modest" | "Origin";
 interface Props {
   children: ReactNode;
   mapContainerStyle?: any;
   onMouseOver?: (e: google.maps.MapMouseEvent) => void;
   onClick?: (e: google.maps.MapMouseEvent) => void;
+  mapStyle?: MapMode;
 }
 
 const _mapContainerStyle = {
@@ -27,6 +31,7 @@ const DefaultGoogleMapComponent: VFC<Props> = ({
   mapContainerStyle = _mapContainerStyle,
   onMouseOver,
   onClick,
+  mapStyle,
 }) => {
   const placeParam = useAppSelector(selectAdminPlaceState);
   const mapOption: google.maps.MapOptions = {
@@ -35,6 +40,7 @@ const DefaultGoogleMapComponent: VFC<Props> = ({
     maxZoom: 50,
     rotateControl: true, // 効果なさそう
     gestureHandling: "cooperative",
+    styles: mapStyle === "Modest" ? modestMapStyle : undefined,
   };
 
   return (
