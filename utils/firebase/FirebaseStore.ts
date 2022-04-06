@@ -116,3 +116,12 @@ export type TaskType = {
   by: string;
   content: TaskContentType;
 };
+
+export type Comment = {
+  id: string;
+  text: string;
+  timeStamp: Timestamp;
+  sendBy: string;
+  location?: Location;
+  photoUrl?: string;
+};
