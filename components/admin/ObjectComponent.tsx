@@ -1,4 +1,5 @@
 import {
+  Circle,
   DrawingManager,
   InfoWindow,
   Marker,
@@ -10,6 +11,7 @@ import { useAppSelector } from "../../app/hooks";
 import { selectAdminObjects } from "../../features/adminSlice";
 import { selectTeamId } from "../../features/basicInfoSlice";
 import useObjectHooks from "../../hooks/useObjectHooks";
+import useSetObjectHooks from "../../hooks/useSetObjectHooks";
 import {
   Location,
   ObjectLocation,
@@ -90,6 +92,42 @@ const ObjectComponent: VFC = () => {
 
   const PolygonOption = {};
 
+  /**SetObjectについて */
+  const { addSetObject } = useSetObjectHooks();
+  const [editObj, setEditObj] = useState<
+    google.maps.Circle | google.maps.Marker | google.maps.Polygon | null
+  >(null);
+  //console.log(editObj);
+
+  const editObjView = (
+    obj: google.maps.Circle | google.maps.Marker | google.maps.Polygon
+  ) => {
+    console.log(obj instanceof google.maps.Marker);
+    if (obj instanceof google.maps.Circle) {
+      obj = obj as google.maps.Circle;
+      const center = obj.getCenter();
+      console.log("circle");
+      return (
+        <>{center && <Circle center={center} radius={obj.getRadius()} />}</>
+      );
+    } else if (obj instanceof google.maps.Marker) {
+      obj = obj as google.maps.Marker;
+      const pos = obj.getPosition();
+      console.log("marker");
+      return <>{pos && <Marker position={pos} />}</>;
+    } else if (obj instanceof google.maps.Polygon) {
+      obj = obj as google.maps.Polygon;
+      console.log("Polygon");
+      return (
+        <>
+          <Polygon path={obj.getPath()} />
+        </>
+      );
+    } else {
+      return <></>;
+    }
+  };
+
   return (
     <>
       <ObjectTable
@@ -102,7 +140,27 @@ const ObjectComponent: VFC = () => {
           console.log(e.latLng?.lat(), e.latLng?.lng());
         }}
       >
-        <DrawingManager options={drawControlOption} />
+        <DrawingManager
+          options={drawControlOption}
+          onCircleComplete={(obj) => {
+            setEditObj(obj);
+            //console.log(obj);
+            obj.setVisible(false);
+          }}
+          onMarkerComplete={(obj) => {
+            setEditObj(obj);
+            // console.log(obj);
+            obj.setVisible(false);
+          }}
+          onPolygonComplete={(obj) => {
+            setEditObj(obj);
+            // console.log(obj);
+            obj.setVisible(false);
+          }}
+        />
+        {/* 新しいsetObject */}
+        {editObj && editObjView(editObj)}
+        {/* Objectの表示 */}
         {filterObjects.map((obj) =>
           obj.objectTimeLocations && obj.objectTimeLocations.length !== 0 ? (
             <DragDropMarker

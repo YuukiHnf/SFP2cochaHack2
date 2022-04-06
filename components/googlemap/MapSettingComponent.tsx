@@ -1,7 +1,11 @@
+import { Button } from "@mui/material";
 import { Circle, InfoWindow, Marker, Polygon } from "@react-google-maps/api";
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
 import { selectSetObjects } from "../../features/setObjectSlice";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import useSetObjectHooks from "../../hooks/useSetObjectHooks";
 
 const rectAngleOption = {
   fillColor: "teal",
@@ -37,20 +41,27 @@ const MapSettingComponent = () => {
   const [tapping, setTapping] = useState<
     "Stage1" | "Stage2" | "Stage3" | "Souko4" | null
   >(null);
+  const [tappingIndex, setTappingIndex] = useState<number>(-1);
   const setObjects = useAppSelector(selectSetObjects);
-  console.log(setObjects);
+  const { deleteSetObject } = useSetObjectHooks();
+  //console.log(setObjects);
   return (
     <>
       {setObjects &&
-        setObjects.map((setObj) => {
+        setObjects.map((setObj, index) => {
           switch (setObj.setObjectType) {
             case "GooglePolygon":
               return (
-                <Polygon
-                  path={setObj.locations}
-                  options={rectAngleOption}
-                  onClick={() => {}}
-                />
+                <>
+                  <Polygon
+                    key={setObj.id}
+                    path={setObj.locations}
+                    options={rectAngleOption3}
+                    onClick={() => {
+                      setTappingIndex(index);
+                    }}
+                  />
+                </>
               );
             // case "GooglePointer":
             //   return <Marker />;
@@ -60,6 +71,21 @@ const MapSettingComponent = () => {
               return <></>;
           }
         })}
+      {tappingIndex !== -1 && (
+        <InfoWindow position={setObjects[tappingIndex].locations[0]}>
+          <>
+            <div>{setObjects[tappingIndex].desc}</div>
+            <Button
+              onClick={() => deleteSetObject(setObjects[tappingIndex].id)}
+            >
+              <DeleteIcon color="error" />
+            </Button>
+            <Button>
+              <EditIcon color="success" />
+            </Button>
+          </>
+        </InfoWindow>
+      )}
       {/* <Polygon
         path={[
           new google.maps.LatLng(43.080180692594475, 141.34037284277449),
@@ -144,4 +170,4 @@ const MapSettingComponent = () => {
   );
 };
 
-export default MapSettingComponent;
+export default memo(MapSettingComponent);
