@@ -1,13 +1,20 @@
 import { TextField } from "@mui/material";
-import { useState, VFC } from "react";
+import { Dispatch, SetStateAction, useState, VFC } from "react";
 import SendIcon from "@mui/icons-material/Send";
+import { GuestInputType } from "./GuestHome";
 
 type Props = {
   taskId: string;
+  guestInput: GuestInputType;
+  setGuestInput: Dispatch<SetStateAction<GuestInputType>>;
 };
 
-const GuestCommentInput: VFC<Props> = ({ taskId }) => {
-  const [inputComment, setInputComment] = useState<string>("");
+const GuestCommentInput: VFC<Props> = ({
+  taskId,
+  guestInput,
+  setGuestInput,
+}) => {
+  //const [inputComment, setInputComment] = useState<string>("");
 
   return (
     <div style={{ margin: "30px", position: "relative", display: "flex" }}>
@@ -16,8 +23,10 @@ const GuestCommentInput: VFC<Props> = ({ taskId }) => {
         label="Standard"
         variant="standard"
         style={{ width: "80%" }}
-        value={inputComment}
-        onChange={(e) => setInputComment(e.target.value)}
+        value={guestInput.commentText}
+        onChange={(e) =>
+          setGuestInput({ ...guestInput, commentText: e.target.value })
+        }
       />
       <SendIcon style={{ width: "10%", flex: "right" }} />
     </div>

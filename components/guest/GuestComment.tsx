@@ -1,20 +1,36 @@
-import { collection, doc, onSnapshot } from "firebase/firestore";
-import { useEffect, useState, VFC } from "react";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
+import {
+  Dispatch,
+  memo,
+  SetStateAction,
+  useEffect,
+  useState,
+  VFC,
+} from "react";
 import { Comment, db } from "../../utils/firebase/FirebaseStore";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import GuestCommentInput from "./GuestCommentInput";
+import { GuestInputType } from "./GuestHome";
+import { TextField } from "@mui/material";
+
+import SendIcon from "@mui/icons-material/Send";
 
 type Props = {
   taskId: string;
 };
 
-const GuestComment: VFC<Props> = ({ taskId }) => {
+const GuestComment: VFC<Props> = memo(({ taskId }) => {
   const [comments, setComments] = useState<Comment[]>();
 
   useEffect(() => {
-    const commentCollect = collection(
-      doc(collection(db, "tasks"), taskId),
-      "comments"
+    const commentCollect = query(
+      collection(doc(collection(db, "tasks"), taskId), "comments"),
+      orderBy("timeStamp", "desc")
     );
 
     const unSub = onSnapshot(commentCollect, (commentSnaps) => {
@@ -47,17 +63,18 @@ const GuestComment: VFC<Props> = ({ taskId }) => {
             <AccountCircleIcon />
             {/* <span>{`@${com.id}`}</span> */}
             <span>{`${com.text}`}</span>
-            <span
-              style={{ fontSize: "14px", color: "gray" }}
-            >{`  ${com.timeStamp.toDate().toLocaleString()}`}</span>
+            {com.timeStamp && (
+              <span style={{ fontSize: "14px", color: "gray" }}>
+                {`  ${com.timeStamp.toDate().toLocaleString()} ` ?? ""}
+              </span>
+            )}
           </div>
         ))
       ) : (
         <></>
       )}
-      <GuestCommentInput taskId={taskId} />
     </div>
   );
-};
+});
 
 export default GuestComment;
