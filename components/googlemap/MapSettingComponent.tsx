@@ -1,5 +1,7 @@
-import { InfoWindow, Polygon } from "@react-google-maps/api";
+import { Circle, InfoWindow, Marker, Polygon } from "@react-google-maps/api";
 import React, { useState } from "react";
+import { useAppSelector } from "../../app/hooks";
+import { selectSetObjects } from "../../features/setObjectSlice";
 
 const rectAngleOption = {
   fillColor: "teal",
@@ -35,9 +37,30 @@ const MapSettingComponent = () => {
   const [tapping, setTapping] = useState<
     "Stage1" | "Stage2" | "Stage3" | "Souko4" | null
   >(null);
+  const setObjects = useAppSelector(selectSetObjects);
+  console.log(setObjects);
   return (
     <>
-      <Polygon
+      {setObjects &&
+        setObjects.map((setObj) => {
+          switch (setObj.setObjectType) {
+            case "GooglePolygon":
+              return (
+                <Polygon
+                  path={setObj.locations}
+                  options={rectAngleOption}
+                  onClick={() => {}}
+                />
+              );
+            // case "GooglePointer":
+            //   return <Marker />;
+            // case "GoogleCircle":
+            //   return <Circle />;
+            default:
+              return <></>;
+          }
+        })}
+      {/* <Polygon
         path={[
           new google.maps.LatLng(43.080180692594475, 141.34037284277449),
           new google.maps.LatLng(43.07991425690792, 141.34044258020887),
@@ -48,7 +71,7 @@ const MapSettingComponent = () => {
         onClick={() => {
           setTapping("Stage1");
         }}
-      />
+      /> */}
       {tapping === "Stage1" && (
         <InfoWindow position={new google.maps.LatLng(43.0802, 141.34045)}>
           <div>特設ステージ</div>

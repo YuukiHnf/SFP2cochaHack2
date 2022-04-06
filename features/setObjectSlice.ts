@@ -14,15 +14,14 @@ export const basicInfoSlice = createSlice({
   initialState,
   // reducerをここに定義する
   reducers: {
-    setSetObject: (state, action: PayloadAction<SetObjectType[]>) => ({
-      ...action.payload,
-    }),
+    setSetObject: (state, action: PayloadAction<SetObjectType[]>) =>
+      action.payload,
   },
 });
 
 export const { setSetObject } = basicInfoSlice.actions;
 
-export const selectSetObjects = (state: RootState) => state.basicInfo;
+export const selectSetObjects = (state: RootState) => state.setObjects;
 
 // exporting the reducer here, as we need to add this to the store
 export default basicInfoSlice.reducer;
