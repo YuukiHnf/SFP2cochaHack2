@@ -45,6 +45,12 @@ const GuestHome: VFC = () => {
   const [guestInput, setGuestInput] = useState<GuestInputType>(initGuestInput);
   const { uploadComment } = useCommentHooks();
 
+  // comment用のposition
+  const [pointingLocation, setPointingLocation] = useState<{
+    location: Location;
+    text: string;
+  } | null>(null);
+
   const handleCommentUpload = (taskId: string) => {
     if (guestInput.commentText.length === 0) {
       return;
@@ -56,22 +62,23 @@ const GuestHome: VFC = () => {
     }
 
     //upload
-    imageUrl === ""
+    guestInput.pointerLocation
       ? uploadComment(
-          { text: guestInput.commentText, sendBy: basicInfo.userId },
-          taskId
-        )
-      : uploadComment(
           {
             text: guestInput.commentText,
             sendBy: basicInfo.userId,
-            photoUrl: imageUrl,
+            location: guestInput.pointerLocation,
           },
+          taskId
+        )
+      : uploadComment(
+          { text: guestInput.commentText, sendBy: basicInfo.userId },
           taskId
         );
 
     //init
     setGuestInput(initGuestInput);
+    setUIMode("Origin");
   };
 
   useEffect(() => {
@@ -86,7 +93,27 @@ const GuestHome: VFC = () => {
 
   return (
     <div style={{ margin: "0 auto" }}>
-      <DefaultGoogleMapComponent mapContainerStyle={_mapContainerStyle}>
+      <DefaultGoogleMapComponent
+        mapContainerStyle={_mapContainerStyle}
+        onClick={
+          UIMode === "Inputting"
+            ? (e: google.maps.MapMouseEvent) => {
+                setGuestInput((_state) =>
+                  e.latLng
+                    ? {
+                        ..._state,
+                        pointerLocation: {
+                          lat: e.latLng?.lat(),
+                          lng: e.latLng?.lng(),
+                        },
+                      }
+                    : _state
+                );
+              }
+            : () => {}
+        }
+        mapStyle={UIMode === "Inputting" ? "Modest" : "Origin"}
+      >
         <>
           {guestTaskState[0] ? (
             <TaskViewElementForGuest
@@ -103,12 +130,57 @@ const GuestHome: VFC = () => {
               destination={guestTaskState[0].content.move[0].location}
             />
           )}
+          {/* GuestからCommentとして持ちたい位置情報を表示 */}
+          {guestInput.pointerLocation && (
+            <Marker
+              position={guestInput.pointerLocation}
+              label={guestInput.commentText}
+            />
+          )}
+          {pointingLocation && (
+            <Marker
+              position={pointingLocation.location}
+              label={pointingLocation.text}
+            />
+          )}
         </>
       </DefaultGoogleMapComponent>
+      <div
+        style={{ marginLeft: "30px", position: "relative", display: "flex" }}
+      >
+        <Button
+          variant="outlined"
+          color={UIMode === "Origin" ? "error" : "success"}
+          onClick={() => {
+            UIMode === "Origin" ? setUIMode("Inputting") : setUIMode("Origin");
+          }}
+        >
+          {UIMode === "Origin" ? "場所を伝える" : "戻る"}
+        </Button>
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={() => {
+            setGuestInput((_state) => ({
+              ..._state,
+              pointerLocation: initGuestInput.pointerLocation,
+            }));
+            setPointingLocation(null);
+          }}
+        >
+          {"場所取り消し"}
+        </Button>
+      </div>
+
+      {/* コメント部分のUI */}
       {guestTaskState[0] && (
         <>
           <div
-            style={{ margin: "30px", position: "relative", display: "flex" }}
+            style={{
+              marginLeft: "30px",
+              position: "relative",
+              display: "flex",
+            }}
           >
             <TextField
               id="standard-basic"
@@ -117,13 +189,16 @@ const GuestHome: VFC = () => {
               style={{ width: "80%" }}
               value={guestInput.commentText}
               onChange={(e) =>
-                setGuestInput({ ...guestInput, commentText: e.target.value })
+                setGuestInput((_state) => ({
+                  ..._state,
+                  commentText: e.target.value,
+                }))
               }
               onFocus={(e) => {
-                setUIMode("Inputting");
+                //setUIMode("Inputting");
               }}
               onBlur={(e) => {
-                setUIMode("Origin");
+                //setUIMode("Origin");
               }}
             />
             <Button
@@ -139,7 +214,10 @@ const GuestHome: VFC = () => {
               <SendIcon style={{ width: "90%", flex: "right" }} />
             </Button>
           </div>
-          <GuestComment taskId={guestTaskState[0].id} />
+          <GuestComment
+            taskId={guestTaskState[0].id}
+            setPointingLocation={setPointingLocation}
+          />
         </>
       )}
     </div>

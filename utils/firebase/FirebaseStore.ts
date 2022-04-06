@@ -122,5 +122,6 @@ export type Comment = {
   text: string;
   timeStamp: Timestamp;
   sendBy: string;
+  location?: Location;
   photoUrl?: string;
 };
