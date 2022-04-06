@@ -1,7 +1,7 @@
 import { Button, Divider, Icon, IconButton } from "@mui/material";
 import { Box, BoxProps } from "@mui/system";
 import { DrawingManager } from "@react-google-maps/api";
-import { useState, VFC } from "react";
+import { memo, useState, VFC } from "react";
 
 //icon
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
@@ -120,7 +120,7 @@ const ArgumentDrawingManage: VFC<Props> = ({ taskBlockId }) => {
     markerOptions: markerOptions[ptrMarker?.makerType ?? "Down"],
     drawingControlOptions: {
       drawingModes: [google.maps.drawing.OverlayType.MARKER],
-      position: google.maps.ControlPosition.TOP_RIGHT,
+      position: google.maps.ControlPosition.BOTTOM_LEFT, //google.maps.ControlPosition.TOP_RIGHT,
     },
   };
 
@@ -351,4 +351,4 @@ const ArgumentDrawingManage: VFC<Props> = ({ taskBlockId }) => {
   );
 };
 
-export default ArgumentDrawingManage;
+export default memo(ArgumentDrawingManage);

@@ -1,5 +1,5 @@
 import { Marker } from "@react-google-maps/api";
-import { useEffect, useState, VFC } from "react";
+import { memo, useEffect, useState, VFC } from "react";
 import { useAppSelector } from "../../app/hooks";
 import {
   selectAdminObjects,
@@ -144,4 +144,4 @@ const HomeObjectComponent: VFC<Props> = ({ selectedTaskBlockId }) => {
   );
 };
 
-export default HomeObjectComponent;
+export default memo(HomeObjectComponent);

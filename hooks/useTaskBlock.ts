@@ -48,7 +48,6 @@ const useTaskBlock = ({ teamId }: Props) => {
       title: newTitle,
       time: Timestamp.fromDate(newTime),
       taskIds: [],
-      objectLocations: [],
       isInit: false,
     };
 
