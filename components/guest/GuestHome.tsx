@@ -72,6 +72,7 @@ const GuestHome: VFC = () => {
 
     //init
     setGuestInput(initGuestInput);
+    setUIMode("Origin");
   };
 
   useEffect(() => {
@@ -127,16 +128,46 @@ const GuestHome: VFC = () => {
           {guestInput.pointerLocation && (
             <Marker
               position={guestInput.pointerLocation}
-              title={"guestInput.commentText"}
+              label={guestInput.commentText}
             />
           )}
         </>
       </DefaultGoogleMapComponent>
+      <div
+        style={{ marginLeft: "30px", position: "relative", display: "flex" }}
+      >
+        <Button
+          variant="outlined"
+          color={UIMode === "Origin" ? "error" : "success"}
+          onClick={() => {
+            UIMode === "Origin" ? setUIMode("Inputting") : setUIMode("Origin");
+          }}
+        >
+          {UIMode === "Origin" ? "場所を伝える" : "戻る"}
+        </Button>
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={() => {
+            setGuestInput((_state) => ({
+              ..._state,
+              pointerLocation: initGuestInput.pointerLocation,
+            }));
+          }}
+        >
+          {"場所取り消し"}
+        </Button>
+      </div>
 
+      {/* コメント部分のUI */}
       {guestTaskState[0] && (
         <>
           <div
-            style={{ margin: "30px", position: "relative", display: "flex" }}
+            style={{
+              marginLeft: "30px",
+              position: "relative",
+              display: "flex",
+            }}
           >
             <TextField
               id="standard-basic"
