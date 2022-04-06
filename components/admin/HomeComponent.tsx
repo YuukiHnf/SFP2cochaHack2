@@ -11,6 +11,7 @@ import ArgumentDrawingManage from "../googlemap/ArgumentDrawingManage";
 import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
 import MapSettingComponent from "../googlemap/MapSettingComponent";
 import HomeObjectComponent from "./HomeObjectComponent";
+import MultiToggleMode from "./MultiToggleMode";
 import TaskViewComponents from "./TaskViewComponents";
 import TaskViewForTaskIdsComponents from "./TaskViewForTaskIdsComponents";
 import TimeTable from "./TimeTable";
@@ -69,6 +70,7 @@ const HomeComponent = () => {
           <TimeTable setter={setSelectedTaskBlockId} />
         </div>
         <DefaultGoogleMapComponent mapContainerStyle={_mapContainerStyle}>
+          <MultiToggleMode />
           {/* 描画用のComponent */}
           <ArgumentDrawingManage taskBlockId={selectedTaskBlockId} />
           {/* タスク提示用のComponent */}

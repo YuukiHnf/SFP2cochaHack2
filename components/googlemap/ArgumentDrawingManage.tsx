@@ -120,7 +120,7 @@ const ArgumentDrawingManage: VFC<Props> = ({ taskBlockId }) => {
     markerOptions: markerOptions[ptrMarker?.makerType ?? "Down"],
     drawingControlOptions: {
       drawingModes: [google.maps.drawing.OverlayType.MARKER],
-      position: google.maps.ControlPosition.TOP_RIGHT,
+      position: google.maps.ControlPosition.BOTTOM_LEFT, //google.maps.ControlPosition.TOP_RIGHT,
     },
   };
 
