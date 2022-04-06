@@ -86,7 +86,27 @@ const GuestHome: VFC = () => {
 
   return (
     <div style={{ margin: "0 auto" }}>
-      <DefaultGoogleMapComponent mapContainerStyle={_mapContainerStyle}>
+      <DefaultGoogleMapComponent
+        mapContainerStyle={_mapContainerStyle}
+        onClick={
+          UIMode === "Inputting"
+            ? (e: google.maps.MapMouseEvent) => {
+                setGuestInput((_state) =>
+                  e.latLng
+                    ? {
+                        ..._state,
+                        pointerLocation: {
+                          lat: e.latLng?.lat(),
+                          lng: e.latLng?.lng(),
+                        },
+                      }
+                    : _state
+                );
+              }
+            : () => {}
+        }
+        mapStyle={UIMode === "Inputting" ? "Modest" : "Origin"}
+      >
         <>
           {guestTaskState[0] ? (
             <TaskViewElementForGuest
@@ -103,8 +123,16 @@ const GuestHome: VFC = () => {
               destination={guestTaskState[0].content.move[0].location}
             />
           )}
+          {/* GuestからCommentとして持ちたい位置情報を表示 */}
+          {guestInput.pointerLocation && (
+            <Marker
+              position={guestInput.pointerLocation}
+              title={"guestInput.commentText"}
+            />
+          )}
         </>
       </DefaultGoogleMapComponent>
+
       {guestTaskState[0] && (
         <>
           <div
@@ -117,13 +145,16 @@ const GuestHome: VFC = () => {
               style={{ width: "80%" }}
               value={guestInput.commentText}
               onChange={(e) =>
-                setGuestInput({ ...guestInput, commentText: e.target.value })
+                setGuestInput((_state) => ({
+                  ..._state,
+                  commentText: e.target.value,
+                }))
               }
               onFocus={(e) => {
-                setUIMode("Inputting");
+                //setUIMode("Inputting");
               }}
               onBlur={(e) => {
-                setUIMode("Origin");
+                //setUIMode("Origin");
               }}
             />
             <Button

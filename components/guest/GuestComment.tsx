@@ -5,20 +5,9 @@ import {
   orderBy,
   query,
 } from "firebase/firestore";
-import {
-  Dispatch,
-  memo,
-  SetStateAction,
-  useEffect,
-  useState,
-  VFC,
-} from "react";
+import { memo, useEffect, useState, VFC } from "react";
 import { Comment, db } from "../../utils/firebase/FirebaseStore";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { GuestInputType } from "./GuestHome";
-import { TextField } from "@mui/material";
-
-import SendIcon from "@mui/icons-material/Send";
 
 type Props = {
   taskId: string;
@@ -48,7 +37,7 @@ const GuestComment: VFC<Props> = memo(({ taskId }) => {
   console.log(comments);
 
   return (
-    <div>
+    <div style={{ marginLeft: "15px" }}>
       {comments ? (
         comments.map((com) => (
           <div
