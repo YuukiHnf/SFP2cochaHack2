@@ -1,4 +1,3 @@
-import { StringLike } from "@firebase/util";
 import { getApp } from "firebase/app";
 import {
   collection,
