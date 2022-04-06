@@ -63,10 +63,22 @@ const MapSettingComponent = () => {
                   />
                 </>
               );
-            // case "GooglePointer":
-            //   return <Marker />;
-            // case "GoogleCircle":
-            //   return <Circle />;
+            case "GooglePointer":
+              return (
+                <Marker
+                  key={setObj.id}
+                  position={setObj.locations[0]}
+                  label={setObj.desc[0]}
+                />
+              );
+            case "GoogleCircle":
+              return (
+                <Circle
+                  key={setObj.id}
+                  center={setObj.locations[0]}
+                  radius={setObj.locations[1].lat}
+                />
+              );
             default:
               return <></>;
           }

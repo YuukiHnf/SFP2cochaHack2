@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import {
   Circle,
   DrawingManager,
@@ -6,7 +7,7 @@ import {
   Polygon,
   Rectangle,
 } from "@react-google-maps/api";
-import { useState, VFC } from "react";
+import { useCallback, useState, VFC } from "react";
 import { useAppSelector } from "../../app/hooks";
 import { selectAdminObjects } from "../../features/adminSlice";
 import { selectTeamId } from "../../features/basicInfoSlice";
@@ -21,6 +22,10 @@ import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
 import DragDropMarker from "../googlemap/DragDropMarker";
 import MapSettingComponent from "../googlemap/MapSettingComponent";
 import ObjectTable from "./ObjectTable";
+
+import SaveIcon from "@mui/icons-material/Save";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 /**
  * 2022/03/30
@@ -97,6 +102,7 @@ const ObjectComponent: VFC = () => {
   const [editObj, setEditObj] = useState<
     google.maps.Circle | google.maps.Marker | google.maps.Polygon | null
   >(null);
+  const [editTitle, setEditTitle] = useState<string>("");
   //console.log(editObj);
 
   const editObjView = (
@@ -108,19 +114,97 @@ const ObjectComponent: VFC = () => {
       const center = obj.getCenter();
       console.log("circle");
       return (
-        <>{center && <Circle center={center} radius={obj.getRadius()} />}</>
+        <>
+          {center && (
+            <>
+              <Circle center={center} radius={obj.getRadius()} />
+              <InfoWindow
+                position={center}
+                onCloseClick={() => {
+                  setEditObj(null);
+                  setEditTitle("");
+                }}
+              >
+                <>
+                  <input
+                    type="text"
+                    value={editTitle}
+                    onChange={(e) => setEditTitle(e.target.value)}
+                  />
+                  <Button onClick={() => {}}>
+                    <SaveIcon color="success" />
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setEditObj(null);
+                      setEditTitle("");
+                    }}
+                  >
+                    <DeleteIcon color="error" />
+                  </Button>
+                </>
+              </InfoWindow>
+            </>
+          )}
+        </>
       );
     } else if (obj instanceof google.maps.Marker) {
       obj = obj as google.maps.Marker;
       const pos = obj.getPosition();
       console.log("marker");
-      return <>{pos && <Marker position={pos} />}</>;
+      return (
+        <>
+          {pos && (
+            <>
+              <Marker position={pos} />
+              <InfoWindow position={pos} onCloseClick={() => setEditObj(null)}>
+                <>
+                  <input
+                    type="text"
+                    value={editTitle}
+                    onChange={(e) => setEditTitle(e.target.value)}
+                  />
+                  <Button onClick={() => {}}>
+                    <SaveIcon color="success" />
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setEditObj(null);
+                      setEditTitle("");
+                    }}
+                  >
+                    <DeleteIcon color="error" />
+                  </Button>
+                </>
+              </InfoWindow>
+            </>
+          )}
+        </>
+      );
     } else if (obj instanceof google.maps.Polygon) {
       obj = obj as google.maps.Polygon;
       console.log("Polygon");
       return (
         <>
           <Polygon path={obj.getPath()} />
+          <InfoWindow
+            position={obj.getPath().getAt(0)}
+            onCloseClick={() => setEditObj(null)}
+          >
+            <>
+              <input
+                type="text"
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+              />
+              <Button onClick={() => {}}>
+                <SaveIcon color="success" />
+              </Button>
+              <Button onClick={() => setEditObj(null)}>
+                <DeleteIcon color="error" />
+              </Button>
+            </>
+          </InfoWindow>
         </>
       );
     } else {
@@ -136,25 +220,22 @@ const ObjectComponent: VFC = () => {
         setPtrObjectId={setPtrObjectId}
       />
       <DefaultGoogleMapComponent
-        onClick={(e: google.maps.MapMouseEvent) => {
+        onClick={useCallback((e: google.maps.MapMouseEvent) => {
           console.log(e.latLng?.lat(), e.latLng?.lng());
-        }}
+        }, [])}
       >
         <DrawingManager
           options={drawControlOption}
           onCircleComplete={(obj) => {
             setEditObj(obj);
-            //console.log(obj);
             obj.setVisible(false);
           }}
           onMarkerComplete={(obj) => {
             setEditObj(obj);
-            // console.log(obj);
             obj.setVisible(false);
           }}
           onPolygonComplete={(obj) => {
             setEditObj(obj);
-            // console.log(obj);
             obj.setVisible(false);
           }}
         />
