@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../app/store";
+import { SetObjectType } from "../utils/firebase/FirebaseStore";
 
 /**GuestもAdminも両方使うstate */
 

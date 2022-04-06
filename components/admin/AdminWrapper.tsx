@@ -16,11 +16,13 @@ import {
   selectAdminObjects,
 } from "../../features/adminSlice";
 import { selectBasicInfo } from "../../features/basicInfoSlice";
+import { setSetObject } from "../../features/setObjectSlice";
 import {
   db,
   OBJECTPARAM,
   ObjectTimeLocations,
   PLACE,
+  SetObjectType,
   TaskBlock,
   TEAM,
 } from "../../utils/firebase/FirebaseStore";
@@ -127,10 +129,28 @@ const AdminWrapper: VFC<Props> = ({ children }) => {
         );
       }
     });
+
+    // set Object
+    const unSubSetObj = onSnapshot(
+      collection(doc(collection(db, "team"), basicInfo.teamId), "sets"),
+      (setObjSnaps) => {
+        if (!setObjSnaps.empty) {
+          dispatch(
+            setSetObject(
+              setObjSnaps.docs.map(
+                (snap) => ({ ...snap.data(), id: snap.id } as SetObjectType)
+              )
+            )
+          );
+        }
+      }
+    );
+
     return () => {
       unSub();
       unSubObj();
       unSubTaskBlock();
+      unSubSetObj();
     };
   }, [basicInfo]);
 

@@ -8,7 +8,13 @@ import {
   guestSetterTasks,
   guestSetterWithoutTasks,
 } from "../../features/guestSlice";
-import { db, TaskType, USER } from "../../utils/firebase/FirebaseStore";
+import { setSetObject } from "../../features/setObjectSlice";
+import {
+  db,
+  SetObjectType,
+  TaskType,
+  USER,
+} from "../../utils/firebase/FirebaseStore";
 
 interface Props {
   children: React.ReactNode;
@@ -26,6 +32,7 @@ const GuestWrapper: VFC<Props> = ({ children }) => {
     }
     var unSub = () => {};
     var unSubTask = () => {};
+    var unSubSetObj = () => {};
     try {
       unSub = onSnapshot(
         doc(collection(db, "users"), basicInfo.userId),
@@ -58,11 +65,31 @@ const GuestWrapper: VFC<Props> = ({ children }) => {
           )
         );
       });
+
+      // set Object
+      const unSubSetObj = onSnapshot(
+        collection(doc(collection(db, "team"), basicInfo.teamId), "sets"),
+        (setObjSnaps) => {
+          if (!setObjSnaps.empty) {
+            dispatch(
+              setSetObject(
+                setObjSnaps.docs.map(
+                  (snap) => ({ ...snap.data(), id: snap.id } as SetObjectType)
+                )
+              )
+            );
+          }
+        }
+      );
     } catch (e) {
       router.push("/login");
     }
 
-    return () => unSub();
+    return () => {
+      unSub();
+      unSubSetObj();
+      unSubTask();
+    };
   }, [basicInfo, dispatch, guestSetterTasks, guestSetterWithoutTasks]);
 
   return <div>{children}</div>;
