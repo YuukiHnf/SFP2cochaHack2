@@ -3,14 +3,19 @@ import FormatItalicIcon from "@mui/icons-material/FormatItalic";
 import FormatUnderlinedIcon from "@mui/icons-material/FormatUnderlined";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import { memo, useState } from "react";
+import { Dispatch, memo, SetStateAction, useState, VFC } from "react";
 
 import DirectionsWalkIcon from "@mui/icons-material/DirectionsWalk";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import AddTaskIcon from "@mui/icons-material/AddTask";
 
-const MultiToggleMode = () => {
-  const [formats, setFormats] = useState(() => ["bold", "italic"]);
+type Props = {
+  formats: string[];
+  setFormats: Dispatch<SetStateAction<string[]>>;
+};
+
+const MultiToggleMode: VFC<Props> = ({ formats, setFormats }) => {
+  //const [formats, setFormats] = useState(() => ["bold", "italic"]);
 
   const handleFormat = (
     event: React.MouseEvent<HTMLElement>,
@@ -28,13 +33,13 @@ const MultiToggleMode = () => {
       style={{ float: "right" }}
       orientation="vertical"
     >
-      <ToggleButton value="bold" aria-label="bold">
+      <ToggleButton value="MemberPosition" aria-label="MemberPosition">
         <DirectionsWalkIcon />
       </ToggleButton>
-      <ToggleButton value="italic" aria-label="italic">
+      <ToggleButton value="TaskState" aria-label="TaskState">
         <FormatListBulletedIcon />
       </ToggleButton>
-      <ToggleButton value="underlined" aria-label="underlined">
+      <ToggleButton value="AddTask" aria-label="AddTask">
         <AddTaskIcon />
       </ToggleButton>
     </ToggleButtonGroup>

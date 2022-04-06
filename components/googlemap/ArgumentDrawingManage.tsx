@@ -1,7 +1,7 @@
 import { Button, Divider, Icon, IconButton } from "@mui/material";
 import { Box, BoxProps } from "@mui/system";
 import { DrawingManager } from "@react-google-maps/api";
-import { useState, VFC } from "react";
+import { memo, useState, VFC } from "react";
 
 //icon
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
@@ -351,4 +351,4 @@ const ArgumentDrawingManage: VFC<Props> = ({ taskBlockId }) => {
   );
 };
 
-export default ArgumentDrawingManage;
+export default memo(ArgumentDrawingManage);

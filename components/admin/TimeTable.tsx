@@ -5,11 +5,10 @@ import {
   GridSelectionModel,
 } from "@mui/x-data-grid";
 import { serverTimestamp, Timestamp } from "firebase/firestore";
-import React, { useEffect, useState, VFC } from "react";
+import React, { memo, useEffect, useState, VFC } from "react";
 import { useAppSelector } from "../../app/hooks";
 import {
   selectAdminTaskBlock,
-  selectAdminInitObjects,
   selectAdminTimeSche,
 } from "../../features/adminSlice";
 import { TaskBlock } from "../../utils/firebase/FirebaseStore";
@@ -133,4 +132,4 @@ const TimeTable: VFC<Props> = ({ setter }) => {
   );
 };
 
-export default TimeTable;
+export default memo(TimeTable);

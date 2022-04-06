@@ -42,26 +42,9 @@ const HomeComponent = () => {
   const objectParams = useAppSelector(selectAdminObjects);
   const [selectedTaskBlockId, setSelectedTaskBlockId] = useState<string>("");
 
-  // Objectのrendering方式
-  const markerJSX = (obj: ObjectLocation) => (
-    <Marker
-      key={obj.objectId}
-      position={obj.locationTime.location}
-      icon={{
-        url:
-          objectParams.find((value) => value.id === obj.objectId)?.iconUrl ??
-          "",
-        origin: new window.google.maps.Point(0, 0),
-        anchor: new window.google.maps.Point(15, 15),
-        scaledSize: new window.google.maps.Size(30, 30),
-      }}
-    />
-  );
-
-  console.log(selectedTaskBlockId);
-  // console.log(
-  //   taskBlock?.filter((block) => block.id === selectedTaskBlockId)[0]
-  // );
+  // UIの表示Toggleボタン
+  const [UIToggle, setUIToggle] = useState(() => ["MemberPosition"]);
+  console.log(UIToggle);
 
   return (
     <>
@@ -70,7 +53,7 @@ const HomeComponent = () => {
           <TimeTable setter={setSelectedTaskBlockId} />
         </div>
         <DefaultGoogleMapComponent mapContainerStyle={_mapContainerStyle}>
-          <MultiToggleMode />
+          <MultiToggleMode formats={UIToggle} setFormats={setUIToggle} />
           {/* 描画用のComponent */}
           <ArgumentDrawingManage taskBlockId={selectedTaskBlockId} />
           {/* タスク提示用のComponent */}
@@ -88,21 +71,15 @@ const HomeComponent = () => {
           )) ?? <></>}
           {/* この時のObject用の描画ツール */}
           {/* Objectを指定した時間ごとに描画する */}
-          {
-            /*selectedTaskBlockId === initTaskBlockId ? ( // if init
-            initObjectLocations.map(markerJSX)
-          ) :*/ selectedTaskBlockId ? ( // select taskBlock
-              <>
-                <HomeObjectComponent
-                  selectedTaskBlockId={selectedTaskBlockId}
-                />
-              </>
-            ) : (
-              <></>
-            )
-          }
+          {selectedTaskBlockId ? ( // select taskBlock
+            <>
+              <HomeObjectComponent selectedTaskBlockId={selectedTaskBlockId} />
+            </>
+          ) : (
+            <></>
+          )}
           //それぞれのObjectを表示させる場所 ) : (<></>)
-          {/* 擬似的な全体説明用オブジェクト、後々、ここもDBからとってくるようにする or statusに入れる */}
+          {/* 全体説明用オブジェクト*/}
           <MapSettingComponent />
         </DefaultGoogleMapComponent>
       </div>
