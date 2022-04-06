@@ -26,7 +26,7 @@ const GuestSetting = () => {
   return (
     <div style={{ margin: "0 auto" }}>
       <FormControl component="fieldset" variant="standard">
-        <FormLabel component="legend">{basicInfo.username}'s setting</FormLabel>
+        <FormLabel component="legend">{`${basicInfo.username} setting`}</FormLabel>
         <FormGroup>
           <FormControlLabel
             control={
@@ -53,7 +53,7 @@ const GuestSetting = () => {
           />
         </FormGroup>
         <FormHelperText>
-          ナビゲーションを有効にするにはGPSをOnにする必要があります
+          {"ナビゲーションを有効にするにはGPSをOnにする必要があります"}
         </FormHelperText>
       </FormControl>
     </div>

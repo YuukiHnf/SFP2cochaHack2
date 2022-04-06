@@ -10,7 +10,7 @@ import PlaceComponent from "../../components/admin/PlaceComponent";
 import TeamComponent from "../../components/admin/TeamComponent";
 import { selectAdminPlaceState } from "../../features/adminSlice";
 
-const index = () => {
+const Index = () => {
   const [menu, setMenu] = useState<"home" | "team" | "place" | "object">(
     "home"
   );
@@ -45,4 +45,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

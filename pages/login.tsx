@@ -6,7 +6,7 @@ import SignInForm from "../components/SignInForm";
 import SignInForm2 from "../components/SignInForm2";
 import { selectBasicInfo } from "../features/basicInfoSlice";
 
-const login: VFC = () => {
+const Login = () => {
   const [loginAdmin, setLoginAdmin] = useState<boolean>(true);
   const [signUp, setSignUp] = useState<boolean>(false);
   //console.log(loginAdmin ? "Admin" : "Guest");
@@ -64,4 +64,4 @@ const login: VFC = () => {
   );
 };
 
-export default login;
+export default Login;

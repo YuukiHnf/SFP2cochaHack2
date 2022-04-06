@@ -27,7 +27,7 @@ type Props = {
   >;
 };
 
-const GuestComment: VFC<Props> = memo(({ taskId, setPointingLocation }) => {
+const GuestComment: VFC<Props> = ({ taskId, setPointingLocation }) => {
   const [comments, setComments] = useState<Comment[]>();
 
   useEffect(() => {
@@ -93,6 +93,6 @@ const GuestComment: VFC<Props> = memo(({ taskId, setPointingLocation }) => {
       )}
     </div>
   );
-});
+};
 
-export default GuestComment;
+export default memo(GuestComment);

@@ -7,7 +7,7 @@ import GuestSetting from "../../components/guest/GuestSetting";
 import GuestWrapper from "../../components/guest/GuestWrapper";
 import useAuthState from "../../hooks/useAuthState";
 
-const index = () => {
+const Index = () => {
   const [menu, setMenu] = useState<"Home" | "Schedule" | "Settings" | "Logout">(
     "Home"
   );
@@ -47,4 +47,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

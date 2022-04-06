@@ -92,8 +92,7 @@ const HomeComponent = () => {
           ) : (
             <></>
           )}
-          //それぞれのObjectを表示させる場所 ) : (<></>)
-          {/* 全体説明用オブジェクト*/}
+          ) : (<></>){/* 全体説明用オブジェクト*/}
           <MapSettingComponent />
         </DefaultGoogleMapComponent>
       </div>
