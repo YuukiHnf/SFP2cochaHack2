@@ -63,12 +63,15 @@ const MapSettingComponent = () => {
                   />
                 </>
               );
-            case "GooglePointer":
+            case "GoogleMarker":
               return (
                 <Marker
                   key={setObj.id}
                   position={setObj.locations[0]}
                   label={setObj.desc[0]}
+                  onClick={() => {
+                    setTappingIndex(index);
+                  }}
                 />
               );
             case "GoogleCircle":
@@ -77,6 +80,10 @@ const MapSettingComponent = () => {
                   key={setObj.id}
                   center={setObj.locations[0]}
                   radius={setObj.locations[1].lat}
+                  options={rectAngleOption4}
+                  onClick={() => {
+                    setTappingIndex(index);
+                  }}
                 />
               );
             default:
@@ -110,7 +117,7 @@ const MapSettingComponent = () => {
           setTapping("Stage1");
         }}
       /> */}
-      {tapping === "Stage1" && (
+      {/* {tapping === "Stage1" && (
         <InfoWindow position={new google.maps.LatLng(43.0802, 141.34045)}>
           <div>特設ステージ</div>
         </InfoWindow>
@@ -177,7 +184,7 @@ const MapSettingComponent = () => {
         >
           <div>物品置き場</div>
         </InfoWindow>
-      )}
+      )} */}
     </>
   );
 };

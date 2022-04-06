@@ -128,7 +128,7 @@ export type Comment = {
 
 export type GoogleDrawingOverlay =
   | "GooglePolygon"
-  | "GooglePointer"
+  | "GoogleMarker"
   | "GoogleCircle"
   | "GoogleLine";
 

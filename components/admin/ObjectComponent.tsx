@@ -17,6 +17,7 @@ import {
   Location,
   ObjectLocation,
   ObjectTimeLocations,
+  SetObjectType,
 } from "../../utils/firebase/FirebaseStore";
 import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
 import DragDropMarker from "../googlemap/DragDropMarker";
@@ -26,6 +27,7 @@ import ObjectTable from "./ObjectTable";
 import SaveIcon from "@mui/icons-material/Save";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { title } from "process";
 
 /**
  * 2022/03/30
@@ -131,7 +133,22 @@ const ObjectComponent: VFC = () => {
                     value={editTitle}
                     onChange={(e) => setEditTitle(e.target.value)}
                   />
-                  <Button onClick={() => {}}>
+                  <Button
+                    onClick={() => {
+                      if (title.length === 0) return;
+                      obj = obj as google.maps.Circle;
+                      addSetObject({
+                        desc: editTitle,
+                        setObjectType: "GoogleCircle",
+                        locations: [
+                          { lat: center.lat(), lng: center.lng() },
+                          { lat: obj.getRadius(), lng: 0 },
+                        ],
+                      } as Omit<SetObjectType, "id">);
+                      setEditObj(null);
+                      setEditTitle("");
+                    }}
+                  >
                     <SaveIcon color="success" />
                   </Button>
                   <Button
@@ -164,7 +181,18 @@ const ObjectComponent: VFC = () => {
                     value={editTitle}
                     onChange={(e) => setEditTitle(e.target.value)}
                   />
-                  <Button onClick={() => {}}>
+                  <Button
+                    onClick={() => {
+                      if (title.length === 0) return;
+                      addSetObject({
+                        desc: editTitle,
+                        setObjectType: "GoogleMarker",
+                        locations: [{ lat: pos.lat(), lng: pos.lng() }],
+                      } as Omit<SetObjectType, "id">);
+                      setEditObj(null);
+                      setEditTitle("");
+                    }}
+                  >
                     <SaveIcon color="success" />
                   </Button>
                   <Button
@@ -197,7 +225,25 @@ const ObjectComponent: VFC = () => {
                 value={editTitle}
                 onChange={(e) => setEditTitle(e.target.value)}
               />
-              <Button onClick={() => {}}>
+              <Button
+                onClick={() => {
+                  if (title.length === 0) return;
+                  obj = obj as google.maps.Polygon;
+                  addSetObject({
+                    desc: editTitle,
+                    setObjectType: "GooglePolygon",
+                    locations: obj
+                      .getPath()
+                      .getArray()
+                      .map((_path, index) => {
+                        _path = _path as google.maps.LatLng;
+                        return { lat: _path.lat(), lng: _path.lng() };
+                      }),
+                  } as Omit<SetObjectType, "id">);
+                  setEditObj(null);
+                  setEditTitle("");
+                }}
+              >
                 <SaveIcon color="success" />
               </Button>
               <Button onClick={() => setEditObj(null)}>
@@ -271,30 +317,6 @@ const ObjectComponent: VFC = () => {
         )}
         {/* // ここにまたPolygonなどを置いていく */}
         <MapSettingComponent />
-        {/* <InfoWindow position={new google.maps.LatLng(43.0802, 141.34045)}>
-          <div>特設ステージ</div>
-        </InfoWindow>
-        <InfoWindow
-          position={
-            new google.maps.LatLng(43.080593077898364, 141.34089096515135)
-          }
-        >
-          <div>特設ステージ2</div>
-        </InfoWindow>
-        <InfoWindow
-          position={
-            new google.maps.LatLng(43.08028541379676, 141.33959455686127)
-          }
-        >
-          <div>演者待機場所</div>
-        </InfoWindow>
-        <InfoWindow
-          position={
-            new google.maps.LatLng(43.080355705899384, 141.34019584247977)
-          }
-        >
-          <div>物品置き場</div>
-        </InfoWindow> */}
       </DefaultGoogleMapComponent>
     </>
   );
