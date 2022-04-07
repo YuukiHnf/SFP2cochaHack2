@@ -1,24 +1,27 @@
-import { Button, Divider, Icon, IconButton } from "@mui/material";
-import { Box, BoxProps } from "@mui/system";
+import {
+  Alert,
+  Button,
+  Divider,
+  Icon,
+  IconButton,
+  Snackbar,
+} from "@mui/material";
 import { DrawingManager } from "@react-google-maps/api";
 import { memo, useState, VFC } from "react";
 
 //icon
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import SwipeLeftIcon from "@mui/icons-material/SwipeLeft";
 import { TaskDialog } from "../admin/TaskDialog";
 import { Location, TaskType } from "../../utils/firebase/FirebaseStore";
 import useTaskCRUD from "../../hooks/useTaskCRUD";
-import { useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectBasicInfo } from "../../features/basicInfoSlice";
 import InputTaskViewComponent from "./InputingTaskViewComponents";
 import { getDownloadURL } from "firebase/storage";
 import Image from "next/image";
 import DrawingToggle from "../admin/DrawingToggle";
-
+import SaveAsIcon from "@mui/icons-material/SaveAs";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { setInputType } from "../../features/uiHelperSlice";
 export type MarkerType = "HumanPos" | "Up" | "Down" | "Left" | "Right" | null;
 
 export const humanPosUrl = "/humanTaskIcon.png"; //`https://firebasestorage.googleapis.com/v0/b/next-fb-project.appspot.com/o/default%2FhumanTaskIcon.png`;
@@ -62,6 +65,7 @@ const initPtrMarker = {
 
 const ArgumentDrawingManage: VFC<Props> = ({ taskBlockId }) => {
   const basicInfo = useAppSelector(selectBasicInfo);
+  const dispatch = useAppDispatch();
 
   // drawing Mode の切り替え（Google Maps 純正のDrawingOption用
   const [googleDrawingMode, setGoogleDrawingMode] =
@@ -166,6 +170,14 @@ const ArgumentDrawingManage: VFC<Props> = ({ taskBlockId }) => {
     setAddOpen(true);
   };
 
+  /**
+   * snackbarの処理
+   */
+  const [isSnacks, setIsSnacks] = useState<{ save: boolean; info: boolean }>({
+    save: true,
+    info: true,
+  });
+
   const handleClose = async () => {
     // DialogがCloseした時の処理
     setAddOpen(false);
@@ -177,40 +189,26 @@ const ArgumentDrawingManage: VFC<Props> = ({ taskBlockId }) => {
     console.log("[未実装]");
   };
 
-  /** 全てをSaveさせに行くとき */
-  const handleSave = (title: string) => {
-    // TaskをDBに追加する
-    if (inputingTask && ptrMarker.explaingOrMove === "Explaing") {
-      addTaskInBlock(taskBlockId, {
-        ...inputingTask,
-        content: {
-          ...inputingTask.content,
-          explaing: [
-            ...inputingTask.content.explaing,
-            {
-              location: ptrMarker.location,
-              desc: title,
-              iconId: ptrMarker.makerType,
-            },
-          ],
-        },
-      });
-    } else if (inputingTask && ptrMarker.explaingOrMove === "Move") {
-      addTaskInBlock(taskBlockId, {
-        ...inputingTask,
-        content: {
-          ...inputingTask.content,
-          move: [
-            ...inputingTask.content.move,
-            { location: ptrMarker.location, desc: title },
-          ],
-        },
-      });
-    }
-    // Inputを全て無効にする
-    setInputingTask(initInputTask);
+  // 全てが終わった時
+  const handleInit = async () => {
+    setInputingTask({
+      ...initInputTask,
+      team: basicInfo.teamId,
+    });
     handleClose();
+    //dispatch(setInputType("ORIGINAL"));
+  };
+
+  /** 全てをSaveさせに行くとき */
+  const handleSave = () => {
+    // TaskをDBに追加する
+    inputingTask && addTaskInBlock(taskBlockId, inputingTask);
+    // Inputを全て無効にする
+    handleInit();
     // Drawingの物を全て無くしたい
+
+    // snackが出るなら、falseにする
+    setIsSnacks((state) => ({ ...state, save: true, info: false }));
   };
 
   // explaingなObjectを足すとき...,現在の入力をStateに入れ込んで、Explaing Modeにしながら、入力をまつ
@@ -246,83 +244,50 @@ const ArgumentDrawingManage: VFC<Props> = ({ taskBlockId }) => {
       });
     }
     setGoogleDrawingMode(null);
+    // snackが出てなければ、trueにする
+    !isSnacks.info && setIsSnacks((state) => ({ ...state, info: true }));
   };
 
   return (
     <>
+      {/* 入力用のToggle */}
       <DrawingToggle setIconMode={setIconMode} />
-      {/* <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          width: "fit-content",
-          border: (theme) => `1px solid ${theme.palette.divider}`,
-          borderRadius: 1,
-          bgcolor: "background.paper",
-          color: "text.secondary",
-          "& svg": {
-            m: 1.0,
-          },
-          "& hr": {
-            mx: 0.5,
-          },
-        }}
-      >
-        <Button
-          size="small"
-          variant="outlined"
-          fullWidth={false}
-          color="inherit"
-          onClick={() => setIconMode(null)}
+      {/* saveした時のsnakbar */}
+      <Snackbar open={isSnacks.save} autoHideDuration={5000}>
+        <Alert
+          onClose={() => {
+            setIsSnacks((state) => ({ ...state, save: false }));
+          }}
+          severity="success"
+          sx={{ width: "100%" }}
         >
-          <SwipeLeftIcon />
-        </Button>
-        <Button
-          size="small"
-          variant="outlined"
-          fullWidth={false}
-          color="inherit"
-          onClick={() => setIconMode("Up")}
+          SAVE
+        </Alert>
+      </Snackbar>
+      {/* 入力のsnackbar */}
+      <Snackbar open={isSnacks.info}>
+        <Alert
+          onClose={() => {
+            setIsSnacks((state) => ({ ...state, info: false }));
+          }}
+          severity="info"
+          sx={{ width: "100%" }}
         >
-          <ArrowUpwardIcon />
-        </Button>
-        <Button
-          size="small"
-          variant="outlined"
-          fullWidth={false}
-          color="inherit"
-          onClick={() => setIconMode("Down")}
-        >
-          <ArrowDownwardIcon />
-        </Button>
-        <Button
-          size="small"
-          variant="outlined"
-          fullWidth={false}
-          color="inherit"
-          onClick={() => setIconMode("Left")}
-        >
-          <ArrowBackIcon />
-        </Button>
-        <Button
-          size="small"
-          variant="outlined"
-          fullWidth={false}
-          color="inherit"
-          onClick={() => setIconMode("Right")}
-        >
-          <ArrowRightAltIcon />
-        </Button>
-        <Button
-          size="small"
-          variant="outlined"
-          fullWidth={false}
-          color="inherit"
-          onClick={() => setIconMode("HumanPos")}
-        >
-          <Image src={humanPosUrl} width={44} height={40} />
-        </Button>
-      </Box> */}
+          <>
+            <span>{`Inputing... ${inputingTask.content.move.length}moves & ${inputingTask.content.explaing.length}explains`}</span>
+            <span>
+              <Button color="success" size="small" onClick={() => handleSave()}>
+                <SaveAsIcon />
+              </Button>
+            </span>
+            <span>
+              <Button color="error" size="small" onClick={() => handleInit()}>
+                <DeleteOutlineIcon />
+              </Button>
+            </span>
+          </>
+        </Alert>
+      </Snackbar>
       <DrawingManager
         drawingMode={googleDrawingMode} //ここを変えれば、切り替えができる！！
         onMarkerComplete={
@@ -341,8 +306,8 @@ const ArgumentDrawingManage: VFC<Props> = ({ taskBlockId }) => {
       <TaskDialog
         open={addOpen}
         onClose={handleClose}
-        onSave={handleSave}
-        onDelete={() => handleDelete("")}
+        //onSave={handleSave}
+        //onDelete={() => handleDelete("")}
         onExplaing={handleExplaing}
       />
     </>
