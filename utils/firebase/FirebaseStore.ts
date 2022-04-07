@@ -6,6 +6,7 @@ import {
   getFirestore,
   Timestamp,
 } from "firebase/firestore";
+import { getStorage, ref } from "firebase/storage";
 import { MarkerType } from "../../components/googlemap/ArgumentDrawingManage";
 import { isEmulating, storePort } from "./FirebaseInit";
 
@@ -20,6 +21,11 @@ export const getUserCollection = collection(db, "users");
 export const getTeamCollection = collection(db, "team");
 export const getPlaceCollection = (teamId: string) =>
   collection(doc(collection(db, "users"), teamId), "place");
+
+/**storage */
+export const storage = getStorage(getApp());
+
+export const defaultImageStorage = ref(storage, "default");
 
 // Userテーブル
 export type USER = {

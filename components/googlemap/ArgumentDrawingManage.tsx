@@ -15,10 +15,11 @@ import useTaskCRUD from "../../hooks/useTaskCRUD";
 import { useAppSelector } from "../../app/hooks";
 import { selectBasicInfo } from "../../features/basicInfoSlice";
 import InputTaskViewComponent from "./InputingTaskViewComponents";
+import { getDownloadURL } from "firebase/storage";
 
 export type MarkerType = "HumanPos" | "Up" | "Down" | "Left" | "Right" | null;
 
-export const humanPosUrl = `http://localhost:9199/v0/b/default-bucket/o/humanTaskIcon.png?alt=media&token=389a05b0-c6d7-4de2-86da-1559154b17f8`;
+export const humanPosUrl = `https://firebasestorage.googleapis.com/v0/b/next-fb-project.appspot.com/o/default%2FhumanTaskIcon.png`;
 export const upUrl = `http://localhost:9199/v0/b/default-bucket/o/upIcon.png?alt=media&token=4fef015d-c9c5-43c5-8a5b-06671d2c6a61`;
 export const rightUrl = `http://localhost:9199/v0/b/default-bucket/o/rightIcon.png?alt=media&token=0de0d1a4-06f3-49f8-9971-df1fd0f7709e`;
 export const downUrl = `http://localhost:9199/v0/b/default-bucket/o/downIcon.png?alt=media&token=e6f3bb0e-7687-42fd-a7e1-d0543c78d1fd`;
@@ -316,13 +317,7 @@ const ArgumentDrawingManage: VFC<Props> = ({ taskBlockId }) => {
           color="inherit"
           onClick={() => setIconMode("HumanPos")}
         >
-          <img
-            src={
-              "http://localhost:9199/v0/b/default-bucket/o/humanTaskIcon.png?alt=media&token=389a05b0-c6d7-4de2-86da-1559154b17f8"
-            }
-            width={44}
-            height={40}
-          ></img>
+          <img src={humanPosUrl} width={44} height={40}></img>
         </Button>
       </Box>
       <DrawingManager
