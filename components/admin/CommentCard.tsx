@@ -4,8 +4,12 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { useAppSelector } from "../../app/hooks";
-import { selectChatTaskId } from "../../features/uiHelperSlice";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import {
+  selectChatTaskId,
+  setChatInputLocation,
+  setPointingLocation,
+} from "../../features/uiHelperSlice";
 import { memo, useEffect, useState } from "react";
 import { Comment, db } from "../../utils/firebase/FirebaseStore";
 import {
@@ -22,8 +26,12 @@ import AddLocationIcon from "@mui/icons-material/AddLocation";
 const CommentCard = () => {
   const commentTaskId = useAppSelector(selectChatTaskId);
   const [comments, setComments] = useState<Comment[]>([]);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
+    if (!db || commentTaskId === "") {
+      return;
+    }
     const commentCollect = query(
       collection(doc(collection(db, "tasks"), commentTaskId), "comments"),
       orderBy("timeStamp", "desc")
@@ -71,13 +79,14 @@ const CommentCard = () => {
                   }}
                   onClick={
                     com.location
-                      ? () => {}
-                      : //   setPointingLocation(
-                        //     com.location
-                        //       ? { location: com.location, text: com.text }
-                        //       : null
-                        //   )
-                        () => {}
+                      ? () =>
+                          dispatch(
+                            setPointingLocation({
+                              location: com.location ?? { lat: 0, lng: 0 },
+                              text: com.text,
+                            })
+                          )
+                      : () => {}
                   }
                 >
                   <AccountCircleIcon />
