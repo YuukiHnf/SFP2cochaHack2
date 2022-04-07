@@ -20,7 +20,7 @@ const TaskStatesView: VFC<Props> = ({ taskIds }) => {
         <OneTaskStateView
           key={_id + index}
           taskId={_id}
-          isTapping={isTappings[index]}
+          isTapping={isTappings[index] ?? true}
         />
       ))}
     </div>

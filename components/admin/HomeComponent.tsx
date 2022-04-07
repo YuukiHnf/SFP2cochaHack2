@@ -54,7 +54,10 @@ const HomeComponent = () => {
         <div style={_tableStyle}>
           <TimeTable setter={setSelectedTaskBlockId} />
         </div>
-        <DefaultGoogleMapComponent mapContainerStyle={_mapContainerStyle}>
+        <DefaultGoogleMapComponent
+          mapContainerStyle={_mapContainerStyle}
+          mapStyle={UIToggle.includes("TaskState") ? "Dark" : "Origin"}
+        >
           <MultiToggleMode formats={UIToggle} setFormats={setUIToggle} />
           {/* UIレイヤーの表示 */}
           {UIToggle.map((mode) => {

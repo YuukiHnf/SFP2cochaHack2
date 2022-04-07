@@ -109,7 +109,7 @@ const taskAndDataView = (
               scaledSize: new window.google.maps.Size(30, 30),
             }}
           />
-          {isTapping && (
+          {/* {isTapping && (
             <InfoWindow
               key={ex.location.lat + ex.location.lng + index + 1}
               position={ex.location}
@@ -127,7 +127,7 @@ const taskAndDataView = (
                 <p>{"Comment"}</p>
               </div>
             </InfoWindow>
-          )}
+          )} */}
         </>
       ))}
     </>
@@ -162,17 +162,14 @@ const taskAndDataViewObject = (
               key={_objLoc.location.lat * _objLoc.location.lng * 0.7}
               position={_objLoc.location}
               icon={{
-                url:
-                  state === "UNDO" || state === "DONE"
-                    ? _obj.semiIconUrl
-                    : _obj.iconUrl,
+                url: state === "DONE" ? _obj.iconUrl : "",
                 origin: new window.google.maps.Point(0, 0),
                 anchor: new window.google.maps.Point(15, 15),
                 scaledSize: new window.google.maps.Size(30, 30),
               }}
               onClick={() => {}}
             />
-            {isTapping && (
+            {
               <InfoWindow position={mv.location}>
                 <div>{mv.desc}</div>
                 <p>
@@ -184,7 +181,7 @@ const taskAndDataViewObject = (
                     : "進行中"}
                 </p>
               </InfoWindow>
-            )}
+            }
           </>
         );
       })}
@@ -210,8 +207,10 @@ const taskAndDataViewObject = (
               position={_objLoc.location}
               icon={{
                 url:
-                  state === "UNDO" || state === "DONE"
+                  state === "UNDO"
                     ? _obj.iconUrl
+                    : state === "DONE"
+                    ? ""
                     : _obj.semiIconUrl,
                 origin: new window.google.maps.Point(0, 0),
                 anchor: new window.google.maps.Point(15, 15),
@@ -219,11 +218,11 @@ const taskAndDataViewObject = (
               }}
               onClick={() => {}}
             />
-            {isTapping && (
+            {
               <InfoWindow position={ex.location} onCloseClick={() => {}}>
                 <div>{ex.desc}</div>
               </InfoWindow>
-            )}
+            }
           </>
         );
       })}

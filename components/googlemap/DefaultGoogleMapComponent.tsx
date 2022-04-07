@@ -9,9 +9,11 @@ import { memo, ReactNode, VFC } from "react";
 import { useAppSelector } from "../../app/hooks";
 import { selectAdminPlaceState } from "../../features/adminSlice";
 import { modestMapStyle } from "../../mapUtils/Modest";
+import { grayScaleMapStyle } from "../../mapUtils/Grayscale";
+import { darkMapStyle } from "../../mapUtils/Dark";
 
 // 表示モード切り替え用
-export type MapMode = "Modest" | "Origin";
+export type MapMode = "Modest" | "Origin" | "GrayScale" | "Dark";
 interface Props {
   children: ReactNode;
   mapContainerStyle?: any;
@@ -40,7 +42,14 @@ const DefaultGoogleMapComponent: VFC<Props> = ({
     maxZoom: 50,
     rotateControl: true, // 効果なさそう
     gestureHandling: "cooperative",
-    styles: mapStyle === "Modest" ? modestMapStyle : undefined,
+    styles:
+      mapStyle === "Modest"
+        ? modestMapStyle
+        : mapStyle === "GrayScale"
+        ? grayScaleMapStyle
+        : mapStyle === "Dark"
+        ? darkMapStyle
+        : undefined,
   };
 
   return (
