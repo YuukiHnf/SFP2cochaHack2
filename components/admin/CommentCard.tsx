@@ -30,6 +30,8 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AddLocationIcon from "@mui/icons-material/AddLocation";
 import { TextField } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+import useCommentHooks from "../../hooks/useCommentHooks";
+import { selectBasicInfo } from "../../features/basicInfoSlice";
 
 const CommentCard = () => {
   const commentTaskId = useAppSelector(selectChatTaskId);
@@ -38,6 +40,9 @@ const CommentCard = () => {
 
   const InputType = useAppSelector(selectInputType);
   const ChatInput = useAppSelector(selectChatInput);
+  const basicInfo = useAppSelector(selectBasicInfo);
+
+  const { uploadComment } = useCommentHooks();
 
   useEffect(() => {
     if (!db || commentTaskId === "") {
@@ -63,6 +68,28 @@ const CommentCard = () => {
   if (commentTaskId === "" || !commentTaskId) {
     return <></>;
   }
+
+  const handleComment = () => {
+    if (ChatInput.commentText.length === 0) {
+      return;
+    }
+
+    ChatInput.pointerLocation
+      ? uploadComment(
+          {
+            text: ChatInput.commentText,
+            sendBy: basicInfo.userId,
+            location: ChatInput.pointerLocation,
+          },
+          commentTaskId
+        )
+      : uploadComment(
+          { text: ChatInput.commentText, sendBy: basicInfo.userId },
+          commentTaskId
+        );
+
+    dispatch(setChatInputInit());
+  };
 
   console.log("[Comment]" + commentTaskId, comments);
 
@@ -104,7 +131,18 @@ const CommentCard = () => {
               value={ChatInput.commentText}
               onChange={(e) => dispatch(setChatInputText(e.target.value))}
             />
-            <SendIcon style={{ width: "10%", flex: "right" }} />
+            <Button
+              size="small"
+              variant="outlined"
+              fullWidth={false}
+              color="inherit"
+              disabled={ChatInput.commentText.length === 0}
+              onClick={() => {
+                handleComment();
+              }}
+            >
+              <SendIcon />
+            </Button>
           </div>
         </Typography>
         <Typography variant="body2">
