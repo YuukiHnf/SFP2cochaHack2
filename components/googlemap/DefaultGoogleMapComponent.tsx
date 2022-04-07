@@ -11,9 +11,10 @@ import { selectAdminPlaceState } from "../../features/adminSlice";
 import { modestMapStyle } from "../../mapUtils/Modest";
 import { grayScaleMapStyle } from "../../mapUtils/Grayscale";
 import { darkMapStyle } from "../../mapUtils/Dark";
+import { greenMapStyle } from "../../mapUtils/Green";
 
 // 表示モード切り替え用
-export type MapMode = "Modest" | "Origin" | "GrayScale" | "Dark";
+export type MapMode = "Modest" | "Origin" | "GrayScale" | "Dark" | "Green";
 interface Props {
   children: ReactNode;
   mapContainerStyle?: any;
@@ -49,6 +50,8 @@ const DefaultGoogleMapComponent: VFC<Props> = ({
         ? grayScaleMapStyle
         : mapStyle === "Dark"
         ? darkMapStyle
+        : mapStyle === "Green"
+        ? greenMapStyle
         : undefined,
   };
 

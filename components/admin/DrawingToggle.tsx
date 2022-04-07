@@ -1,12 +1,6 @@
 import * as React from "react";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import {
-  InputModeType,
-  selectInputType,
-  setInputType,
-} from "../../features/uiHelperSlice";
 
 //icon
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
@@ -46,26 +40,25 @@ const DrawingToggle: React.VFC<Props> = ({
     <ToggleButtonGroup
       value={alignment}
       exclusive
-      color="primary"
       onChange={handleInputType}
       aria-label="text alignment"
     >
-      <ToggleButton value="origin" aria-label="left aligned" color="standard">
+      <ToggleButton value="origin" aria-label="left aligned" color="success">
         <SwipeLeftIcon />
       </ToggleButton>
-      <ToggleButton value="Up" aria-label="centered" color="standard">
+      <ToggleButton value="Up" aria-label="centered" color="success">
         <ArrowUpwardIcon />
       </ToggleButton>
-      <ToggleButton value="Down" aria-label="centered" color="standard">
+      <ToggleButton value="Down" aria-label="centered" color="success">
         <ArrowDownwardIcon />
       </ToggleButton>
-      <ToggleButton value="Left" aria-label="centered" color="standard">
+      <ToggleButton value="Left" aria-label="centered" color="success">
         <ArrowBackIcon />
       </ToggleButton>
-      <ToggleButton value="Right" aria-label="centered" color="standard">
+      <ToggleButton value="Right" aria-label="centered" color="success">
         <ArrowRightAltIcon />
       </ToggleButton>
-      <ToggleButton value="HumanPos" aria-label="centered" color="standard">
+      <ToggleButton value="HumanPos" aria-label="centered" color="success">
         <Image src={marker2Url["HumanPos"]} width={22} height={20} />
       </ToggleButton>
     </ToggleButtonGroup>

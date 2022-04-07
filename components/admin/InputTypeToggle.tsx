@@ -46,7 +46,7 @@ const InputTypeToggle = () => {
       >
         <TouchAppIcon />
       </ToggleButton>
-      <ToggleButton value="ADD" aria-label="centered" color="standard">
+      <ToggleButton value="ADD" aria-label="centered" color="success">
         <AddTaskIcon />
         <ArrowRightIcon />
       </ToggleButton>

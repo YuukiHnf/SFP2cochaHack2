@@ -63,7 +63,13 @@ const HomeComponent = () => {
         </div>
         <DefaultGoogleMapComponent
           mapContainerStyle={_mapContainerStyle}
-          mapStyle={UIToggle.includes("TaskState") ? "Dark" : "Origin"}
+          mapStyle={
+            UIToggle.includes("TaskState")
+              ? "Dark"
+              : InputType === "ADD"
+              ? "Green"
+              : "Origin"
+          } //Mapの色を変える
           onClick={
             InputType === "CHATINPUT"
               ? (e) => {
