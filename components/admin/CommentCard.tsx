@@ -6,9 +6,15 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
+  selectChatInput,
   selectChatTaskId,
+  selectInputType,
+  setChatInputInit,
   setChatInputLocation,
+  setChatInputText,
+  setInputType,
   setPointingLocation,
+  setPointingLocationNULL,
 } from "../../features/uiHelperSlice";
 import { memo, useEffect, useState } from "react";
 import { Comment, db } from "../../utils/firebase/FirebaseStore";
@@ -22,11 +28,16 @@ import {
 
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AddLocationIcon from "@mui/icons-material/AddLocation";
+import { TextField } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
 
 const CommentCard = () => {
   const commentTaskId = useAppSelector(selectChatTaskId);
   const [comments, setComments] = useState<Comment[]>([]);
   const dispatch = useAppDispatch();
+
+  const InputType = useAppSelector(selectInputType);
+  const ChatInput = useAppSelector(selectChatInput);
 
   useEffect(() => {
     if (!db || commentTaskId === "") {
@@ -38,7 +49,7 @@ const CommentCard = () => {
     );
 
     const unSub = onSnapshot(commentCollect, (commentSnaps) => {
-      if (commentSnaps.empty) return;
+      if (commentSnaps.empty) setComments([]);
       setComments(
         commentSnaps.docs.map(
           (snap) => ({ ...snap.data(), id: snap.id } as Comment)
@@ -53,6 +64,8 @@ const CommentCard = () => {
     return <></>;
   }
 
+  console.log("[Comment]" + commentTaskId, comments);
+
   return (
     <Card sx={{ minWidth: 275 }} style={{ margin: "0 auto" }}>
       <CardContent>
@@ -60,11 +73,40 @@ const CommentCard = () => {
           チャットスペース
         </Typography>
         <CardActions>
-          <Button size="small">場所を追加</Button>
+          <Button
+            size="small"
+            onClick={() => dispatch(setInputType("CHATINPUT"))}
+          >
+            {!(InputType === "CHATINPUT") ? "場所を伝える" : "戻る"}
+          </Button>
         </CardActions>
         <CardActions>
-          <Button size="small">場所をクリア</Button>
+          <Button
+            size="small"
+            onClick={() => {
+              dispatch(setInputType("ORIGINAL"));
+              dispatch(setChatInputInit());
+              dispatch(setPointingLocationNULL());
+            }}
+          >
+            場所をクリア
+          </Button>
         </CardActions>
+        <Typography>
+          <div
+            style={{ margin: "30px", position: "relative", display: "flex" }}
+          >
+            <TextField
+              id="standard-basic"
+              label="Standard"
+              variant="standard"
+              style={{ width: "80%" }}
+              value={ChatInput.commentText}
+              onChange={(e) => dispatch(setChatInputText(e.target.value))}
+            />
+            <SendIcon style={{ width: "10%", flex: "right" }} />
+          </div>
+        </Typography>
         <Typography variant="body2">
           <div style={{ marginLeft: "15px" }}>
             {comments ? (

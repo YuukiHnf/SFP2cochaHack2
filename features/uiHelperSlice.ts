@@ -7,6 +7,7 @@ import {
 import { Location } from "../utils/firebase/FirebaseStore";
 
 /**GuestもAdminも両方使うstate */
+export type InputModeType = "ORIGINAL" | "ADD" | "EDIT" | "COPY" | "CHATINPUT";
 
 const initGuestInput: GuestInputType = {
   commentText: "",
@@ -18,6 +19,7 @@ export type UIHelperType = {
   chatTaskId: string;
   chatInput: GuestInputType; //ユーザのInput
   pointingLocation: PointingLocationType | null; //chatが指す場所
+  InputMode: InputModeType;
 };
 
 // Stateの初期値
@@ -25,6 +27,7 @@ const initialState: UIHelperType = {
   chatTaskId: "",
   chatInput: initGuestInput,
   pointingLocation: null,
+  InputMode: "ORIGINAL",
 };
 
 // sliceの設定
@@ -42,6 +45,12 @@ export const UIHelperSlice = createSlice({
         chatInput: { ...state.chatInput, pointerLocation: action.payload },
       };
     },
+    setChatInputInit: (state, action: PayloadAction) => {
+      return {
+        ...state,
+        chatInput: initGuestInput,
+      };
+    },
     setChatInputText: (state, action: PayloadAction<string>) => {
       return {
         ...state,
@@ -57,6 +66,18 @@ export const UIHelperSlice = createSlice({
         pointingLocation: { ...action.payload },
       };
     },
+    setPointingLocationNULL: (state, action: PayloadAction) => {
+      return {
+        ...state,
+        pointingLocation: null,
+      };
+    },
+    setInputType: (state, action: PayloadAction<InputModeType>) => {
+      return {
+        ...state,
+        InputMode: action.payload,
+      };
+    },
   },
 });
 
@@ -65,12 +86,16 @@ export const {
   setChatInputLocation,
   setChatInputText,
   setPointingLocation,
+  setPointingLocationNULL,
+  setInputType,
+  setChatInputInit,
 } = UIHelperSlice.actions;
 
 export const selectChatTaskId = (state: RootState) => state.uiHelper.chatTaskId;
 export const selectChatInput = (state: RootState) => state.uiHelper.chatInput;
 export const selectPointingLocations = (state: RootState) =>
   state.uiHelper.pointingLocation;
+export const selectInputType = (state: RootState) => state.uiHelper.InputMode;
 
 // exporting the reducer here, as we need to add this to the store
 export default UIHelperSlice.reducer;
