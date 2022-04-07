@@ -26,6 +26,11 @@ export type GuestInputType = {
   pointerLocation: Location | null;
 };
 
+export type PointingLocationType = {
+  location: Location;
+  text: string;
+};
+
 const initGuestInput: GuestInputType = {
   commentText: "",
   pointerLocation: null,
@@ -48,10 +53,8 @@ const GuestHome: VFC = () => {
   const { uploadComment } = useCommentHooks();
 
   // comment用のposition
-  const [pointingLocation, setPointingLocation] = useState<{
-    location: Location;
-    text: string;
-  } | null>(null);
+  const [pointingLocation, setPointingLocation] =
+    useState<PointingLocationType | null>(null);
 
   const handleCommentUpload = (taskId: string) => {
     if (guestInput.commentText.length === 0) {
