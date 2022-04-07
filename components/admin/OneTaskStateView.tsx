@@ -5,11 +5,14 @@ import { useAppSelector } from "../../app/hooks";
 import { selectAdminObjects } from "../../features/adminSlice";
 import {
   db,
+  Location,
   OBJECTPARAM,
   TaskProgressState,
   TaskType,
 } from "../../utils/firebase/FirebaseStore";
 import { inputingMarker2Url } from "../googlemap/EditingTaskViewComponent";
+import { GuestInputType } from "../guest/GuestHome";
+import AdminComment from "./AdminComment";
 
 type Props = {
   taskId: string;
@@ -44,84 +47,23 @@ export const DONEMarker2Url = {
   Right: _rightUrl,
 };
 
-const taskAndDataView = (
-  taskData: TaskType,
-  isTapping: boolean,
-  state: TaskProgressState
-) => {
-  return (
-    <>
-      {taskData.content.move.map((mv) => (
-        <>
-          <Marker
-            key={mv.location.lat * mv.location.lng * Math.random()}
-            position={mv.location}
-            icon={{
-              url:
-                state === "UNDO"
-                  ? UNDOMarker2Url["HumanPos"]
-                  : state === "DONE"
-                  ? DONEMarker2Url["HumanPos"]
-                  : inputingMarker2Url["HumanPos"],
-              origin: new window.google.maps.Point(0, 0),
-              anchor: new window.google.maps.Point(15, 15),
-              scaledSize: new window.google.maps.Size(30, 30),
-            }}
-          />
-          <InfoWindow position={mv.location} onCloseClick={() => {}}>
-            <div
-              style={{
-                backgroundColor: state === "UNDO" ? "#FF9966" : "#008000",
-              }}
-            >
-              <div>{mv.desc}</div>
-              <p>
-                State:
-                {state === "UNDO"
-                  ? "未着手"
-                  : state === "DONE"
-                  ? "完了"
-                  : "進行中"}
-              </p>
-              {/* <SvgIcon
-                      component={DeleteIcon}
-                      onClick={() => {
-                        deleteTaskInBlock(taskBlockId, taskId);
-                      }}
-                      //onClick={() => console.log("Delete", taskId)}
-                    />
-                    <SvgIcon component={EditIcon} /> */}
-            </div>
-          </InfoWindow>
-        </>
-      ))}
-      {taskData.content.explaing.map((ex, index) => (
-        <>
-          <Marker
-            key={ex.location.lat + ex.location.lng + index}
-            position={ex.location}
-            icon={{
-              url: ex.iconId
-                ? state === "UNDO"
-                  ? UNDOMarker2Url[ex.iconId]
-                  : state === "DONE"
-                  ? DONEMarker2Url[ex.iconId]
-                  : inputingMarker2Url[ex.iconId]
-                : "",
-              origin: new window.google.maps.Point(0, 0),
-              anchor: new window.google.maps.Point(15, 15),
-              scaledSize: new window.google.maps.Size(30, 30),
-            }}
-          />
-        </>
-      ))}
-    </>
-  );
+const initGuestInput: GuestInputType = {
+  commentText: "",
+  pointerLocation: null,
 };
 
 const OneTaskStateView: VFC<Props> = ({ taskId, isTapping }) => {
   const [taskData, setTaskData] = useState<TaskType>();
   const objectState = useAppSelector(selectAdminObjects);
+  const [open, setOpen] = useState<boolean>(false);
+
+  /**Comment系の処理 */
+  const [guestInput, setGuestInput] = useState<GuestInputType>(initGuestInput);
+  // comment用のposition
+  const [pointingLocation, setPointingLocation] = useState<{
+    location: Location;
+    text: string;
+  } | null>(null);
 
   useEffect(() => {
     const unSub = onSnapshot(doc(db, "tasks", taskId), (doc) => {
@@ -145,8 +87,6 @@ const OneTaskStateView: VFC<Props> = ({ taskId, isTapping }) => {
     isTapping: boolean,
     state: TaskProgressState
   ) => {
-    //return <></>;
-    console.log("[TEST]");
     return (
       <>
         {taskData.content.move.map((mv) => {
@@ -229,19 +169,120 @@ const OneTaskStateView: VFC<Props> = ({ taskId, isTapping }) => {
               />
               {!(state === "DONE") && (
                 <InfoWindow position={_objLoc.location} onCloseClick={() => {}}>
-                  <div
-                    style={{
-                      backgroundColor: state === "UNDO" ? "#FF9966" : "#008000",
-                    }}
-                  >
-                    <div>移動タスク</div>
-                    <div>State: {state === "UNDO" ? "未着手" : "進行中"}</div>
+                  <div>
+                    <div>物品移動タスク</div>
+                    <div
+                      style={{
+                        backgroundColor:
+                          state === "UNDO" ? "#FF9966" : "#008000",
+                      }}
+                    >
+                      State: {state === "UNDO" ? "未着手" : "進行中"}
+                    </div>
                   </div>
                 </InfoWindow>
               )}
             </>
           );
         })}
+      </>
+    );
+  };
+
+  const taskAndDataView = (
+    taskData: TaskType,
+    isTapping: boolean,
+    state: TaskProgressState
+  ) => {
+    return (
+      <>
+        {taskData.content.move.map((mv) => (
+          <>
+            <Marker
+              key={mv.location.lat * mv.location.lng * Math.random()}
+              position={mv.location}
+              icon={{
+                url:
+                  state === "UNDO"
+                    ? UNDOMarker2Url["HumanPos"]
+                    : state === "DONE"
+                    ? DONEMarker2Url["HumanPos"]
+                    : inputingMarker2Url["HumanPos"],
+                origin: new window.google.maps.Point(0, 0),
+                anchor: new window.google.maps.Point(15, 15),
+                scaledSize: new window.google.maps.Size(30, 30),
+              }}
+            />
+            <InfoWindow position={mv.location} onCloseClick={() => {}}>
+              <div>
+                <div>{mv.desc}</div>
+                <p
+                  style={{
+                    backgroundColor: state === "UNDO" ? "#FF9966" : "#008000",
+                  }}
+                >
+                  State:
+                  {state === "UNDO"
+                    ? "未着手"
+                    : state === "DONE"
+                    ? "完了"
+                    : "進行中"}
+                </p>
+                <h6 style={{ color: "gray" }} onClick={() => setOpen(!open)}>
+                  chat
+                </h6>
+
+                {/* <SvgIcon
+                        component={DeleteIcon}
+                        onClick={() => {
+                          deleteTaskInBlock(taskBlockId, taskId);
+                        }}
+                        //onClick={() => console.log("Delete", taskId)}
+                      />
+                      <SvgIcon component={EditIcon} /> */}
+              </div>
+            </InfoWindow>
+          </>
+        ))}
+        {taskData.content.explaing.map((ex, index) => (
+          <>
+            <Marker
+              key={ex.location.lat + ex.location.lng + index}
+              position={ex.location}
+              icon={{
+                url: ex.iconId
+                  ? state === "UNDO"
+                    ? UNDOMarker2Url[ex.iconId]
+                    : state === "DONE"
+                    ? DONEMarker2Url[ex.iconId]
+                    : inputingMarker2Url[ex.iconId]
+                  : "",
+                origin: new window.google.maps.Point(0, 0),
+                anchor: new window.google.maps.Point(15, 15),
+                scaledSize: new window.google.maps.Size(30, 30),
+              }}
+            />
+          </>
+        ))}
+        {/* GuestからCommentとして持ちたい位置情報を表示 */}
+        {guestInput.pointerLocation && (
+          <Marker
+            position={guestInput.pointerLocation}
+            label={guestInput.commentText}
+          />
+        )}
+        {pointingLocation && (
+          <Marker
+            position={pointingLocation.location}
+            label={pointingLocation.text}
+          />
+        )}
+        {/* {open && (
+          <AdminComment
+            taskId={taskData.id}
+            setPointingLocation={setPointingLocation}
+          />
+        )} */}
       </>
     );
   };

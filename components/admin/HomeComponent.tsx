@@ -89,7 +89,9 @@ const HomeComponent = () => {
             }
           })}
           {/* 描画用のComponent */}
-          <ArgumentDrawingManage taskBlockId={selectedTaskBlockId} />
+          {!UIToggle.includes("TaskState") && UIToggle.includes("AddTask") && (
+            <ArgumentDrawingManage taskBlockId={selectedTaskBlockId} />
+          )}
           {/* タスク提示用のComponent */}
           {(!UIToggle.includes("TaskState") &&
             taskBlock?.filter(
