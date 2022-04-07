@@ -17,6 +17,7 @@ import { selectBasicInfo } from "../../features/basicInfoSlice";
 import InputTaskViewComponent from "./InputingTaskViewComponents";
 import { getDownloadURL } from "firebase/storage";
 import Image from "next/image";
+import DrawingToggle from "../admin/DrawingToggle";
 
 export type MarkerType = "HumanPos" | "Up" | "Down" | "Left" | "Right" | null;
 
@@ -249,7 +250,8 @@ const ArgumentDrawingManage: VFC<Props> = ({ taskBlockId }) => {
 
   return (
     <>
-      <Box
+      <DrawingToggle setIconMode={setIconMode} />
+      {/* <Box
         sx={{
           display: "flex",
           alignItems: "center",
@@ -320,7 +322,7 @@ const ArgumentDrawingManage: VFC<Props> = ({ taskBlockId }) => {
         >
           <Image src={humanPosUrl} width={44} height={40} />
         </Button>
-      </Box>
+      </Box> */}
       <DrawingManager
         drawingMode={googleDrawingMode} //ここを変えれば、切り替えができる！！
         onMarkerComplete={

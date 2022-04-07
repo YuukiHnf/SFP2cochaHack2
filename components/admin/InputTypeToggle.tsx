@@ -10,7 +10,8 @@ import {
 
 import TouchAppIcon from "@mui/icons-material/TouchApp";
 import AddTaskIcon from "@mui/icons-material/AddTask";
-
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 /**
  * Edit用のUI操作設定
  * @returns
@@ -47,6 +48,7 @@ const InputTypeToggle = () => {
       </ToggleButton>
       <ToggleButton value="ADD" aria-label="centered" color="standard">
         <AddTaskIcon />
+        <ArrowRightIcon />
       </ToggleButton>
     </ToggleButtonGroup>
   );

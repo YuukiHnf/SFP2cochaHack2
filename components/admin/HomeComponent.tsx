@@ -111,7 +111,7 @@ const HomeComponent = () => {
             }
           })}
           {/* 描画用のComponent */}
-          {!UIToggle.includes("TaskState") && UIToggle.includes("AddTask") && (
+          {!UIToggle.includes("TaskState") && InputType === "ADD" && (
             <ArgumentDrawingManage taskBlockId={selectedTaskBlockId} />
           )}
           {/* タスク提示用のComponent */}
