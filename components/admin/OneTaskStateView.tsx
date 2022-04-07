@@ -113,25 +113,6 @@ const taskAndDataView = (
               scaledSize: new window.google.maps.Size(30, 30),
             }}
           />
-          {/* {isTapping && (
-            <InfoWindow
-              key={ex.location.lat + ex.location.lng + index + 1}
-              position={ex.location}
-            >
-              <div>
-                <div>{`${taskData.title}の説明`}</div>
-                <p>
-                  State:
-                  {state === "UNDO"
-                    ? "未着手"
-                    : state === "DONE"
-                    ? "完了"
-                    : "進行中"}
-                </p>
-                <p>{"Comment"}</p>
-              </div>
-            </InfoWindow>
-          )} */}
         </>
       ))}
     </>
