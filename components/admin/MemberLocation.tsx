@@ -39,7 +39,7 @@ const MemberLocation: VFC = () => {
             <Marker
               key={mem.uid}
               position={mem.location}
-              icon={"/humanIcon.png"}
+              icon={mem.avatarUrl ?? "/humanIcon.png"}
               onClick={() => {
                 setMemberIndex(index);
               }}

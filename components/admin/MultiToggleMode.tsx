@@ -39,9 +39,6 @@ const MultiToggleMode: VFC<Props> = ({ formats, setFormats }) => {
       <ToggleButton value="TaskState" aria-label="TaskState">
         <FormatListBulletedIcon />
       </ToggleButton>
-      <ToggleButton value="AddTask" aria-label="AddTask">
-        <AddTaskIcon />
-      </ToggleButton>
     </ToggleButtonGroup>
   );
 };

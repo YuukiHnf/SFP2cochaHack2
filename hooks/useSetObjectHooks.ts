@@ -6,17 +6,22 @@ import { db, SetObjectType } from "../utils/firebase/FirebaseStore";
 
 const useSetObjectHooks = () => {
   const basicInfo = useAppSelector(selectBasicInfo);
-  const setObjectCollection = collection(
-    doc(collection(db, "team"), basicInfo.teamId),
-    "sets"
-  );
+
   const addSetObject = async (params: Omit<SetObjectType, "id">) => {
+    const setObjectCollection = collection(
+      doc(collection(db, "team"), basicInfo.teamId),
+      "sets"
+    );
     await addDoc(setObjectCollection, {
       ...params,
     });
   };
 
   const deleteSetObject = async (setObjectId: string) => {
+    const setObjectCollection = collection(
+      doc(collection(db, "team"), basicInfo.teamId),
+      "sets"
+    );
     const setObjRef = doc(setObjectCollection, setObjectId);
 
     await deleteDoc(setObjRef);

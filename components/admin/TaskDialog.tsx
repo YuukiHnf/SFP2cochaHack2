@@ -6,7 +6,7 @@ import { useCallback, useState } from "react";
 export interface SimpleDialogProps {
   open: boolean;
   onClose: () => void;
-  onSave: (title: string) => void;
+  onSave?: (title: string) => void;
   onDelete?: () => void;
   onExplaing: (title: string) => void;
 }
@@ -26,32 +26,33 @@ export const TaskDialog = (props: SimpleDialogProps) => {
 
   return (
     <Dialog onClose={handleClose} open={open}>
-      <DialogTitle>{"Title"}</DialogTitle>
-      <List sx={{ pt: 0 }}>
-        <ListItem>
-          <Input
-            value={inputTitle}
-            type="text"
-            autoFocus
-            margin={"none"}
-            fullWidth={false}
-            onChange={(e) => setInputTitle(e.target.value)}
-          />
-        </ListItem>
-        <DialogTitle>{"NEXT"}</DialogTitle>
-        <ListItem alignItems="center">
-          <Button
-            variant="outlined"
-            color="success"
-            onClick={() => {
-              onExplaing(inputTitle);
-              onClose();
-            }}
-          >
-            {"Explaing"}
-          </Button>
-        </ListItem>
-        <ListItem alignItems="center">
+      <div style={{ alignItems: "center" }}>
+        <DialogTitle>{"Title"}</DialogTitle>
+        <List sx={{ pt: 0 }}>
+          <ListItem>
+            <Input
+              value={inputTitle}
+              type="text"
+              autoFocus
+              margin={"none"}
+              fullWidth={false}
+              onChange={(e) => setInputTitle(e.target.value)}
+            />
+          </ListItem>
+          <DialogTitle>{"NEXT"}</DialogTitle>
+          <ListItem alignItems="center">
+            <Button
+              variant="outlined"
+              color="success"
+              onClick={() => {
+                onExplaing(inputTitle);
+                onClose();
+              }}
+            >
+              {"SAVE"}
+            </Button>
+          </ListItem>
+          {/* <ListItem alignItems="center">
           <Button
             variant="contained"
             onClick={() => {
@@ -61,13 +62,14 @@ export const TaskDialog = (props: SimpleDialogProps) => {
           >
             {" SAVE "}
           </Button>
-        </ListItem>
-        <ListItem alignItems="center">
-          <Button variant="outlined" color="error" onClick={() => onClose()}>
-            DELETE
-          </Button>
-        </ListItem>
-      </List>
+        </ListItem> */}
+          <ListItem alignItems="center">
+            <Button variant="outlined" color="error" onClick={() => onClose()}>
+              CANCEL
+            </Button>
+          </ListItem>
+        </List>
+      </div>
     </Dialog>
   );
 };

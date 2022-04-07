@@ -21,7 +21,7 @@ const TaskViewForTaskIdsComponents: VFC<Props> = ({ taskIds, taskBlockId }) => {
   return (
     <>
       {taskIds?.map((_id) =>
-        selectedTaskId === _id ? ( //現在編集中のtask
+        selectedTaskId === _id ? ( //現在選択中のタスク
           <EditingTaskViewComponent
             key={_id}
             taskId={_id}
