@@ -10,6 +10,7 @@ import { ObjectLocation, TaskBlock } from "../../utils/firebase/FirebaseStore";
 import ArgumentDrawingManage from "../googlemap/ArgumentDrawingManage";
 import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
 import MapSettingComponent from "../googlemap/MapSettingComponent";
+import CommentCard from "./CommentCard";
 import HomeObjectComponent from "./HomeObjectComponent";
 import MemberLocation from "./MemberLocation";
 import MultiToggleMode from "./MultiToggleMode";
@@ -118,6 +119,9 @@ const HomeComponent = () => {
           ) : (<></>){/* 全体説明用オブジェクト*/}
           <MapSettingComponent />
         </DefaultGoogleMapComponent>
+      </div>
+      <div>
+        <CommentCard />
       </div>
     </>
   );

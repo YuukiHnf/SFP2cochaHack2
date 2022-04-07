@@ -1,8 +1,9 @@
 import { InfoWindow, Marker } from "@react-google-maps/api";
 import { doc, onSnapshot, TaskState } from "firebase/firestore";
 import React, { useEffect, useState, VFC } from "react";
-import { useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectAdminObjects } from "../../features/adminSlice";
+import { setChatTaskId } from "../../features/uiHelperSlice";
 import {
   db,
   Location,
@@ -55,15 +56,16 @@ const initGuestInput: GuestInputType = {
 const OneTaskStateView: VFC<Props> = ({ taskId, isTapping }) => {
   const [taskData, setTaskData] = useState<TaskType>();
   const objectState = useAppSelector(selectAdminObjects);
-  const [open, setOpen] = useState<boolean>(false);
+  //const [open, setOpen] = useState<boolean>(false);
 
-  /**Comment系の処理 */
-  const [guestInput, setGuestInput] = useState<GuestInputType>(initGuestInput);
-  // comment用のposition
-  const [pointingLocation, setPointingLocation] = useState<{
-    location: Location;
-    text: string;
-  } | null>(null);
+  // /**Comment系の処理 */
+  // const [guestInput, setGuestInput] = useState<GuestInputType>(initGuestInput);
+  // // comment用のposition
+  // const [pointingLocation, setPointingLocation] = useState<{
+  //   location: Location;
+  //   text: string;
+  // } | null>(null);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const unSub = onSnapshot(doc(db, "tasks", taskId), (doc) => {
@@ -228,7 +230,10 @@ const OneTaskStateView: VFC<Props> = ({ taskId, isTapping }) => {
                     ? "完了"
                     : "進行中"}
                 </p>
-                <h6 style={{ color: "gray" }} onClick={() => setOpen(!open)}>
+                <h6
+                  style={{ color: "gray" }}
+                  onClick={() => dispatch(setChatTaskId(taskData.id))}
+                >
                   chat
                 </h6>
 
@@ -264,7 +269,7 @@ const OneTaskStateView: VFC<Props> = ({ taskId, isTapping }) => {
             />
           </>
         ))}
-        {/* GuestからCommentとして持ちたい位置情報を表示 */}
+        {/* GuestからCommentとして持ちたい位置情報を表示
         {guestInput.pointerLocation && (
           <Marker
             position={guestInput.pointerLocation}
@@ -276,7 +281,7 @@ const OneTaskStateView: VFC<Props> = ({ taskId, isTapping }) => {
             position={pointingLocation.location}
             label={pointingLocation.text}
           />
-        )}
+        )} */}
         {/* {open && (
           <AdminComment
             taskId={taskData.id}
