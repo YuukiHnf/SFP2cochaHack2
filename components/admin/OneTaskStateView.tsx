@@ -69,7 +69,11 @@ const taskAndDataView = (
             }}
           />
           <InfoWindow position={mv.location} onCloseClick={() => {}}>
-            <>
+            <div
+              style={{
+                backgroundColor: state === "UNDO" ? "#FF9966" : "#008000",
+              }}
+            >
               <div>{mv.desc}</div>
               <p>
                 State:
@@ -87,7 +91,7 @@ const taskAndDataView = (
                       //onClick={() => console.log("Delete", taskId)}
                     />
                     <SvgIcon component={EditIcon} /> */}
-            </>
+            </div>
           </InfoWindow>
         </>
       ))}
@@ -134,102 +138,6 @@ const taskAndDataView = (
   );
 };
 
-const taskAndDataViewObject = (
-  taskData: TaskType,
-  isTapping: boolean,
-  state: TaskProgressState,
-  objectState: OBJECTPARAM[]
-) => {
-  return (
-    <>
-      {taskData.content.move.map((mv) => {
-        // 移動後の物品情報
-        const _obj = objectState.find((obj) =>
-          obj.objectTimeLocations?.find((loc) => loc.id === mv.desc)
-        );
-        if (!_obj) {
-          return <></>;
-        }
-        const _objLoc = _obj.objectTimeLocations?.find(
-          (loc) => loc.id === mv.desc
-        );
-        if (!_objLoc) {
-          return <></>;
-        }
-        return (
-          <>
-            <Marker
-              key={_objLoc.location.lat * _objLoc.location.lng * 0.7}
-              position={_objLoc.location}
-              icon={{
-                url: state === "DONE" ? _obj.iconUrl : "",
-                origin: new window.google.maps.Point(0, 0),
-                anchor: new window.google.maps.Point(15, 15),
-                scaledSize: new window.google.maps.Size(30, 30),
-              }}
-              onClick={() => {}}
-            />
-            {
-              <InfoWindow position={mv.location}>
-                <div>{mv.desc}</div>
-                <p>
-                  State:
-                  {state === "UNDO"
-                    ? "未着手"
-                    : state === "DONE"
-                    ? "完了"
-                    : "進行中"}
-                </p>
-              </InfoWindow>
-            }
-          </>
-        );
-      })}
-      {/* 移動まえの表示を出力する */}
-      {taskData.content.explaing.map((ex, index) => {
-        // 移動前の物品情報
-        const _obj = objectState.find((obj) =>
-          obj.objectTimeLocations?.find((loc) => loc.id === ex.desc)
-        );
-        if (!_obj) {
-          return <></>;
-        }
-        const _objLoc = _obj.objectTimeLocations?.find(
-          (loc) => loc.id === ex.desc
-        );
-        if (!_objLoc) {
-          return <></>;
-        }
-        return (
-          <>
-            <Marker
-              key={_objLoc.location.lat * _objLoc.location.lng * 0.1}
-              position={_objLoc.location}
-              icon={{
-                url:
-                  state === "UNDO"
-                    ? _obj.iconUrl
-                    : state === "DONE"
-                    ? ""
-                    : _obj.semiIconUrl,
-                origin: new window.google.maps.Point(0, 0),
-                anchor: new window.google.maps.Point(15, 15),
-                scaledSize: new window.google.maps.Size(30, 30),
-              }}
-              onClick={() => {}}
-            />
-            {
-              <InfoWindow position={ex.location} onCloseClick={() => {}}>
-                <div>{ex.desc}</div>
-              </InfoWindow>
-            }
-          </>
-        );
-      })}
-    </>
-  );
-};
-
 const OneTaskStateView: VFC<Props> = ({ taskId, isTapping }) => {
   const [taskData, setTaskData] = useState<TaskType>();
   const objectState = useAppSelector(selectAdminObjects);
@@ -238,6 +146,7 @@ const OneTaskStateView: VFC<Props> = ({ taskId, isTapping }) => {
     const unSub = onSnapshot(doc(db, "tasks", taskId), (doc) => {
       //console.log(doc.data());
       const _data = doc.data() as Omit<TaskType, "id">;
+      //console.log(doc.data());
       setTaskData({
         ..._data,
         id: doc.id,
@@ -248,6 +157,113 @@ const OneTaskStateView: VFC<Props> = ({ taskId, isTapping }) => {
   }, [taskId]);
 
   if (!taskData) return <></>;
+  console.log("[target]", taskData);
+
+  const taskAndDataViewObject = (
+    taskData: TaskType,
+    isTapping: boolean,
+    state: TaskProgressState
+  ) => {
+    //return <></>;
+    console.log("[TEST]");
+    return (
+      <>
+        {taskData.content.move.map((mv) => {
+          // 移動後の物品情報
+          const _obj = objectState.find((obj) =>
+            obj.objectTimeLocations?.find((loc) => loc.id === mv.desc)
+          );
+          if (!_obj) {
+            return <></>;
+          }
+          const _objLoc = _obj.objectTimeLocations?.find(
+            (loc) => loc.id === mv.desc
+          );
+          if (!_objLoc) {
+            return <></>;
+          }
+          return (
+            <>
+              <Marker
+                key={_objLoc.location.lat * _objLoc.location.lng * 0.7}
+                position={_objLoc.location}
+                icon={{
+                  url: state === "DONE" ? _obj.iconUrl : _obj.semiIconUrl,
+                  origin: new window.google.maps.Point(0, 0),
+                  anchor: new window.google.maps.Point(15, 15),
+                  scaledSize: new window.google.maps.Size(30, 30),
+                }}
+                onClick={() => {}}
+              />
+              {!(state === "UNDO") && (
+                <InfoWindow position={_objLoc.location}>
+                  <div
+                    style={{
+                      backgroundColor: state === "DONE" ? "#808080" : "#008000",
+                    }}
+                  >
+                    <div>{mv.desc}</div>
+                    <p>
+                      State:
+                      {state === "DONE" ? "完了" : "進行中"}
+                    </p>
+                  </div>
+                </InfoWindow>
+              )}
+            </>
+          );
+        })}
+        {/* 移動まえの表示を出力する */}
+        {taskData.content.explaing.map((ex, index) => {
+          // 移動前の物品情報
+          const _obj = objectState.find((obj) =>
+            obj.objectTimeLocations?.find((loc) => loc.id === ex.desc)
+          );
+          if (!_obj) {
+            return <></>;
+          }
+          const _objLoc = _obj.objectTimeLocations?.find(
+            (loc) => loc.id === ex.desc
+          );
+          if (!_objLoc) {
+            return <></>;
+          }
+          return (
+            <>
+              <Marker
+                key={_objLoc.location.lat * _objLoc.location.lng * 0.1}
+                position={_objLoc.location}
+                icon={{
+                  url:
+                    state === "UNDO"
+                      ? _obj.iconUrl
+                      : state === "DONE"
+                      ? _obj.semiIconUrl
+                      : _obj.semiIconUrl,
+                  origin: new window.google.maps.Point(0, 0),
+                  anchor: new window.google.maps.Point(15, 15),
+                  scaledSize: new window.google.maps.Size(30, 30),
+                }}
+                onClick={() => {}}
+              />
+              {!(state === "DONE") && (
+                <InfoWindow position={_objLoc.location} onCloseClick={() => {}}>
+                  <div
+                    style={{
+                      backgroundColor: state === "UNDO" ? "#FF9966" : "#008000",
+                    }}
+                  >
+                    <div>移動タスク</div>
+                    <div>State: {state === "UNDO" ? "未着手" : "進行中"}</div>
+                  </div>
+                </InfoWindow>
+              )}
+            </>
+          );
+        })}
+      </>
+    );
+  };
 
   /**
    * Humanタスクの場合
@@ -268,12 +284,12 @@ const OneTaskStateView: VFC<Props> = ({ taskId, isTapping }) => {
    */
   switch (taskData.taskState) {
     case "UNDO":
-      return taskAndDataViewObject(taskData, isTapping, "UNDO", objectState);
+      return taskAndDataViewObject(taskData, isTapping, "UNDO");
     case "DOING":
     case "CHECK":
-      return taskAndDataViewObject(taskData, isTapping, "DOING", objectState);
+      return taskAndDataViewObject(taskData, isTapping, "DOING");
     case "DONE":
-      return taskAndDataViewObject(taskData, isTapping, "DONE", objectState);
+      return taskAndDataViewObject(taskData, isTapping, "DONE");
   }
 };
 

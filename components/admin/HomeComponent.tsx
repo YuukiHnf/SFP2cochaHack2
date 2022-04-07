@@ -106,7 +106,7 @@ const HomeComponent = () => {
             )) ?? <></>}
           {/* この時のObject用の描画ツール */}
           {/* Objectを指定した時間ごとに描画する */}
-          {selectedTaskBlockId ? ( // select taskBlock
+          {!UIToggle.includes("TaskState") && selectedTaskBlockId ? ( // select taskBlock
             <>
               <HomeObjectComponent selectedTaskBlockId={selectedTaskBlockId} />
             </>
