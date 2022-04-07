@@ -13,6 +13,7 @@ import MapSettingComponent from "../googlemap/MapSettingComponent";
 import HomeObjectComponent from "./HomeObjectComponent";
 import MemberLocation from "./MemberLocation";
 import MultiToggleMode from "./MultiToggleMode";
+import TaskStateView from "./TaskStatesView";
 import TaskViewComponents from "./TaskViewComponents";
 import TaskViewForTaskIdsComponents from "./TaskViewForTaskIdsComponents";
 import TimeTable from "./TimeTable";
@@ -64,6 +65,22 @@ const HomeComponent = () => {
                     <MemberLocation />
                   </>
                 );
+              case "TaskState":
+                return (
+                  <>
+                    {taskBlock?.filter(
+                      (block) => block.id === selectedTaskBlockId
+                    )[0] && (
+                      <TaskStateView
+                        taskIds={
+                          taskBlock?.filter(
+                            (block) => block.id === selectedTaskBlockId
+                          )[0].taskIds
+                        }
+                      />
+                    )}
+                  </>
+                );
               default:
                 return <></>;
             }
@@ -71,18 +88,19 @@ const HomeComponent = () => {
           {/* 描画用のComponent */}
           <ArgumentDrawingManage taskBlockId={selectedTaskBlockId} />
           {/* タスク提示用のComponent */}
-          {(taskBlock?.filter(
-            (block) => block.id === selectedTaskBlockId
-          )[0] && (
-            <TaskViewForTaskIdsComponents
-              taskIds={
-                taskBlock?.filter(
-                  (block) => block.id === selectedTaskBlockId
-                )[0].taskIds
-              }
-              taskBlockId={selectedTaskBlockId}
-            />
-          )) ?? <></>}
+          {(!UIToggle.includes("TaskState") &&
+            taskBlock?.filter(
+              (block) => block.id === selectedTaskBlockId
+            )[0] && (
+              <TaskViewForTaskIdsComponents
+                taskIds={
+                  taskBlock?.filter(
+                    (block) => block.id === selectedTaskBlockId
+                  )[0].taskIds
+                }
+                taskBlockId={selectedTaskBlockId}
+              />
+            )) ?? <></>}
           {/* この時のObject用の描画ツール */}
           {/* Objectを指定した時間ごとに描画する */}
           {selectedTaskBlockId ? ( // select taskBlock
