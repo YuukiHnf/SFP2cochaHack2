@@ -1,15 +1,21 @@
 import { DrawingManager, Marker, Polygon } from "@react-google-maps/api";
 import React, { useEffect, useState } from "react";
-import { useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   selectAdminObjects,
   selectAdminTaskBlock,
   // selectAdminInitObjects,
 } from "../../features/adminSlice";
+import {
+  selectInputType,
+  setChatInputLocation,
+} from "../../features/uiHelperSlice";
 import { ObjectLocation, TaskBlock } from "../../utils/firebase/FirebaseStore";
 import ArgumentDrawingManage from "../googlemap/ArgumentDrawingManage";
 import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
 import MapSettingComponent from "../googlemap/MapSettingComponent";
+import CommentCard from "./CommentCard";
+import CommentOnMap from "./CommentOnMap";
 import HomeObjectComponent from "./HomeObjectComponent";
 import MemberLocation from "./MemberLocation";
 import MultiToggleMode from "./MultiToggleMode";
@@ -40,13 +46,13 @@ const rectAngleOption = {
 
 const HomeComponent = () => {
   const taskBlock = useAppSelector(selectAdminTaskBlock);
-  const initTaskBlockId = taskBlock?.find((block) => block.isInit)?.id ?? "";
-  const objectParams = useAppSelector(selectAdminObjects);
   const [selectedTaskBlockId, setSelectedTaskBlockId] = useState<string>("");
 
   // UIの表示Toggleボタン
   const [UIToggle, setUIToggle] = useState(() => ["MemberPosition"]);
   console.log(UIToggle);
+  const InputType = useAppSelector(selectInputType);
+  const dispatch = useAppDispatch();
 
   return (
     <>
@@ -57,6 +63,20 @@ const HomeComponent = () => {
         <DefaultGoogleMapComponent
           mapContainerStyle={_mapContainerStyle}
           mapStyle={UIToggle.includes("TaskState") ? "Dark" : "Origin"}
+          onClick={
+            InputType === "CHATINPUT"
+              ? (e) => {
+                  //chat用のInput
+                  e.latLng &&
+                    dispatch(
+                      setChatInputLocation({
+                        lat: e.latLng?.lat(),
+                        lng: e.latLng?.lng(),
+                      })
+                    );
+                }
+              : () => {}
+          }
         >
           <MultiToggleMode formats={UIToggle} setFormats={setUIToggle} />
           {/* UIレイヤーの表示 */}
@@ -89,7 +109,9 @@ const HomeComponent = () => {
             }
           })}
           {/* 描画用のComponent */}
-          <ArgumentDrawingManage taskBlockId={selectedTaskBlockId} />
+          {!UIToggle.includes("TaskState") && UIToggle.includes("AddTask") && (
+            <ArgumentDrawingManage taskBlockId={selectedTaskBlockId} />
+          )}
           {/* タスク提示用のComponent */}
           {(!UIToggle.includes("TaskState") &&
             taskBlock?.filter(
@@ -115,7 +137,12 @@ const HomeComponent = () => {
           )}
           ) : (<></>){/* 全体説明用オブジェクト*/}
           <MapSettingComponent />
+          {/* commentの表示用 */}
+          <CommentOnMap />
         </DefaultGoogleMapComponent>
+      </div>
+      <div>
+        <CommentCard />
       </div>
     </>
   );

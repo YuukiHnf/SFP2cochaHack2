@@ -11,6 +11,7 @@ import basicInfoSlice from "../features/basicInfoSlice";
 import counterSlice from "../features/conterSlice";
 import adminSlice from "../features/adminSlice";
 import setObjectSlice from "../features/setObjectSlice";
+import uiHelperSlice from "../features/uiHelperSlice";
 
 const rootReducer = combineReducers({
   // reducerを追加する
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   // admin用
   adminState: adminSlice,
   setObjects: setObjectSlice,
+  uiHelper: uiHelperSlice,
 });
 
 export const store = configureStore({
@@ -33,6 +35,7 @@ export const store = configureStore({
     // admin用
     adminState: adminSlice,
     setObjects: setObjectSlice,
+    uiHelper: uiHelperSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
