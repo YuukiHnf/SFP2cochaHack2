@@ -39,9 +39,7 @@ const MemberLocation: VFC = () => {
             <Marker
               key={mem.uid}
               position={mem.location}
-              icon={
-                "http://localhost:9199/v0/b/default-bucket/o/icons8-circled-user-male-skin-type-1-and-2-48.png?alt=media&token=d910ea1b-2968-4f57-b300-1c99b985ff66"
-              }
+              icon={"/humanIcon.png"}
               onClick={() => {
                 setMemberIndex(index);
               }}
