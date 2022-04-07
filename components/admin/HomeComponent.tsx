@@ -17,6 +17,7 @@ import MapSettingComponent from "../googlemap/MapSettingComponent";
 import CommentCard from "./CommentCard";
 import CommentOnMap from "./CommentOnMap";
 import HomeObjectComponent from "./HomeObjectComponent";
+import InputTypeToggle from "./InputTypeToggle";
 import MemberLocation from "./MemberLocation";
 import MultiToggleMode from "./MultiToggleMode";
 import TaskStateView from "./TaskStatesView";
@@ -50,7 +51,7 @@ const HomeComponent = () => {
 
   // UIの表示Toggleボタン
   const [UIToggle, setUIToggle] = useState(() => ["MemberPosition"]);
-  console.log(UIToggle);
+  //console.log(UIToggle);
   const InputType = useAppSelector(selectInputType);
   const dispatch = useAppDispatch();
 
@@ -79,6 +80,7 @@ const HomeComponent = () => {
           }
         >
           <MultiToggleMode formats={UIToggle} setFormats={setUIToggle} />
+          {!UIToggle.includes("TaskState") && <InputTypeToggle />}
           {/* UIレイヤーの表示 */}
           {UIToggle.map((mode) => {
             switch (mode) {

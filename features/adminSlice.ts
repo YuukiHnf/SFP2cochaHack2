@@ -82,7 +82,7 @@ export const adminSlice = createSlice({
       }>
     ) => {
       const { timeLocation, ObjectId } = action.payload;
-      console.log(timeLocation);
+      //console.log(timeLocation);
       return {
         ...state,
         objects: state.objects.map((obj) =>

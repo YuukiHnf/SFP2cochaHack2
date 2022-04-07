@@ -82,7 +82,7 @@ const OneTaskStateView: VFC<Props> = ({ taskId, isTapping }) => {
   }, [taskId]);
 
   if (!taskData) return <></>;
-  console.log("[target]", taskData);
+  //console.log("[target]", taskData);
 
   const taskAndDataViewObject = (
     taskData: TaskType,
