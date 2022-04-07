@@ -9,6 +9,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import useObjectHooks from "../../hooks/useObjectHooks";
 import { useAppSelector } from "../../app/hooks";
 import { selectBasicInfo } from "../../features/basicInfoSlice";
+import Image from "next/image";
 //import Image from "next/image";
 
 type Props = {
@@ -50,7 +51,7 @@ const ObjectTable: VFC<Props> = ({
       width: 90,
       renderCell: (params) => {
         //console.log(params);
-        return <img src={params.row.iconUrl} width={16} height={16} />;
+        return <Image src={params.row.iconUrl} width={16} height={16} />;
       },
     },
     { field: "objectName", headerName: "Name", width: 130 },
