@@ -34,7 +34,6 @@ export const TaskDialog = (props: SimpleDialogProps) => {
             <Input
               value={inputTitle}
               type="text"
-              autoFocus
               margin={"none"}
               fullWidth={false}
               onChange={(e) => setInputTitle(e.target.value)}
