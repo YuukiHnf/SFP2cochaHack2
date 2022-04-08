@@ -1,4 +1,3 @@
-import { Marker } from "@react-google-maps/api";
 import { memo, useEffect, useState, VFC } from "react";
 import { useAppSelector } from "../../app/hooks";
 import {
@@ -8,12 +7,9 @@ import {
 } from "../../features/adminSlice";
 import useObjectHooks from "../../hooks/useObjectHooks";
 import useTaskCRUD from "../../hooks/useTaskCRUD";
-import {
-  ObjectLocation,
-  ObjectTimeLocations,
-  TaskType,
-} from "../../utils/firebase/FirebaseStore";
+import { ObjectLocation } from "../../utils/firebase/FirebaseStore";
 import DragDropMarker from "../googlemap/DragDropMarker";
+import { TaskDialog } from "./TaskDialog";
 
 type Props = {
   selectedTaskBlockId: string;
@@ -22,11 +18,13 @@ type Props = {
 interface ObjectTaskstate {
   objectId: string;
   timeLocationId: string;
+  mouseEvent: google.maps.MapMouseEvent | null;
 }
 
 const initTimeObject: ObjectTaskstate = {
   objectId: "",
   timeLocationId: "",
+  mouseEvent: null,
 };
 
 /**
@@ -53,66 +51,33 @@ const HomeObjectComponent: VFC<Props> = ({ selectedTaskBlockId }) => {
     }
     // 現在選択されているObjectのLocationを算出
     if (ptrDate) {
-      // objectTimeLocationがソートされていることに注意
-      // const targetTimeLocationsIndex: number[] = objectParams.map(
-      //   (param) =>
-      //     param.objectTimeLocations?.findIndex(
-      //       (timeLoc) => timeLoc.timeStamp.toDate() >= ptrDate
-      //     ) ?? 0
-      // );
-      //console.log(targetTimeLocationsIndex);
-      setPtrLocations(
-        Date2ObjectsLocations(ptrDate)
-        //   objectParams.map((param, index) => {
-        //     if (!param.objectTimeLocations) {
-        //       return {
-        //         objectId: param.id,
-        //         locationTime: {},
-        //       } as ObjectLocation;
-        //     }
-        //     if (targetTimeLocationsIndex[index] !== -1) {
-        //       // 現在の時刻より後かつ最初のObjectを選択
-        //       // console.log(
-        //       //   param.objectTimeLocations[targetTimeLocationsIndex[index]]
-        //       // );
-        //       return {
-        //         objectId: param.id,
-        //         locationTime: {
-        //           ...param.objectTimeLocations[targetTimeLocationsIndex[index]],
-        //         },
-        //       } as ObjectLocation;
-        //     } /*if (param.objectTimeLocations.length !== 0)*/ else {
-        //       // 最新の位置を表示
-        //       return {
-        //         objectId: param.id,
-        //         locationTime:
-        //           param.objectTimeLocations[param.objectTimeLocations.length - 1],
-        //       } as ObjectLocation;
-        //     }
-        //     // それ以外
-        //   })
-      );
+      setPtrLocations(Date2ObjectsLocations(ptrDate));
     }
   }, [selectedTaskBlockId]);
 
+  /**タスク追加系 */
   // 操作中のObject ID
-  const [ptrTimeObject, setPtrTimeObject] = useState<{
-    objectId: string;
-    timeLocationId: string;
-  }>(initTimeObject);
+  const [ptrTimeObject, setPtrTimeObject] =
+    useState<ObjectTaskstate>(initTimeObject);
   const { addObjectTaskInBlock } = useTaskCRUD();
+  const [addOpen, setAddOpen] = useState<boolean>(false);
 
-  const onHandleSave = (e: google.maps.MapMouseEvent) => {
-    if (ptrTimeObject === initTimeObject || !ptrDate) {
+  const onHandleSave = (title: string) => {
+    if (
+      ptrTimeObject === initTimeObject ||
+      !ptrDate ||
+      !ptrTimeObject.mouseEvent
+    ) {
       return;
     }
 
     addObjectTaskInBlock(
-      e,
+      ptrTimeObject.mouseEvent,
       selectedTaskBlockId,
       ptrDate,
       ptrTimeObject.objectId,
-      ptrTimeObject.timeLocationId
+      ptrTimeObject.timeLocationId,
+      title
     );
 
     setPtrTimeObject(initTimeObject);
@@ -141,15 +106,29 @@ const HomeObjectComponent: VFC<Props> = ({ selectedTaskBlockId }) => {
             scaledSize: new window.google.maps.Size(30, 30),
           }}
           onStartDrag={() =>
-            setPtrTimeObject({
+            setPtrTimeObject((_state) => ({
+              ..._state,
               objectId: loc.objectId,
               timeLocationId: loc.locationTime.id,
-            })
+            }))
           }
-          onEndDrag={(e) => onHandleSave(e)}
+          //onEndDrag={(e) => onHandleSave(e)}
+          onEndDrag={(e) => {
+            setAddOpen(true);
+            setPtrTimeObject((_state) => ({
+              ..._state,
+              mouseEvent: e,
+            }));
+          }}
           draggable={timeSchedule.start?.toDate() !== ptrDate}
         />
       ))}
+      <TaskDialog
+        open={addOpen}
+        onClose={() => setAddOpen(false)}
+        onExplaing={onHandleSave}
+        _inputTitle={"物品移動"}
+      />
     </>
   );
 };

@@ -9,11 +9,12 @@ export interface SimpleDialogProps {
   onSave?: (title: string) => void;
   onDelete?: () => void;
   onExplaing: (title: string) => void;
+  _inputTitle?: string;
 }
 
 export const TaskDialog = (props: SimpleDialogProps) => {
-  const { onClose, open, onSave, onDelete, onExplaing } = props;
-  const [inputTitle, setInputTitle] = useState("");
+  const { onClose, open, onSave, onDelete, onExplaing, _inputTitle } = props;
+  const [inputTitle, setInputTitle] = useState(_inputTitle ? _inputTitle : "");
 
   const handleClose = useCallback(
     (event: {}, reason: "backdropClick" | "escapeKeyDown") => {
