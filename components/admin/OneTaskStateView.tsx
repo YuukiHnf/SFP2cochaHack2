@@ -70,12 +70,14 @@ const OneTaskStateView: VFC<Props> = ({ taskId, isTapping }) => {
   useEffect(() => {
     const unSub = onSnapshot(doc(db, "tasks", taskId), (doc) => {
       //console.log(doc.data());
-      const _data = doc.data() as Omit<TaskType, "id">;
-      //console.log(doc.data());
-      setTaskData({
-        ..._data,
-        id: doc.id,
-      });
+      if (doc.exists()) {
+        const _data = doc.data() as Omit<TaskType, "id">;
+        //console.log(doc.data());
+        setTaskData({
+          ..._data,
+          id: doc.id,
+        });
+      }
     });
 
     return () => unSub();
