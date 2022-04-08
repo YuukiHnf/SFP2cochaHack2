@@ -16,6 +16,7 @@ import MapSettingComponent from "../googlemap/MapSettingComponent";
 import CommentCard from "./CommentCard";
 import CommentOnMap from "./CommentOnMap";
 import HomeObjectComponent from "./HomeObjectComponent";
+import HomeObjectView from "./HomeObjectView";
 import InputTypeToggle from "./InputTypeToggle";
 import MemberLocation from "./MemberLocation";
 import MultiToggleMode from "./MultiToggleMode";
@@ -119,6 +120,25 @@ const HomeComponent = () => {
           {!UIToggle.includes("TaskState") && InputType === "ADD" && (
             <ArgumentDrawingManage taskBlockId={selectedTaskBlockId} />
           )}
+          {/* この時のObject用の描画ツール */}
+          {/* Objectを指定した時間ごとに描画する */}
+          {!UIToggle.includes("TaskState") && selectedTaskBlockId ? ( // select taskBlock
+            <>
+              {InputType === "ADD" ? (
+                // タスクを追加するとき
+                <HomeObjectComponent
+                  selectedTaskBlockId={selectedTaskBlockId}
+                />
+              ) : (
+                // Objectを普通に表示する時
+                <HomeObjectView
+                  selectedTaskBlockId={selectedTaskBlockId}
+                ></HomeObjectView>
+              )}
+            </>
+          ) : (
+            <></>
+          )}
           {/* タスク提示用のComponent */}
           {(!UIToggle.includes("TaskState") &&
             taskBlock?.filter(
@@ -133,15 +153,6 @@ const HomeComponent = () => {
                 taskBlockId={selectedTaskBlockId}
               />
             )) ?? <></>}
-          {/* この時のObject用の描画ツール */}
-          {/* Objectを指定した時間ごとに描画する */}
-          {!UIToggle.includes("TaskState") && selectedTaskBlockId ? ( // select taskBlock
-            <>
-              <HomeObjectComponent selectedTaskBlockId={selectedTaskBlockId} />
-            </>
-          ) : (
-            <></>
-          )}
           ) : (<></>){/* 全体説明用オブジェクト*/}
           <MapSettingComponent />
           {/* commentの表示用 */}

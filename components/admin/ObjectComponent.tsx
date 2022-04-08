@@ -36,10 +36,7 @@ import { title } from "process";
  */
 const ObjectComponent: VFC = () => {
   const [ptrObjectId, setPtrObjectId] = useState<string>("");
-  const teamId = useAppSelector(selectTeamId);
-  const { saveInitObjectLocation, FilteredObjectParam } = useObjectHooks({
-    teamId: teamId,
-  });
+  const { saveInitObjectLocation, FilteredObjectParam } = useObjectHooks();
   const objectParams = useAppSelector(selectAdminObjects);
   const filterObjects = FilteredObjectParam();
   console.log(ptrObjectId);

@@ -99,15 +99,18 @@ const CommentCard = () => {
         <Typography variant="h5" component="div">
           チャットスペース
         </Typography>
-        <CardActions>
+        {/* <CardActions> */}
+        <div
+          style={{ marginLeft: "10px", position: "relative", display: "flex" }}
+        >
           <Button
             size="small"
             onClick={() => dispatch(setInputType("CHATINPUT"))}
           >
             {!(InputType === "CHATINPUT") ? "場所を伝える" : "戻る"}
           </Button>
-        </CardActions>
-        <CardActions>
+          {/* </CardActions>
+          <CardActions> */}
           <Button
             size="small"
             onClick={() => {
@@ -115,10 +118,12 @@ const CommentCard = () => {
               dispatch(setChatInputInit());
               dispatch(setPointingLocationNULL());
             }}
+            color="secondary"
           >
             場所をクリア
           </Button>
-        </CardActions>
+          {/* </CardActions> */}
+        </div>
         <Typography>
           <div
             style={{ margin: "30px", position: "relative", display: "flex" }}

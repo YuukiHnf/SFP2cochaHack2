@@ -174,7 +174,7 @@ const ArgumentDrawingManage: VFC<Props> = ({ taskBlockId }) => {
    * snackbarの処理
    */
   const [isSnacks, setIsSnacks] = useState<{ save: boolean; info: boolean }>({
-    save: true,
+    save: false,
     info: true,
   });
 

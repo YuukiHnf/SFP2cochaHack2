@@ -23,11 +23,8 @@ const ObjectTable: VFC<Props> = ({
   ptrObjectId,
   setPtrObjectId,
 }) => {
-  const basicInfo = useAppSelector(selectBasicInfo);
   const { incrementObjectNum, decrementObjectNum, FilteredObjectParam } =
-    useObjectHooks({
-      teamId: basicInfo.teamId,
-    });
+    useObjectHooks();
   const columns: GridColDef[] = [
     {
       field: "selectedButton",

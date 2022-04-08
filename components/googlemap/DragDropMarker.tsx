@@ -54,6 +54,7 @@ const DragDropMarker: VFC<Props> = ({
         onDragEndUI();
         onEndDrag && onEndDrag(e);
       }}
+      zIndex={1}
     ></Marker>
   );
 };

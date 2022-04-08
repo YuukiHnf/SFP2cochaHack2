@@ -26,7 +26,8 @@ const useTaskCRUD = () => {
     taskBlockId: string,
     ptrTime: Date,
     objectId: string,
-    timeLocationIdBefore: string
+    timeLocationIdBefore: string,
+    title?: string
   ) => {
     // objectLocationに新しいLocaitonを追加する
     const objectRef = doc(
@@ -64,8 +65,8 @@ const useTaskCRUD = () => {
           },
           kindOf: "OBJECT",
           taskState: "UNDO",
-          team: "hokdaiFesta",
-          title: "物品移動",
+          team: basicInfo.teamId,
+          title: title ? title : "物品移動",
         } as Omit<TaskType, "id">);
 
         // taskBlockへの追加
