@@ -20,7 +20,7 @@ const GuestCommentInput: VFC<Props> = ({
     <div style={{ margin: "30px", position: "relative", display: "flex" }}>
       <TextField
         id="standard-basic"
-        label="Standard"
+        label="Text"
         variant="standard"
         style={{ width: "80%" }}
         value={guestInput.commentText}

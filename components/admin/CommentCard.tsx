@@ -128,7 +128,7 @@ const CommentCard = () => {
           >
             <TextField
               id="standard-basic"
-              label="Standard"
+              label="Comment"
               variant="standard"
               style={{ width: "80%" }}
               value={ChatInput.commentText}
