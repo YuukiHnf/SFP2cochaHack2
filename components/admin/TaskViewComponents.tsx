@@ -63,7 +63,14 @@ const TaskViewComponents: VFC<Props> = ({ taskId, onClickAnyObject }) => {
           />
           {false && (
             <InfoWindow position={mv.location}>
-              <div>{mv.desc}</div>
+              <>
+                <div>{mv.desc}</div>
+                {/* <p>{`必要人数:${taskdata.memberNum}`}</p>
+                <p>{`担当:${taskdata.memberNum}`}</p>
+                <p>{`担当:${
+                  taskdata.by.length === 0 ? "未定" : taskdata.by.join(",")
+                }`}</p> */}
+              </>
             </InfoWindow>
           )}
         </>
@@ -93,7 +100,13 @@ const TaskViewComponents: VFC<Props> = ({ taskId, onClickAnyObject }) => {
                 onClickAnyObject("");
               }}
             >
-              <div>{ex.desc}</div>
+              <>
+                <div>{ex.desc}</div>
+                <p>{`必要人数:${taskdata.memberNum}`}</p>
+                <p>{`担当:${
+                  taskdata.by.length === 0 ? "未定" : taskdata.by.join(",")
+                }`}</p>
+              </>
             </InfoWindow>
           )}
         </>

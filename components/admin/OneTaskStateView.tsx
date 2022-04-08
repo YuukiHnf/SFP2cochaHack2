@@ -130,6 +130,11 @@ const OneTaskStateView: VFC<Props> = ({ taskId, isTapping }) => {
                       State:
                       {state === "DONE" ? "完了" : "進行中"}
                     </p>
+                    <p>{`必要人数:${taskData.memberNum}`}</p>
+                    <p>{`担当:${taskData.memberNum}`}</p>
+                    <p>{`担当:${
+                      taskData.by.length === 0 ? "未定" : taskData.by.join(",")
+                    }`}</p>
                   </div>
                 </InfoWindow>
               )}
@@ -230,6 +235,10 @@ const OneTaskStateView: VFC<Props> = ({ taskId, isTapping }) => {
                     ? "完了"
                     : "進行中"}
                 </p>
+                <p>{`必要人数:${taskData.memberNum}`}</p>
+                <p>{`担当:${
+                  taskData.by.length === 0 ? "未定" : taskData.by.join(",")
+                }`}</p>
                 <h6
                   style={{ color: "gray" }}
                   onClick={() => dispatch(setChatTaskId(taskData.id))}
