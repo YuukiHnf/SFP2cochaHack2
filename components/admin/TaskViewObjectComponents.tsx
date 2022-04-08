@@ -9,7 +9,7 @@ type Props = {
 };
 
 const TaskViewObjectComponents: VFC<Props> = ({ taskdata }) => {
-  console.log(taskdata);
+  //console.log(taskdata);
   const objectState = useAppSelector(selectAdminObjects);
   const [isSelected, setIsSelected] = useState<boolean>(false);
 
@@ -40,7 +40,9 @@ const TaskViewObjectComponents: VFC<Props> = ({ taskdata }) => {
                 url: _obj.iconUrl,
                 origin: new window.google.maps.Point(0, 0),
                 anchor: new window.google.maps.Point(15, 15),
-                scaledSize: new window.google.maps.Size(30, 30),
+                scaledSize: isSelected
+                  ? new window.google.maps.Size(40, 40)
+                  : new window.google.maps.Size(30, 30),
               }}
               onClick={(e) => setIsSelected(true)}
               zIndex={2}
@@ -84,7 +86,9 @@ const TaskViewObjectComponents: VFC<Props> = ({ taskdata }) => {
                 url: _obj.semiIconUrl,
                 origin: new window.google.maps.Point(0, 0),
                 anchor: new window.google.maps.Point(15, 15),
-                scaledSize: new window.google.maps.Size(30, 30),
+                scaledSize: isSelected
+                  ? new window.google.maps.Size(40, 40)
+                  : new window.google.maps.Size(30, 30),
               }}
               onClick={(e) => setIsSelected(true)}
               zIndex={0}

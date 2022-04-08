@@ -44,7 +44,7 @@ const TaskViewComponents: VFC<Props> = ({ taskId, onClickAnyObject }) => {
   /**
    * Humanタスクの表示
    */
-  console.log(taskdata);
+  //console.log(taskdata);
   return (
     <>
       {/* moveの表示を出力する */}
