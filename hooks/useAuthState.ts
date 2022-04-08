@@ -97,7 +97,39 @@ const useAuthState = ({ LoginType }: Props) => {
 
   const signInGoogle = async () => {
     try {
+      const ptrDate = new Date();
       const result = await signInWithPopup(auth, provider);
+
+      // if (result.user.metadata.creationTime) {
+      //   ptrDate.setSeconds(ptrDate.getSeconds() + 10);
+      //   //console.log(ptrDate);
+      //   console.log(result.user.metadata);
+      //   //console.log(result.user.metadata.lastSignInTime);
+      //   console.log(
+      //     ptrDate.getTime() >
+      //       new Date(result.user.metadata.creationTime).getTime()
+      //   );
+      // }
+      if (
+        result.user.metadata.lastSignInTime ===
+        result.user.metadata.creationTime
+      ) {
+        // firestoreに入れる, idランダム
+        try {
+          await setDoc(doc(db, "users", result.user.uid), {
+            username: result.user.displayName,
+            avatarUrl: result.user.photoURL,
+            timeSche: [] as DateSchedule[],
+            isActive: true,
+            isGPS: false,
+            location: { lat: 0, lng: 0 },
+            teamId: "hokudaiFesta",
+            taskId: "",
+          } as Omit<USER, "uid">);
+        } catch (e: any) {
+          alert(`[MyAuthWithCREATEEmail] : ${e.message}`);
+        }
+      }
 
       router.push(`/${LoginType}`);
     } catch (e: any) {
