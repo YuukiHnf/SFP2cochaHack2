@@ -7,8 +7,6 @@ import { OBJECTPARAM } from "../../utils/firebase/FirebaseStore";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import useObjectHooks from "../../hooks/useObjectHooks";
-import { useAppSelector } from "../../app/hooks";
-import { selectBasicInfo } from "../../features/basicInfoSlice";
 import Image from "next/image";
 //import Image from "next/image";
 

@@ -13,12 +13,7 @@ import { selectAdminObjects } from "../../features/adminSlice";
 import { selectTeamId } from "../../features/basicInfoSlice";
 import useObjectHooks from "../../hooks/useObjectHooks";
 import useSetObjectHooks from "../../hooks/useSetObjectHooks";
-import {
-  Location,
-  ObjectLocation,
-  ObjectTimeLocations,
-  SetObjectType,
-} from "../../utils/firebase/FirebaseStore";
+import { Location, SetObjectType } from "../../utils/firebase/FirebaseStore";
 import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
 import DragDropMarker from "../googlemap/DragDropMarker";
 import MapSettingComponent from "../googlemap/MapSettingComponent";
