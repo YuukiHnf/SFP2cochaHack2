@@ -54,7 +54,7 @@ const GuestWrapper: VFC<Props> = ({ children }) => {
 
       const taskQuery = query(
         collection(db, "tasks"),
-        where("by", "==", basicInfo.userId)
+        where("by", "array-contains", basicInfo.userId)
       );
       unSubTask = onSnapshot(taskQuery, (querySnap) => {
         dispatch(

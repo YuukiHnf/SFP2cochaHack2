@@ -27,6 +27,7 @@ const useTaskCRUD = () => {
     ptrTime: Date,
     objectId: string,
     timeLocationIdBefore: string,
+    memberNum: number,
     title?: string
   ) => {
     // objectLocationに新しいLocaitonを追加する
@@ -47,7 +48,7 @@ const useTaskCRUD = () => {
 
         // taskへの追加
         const newTaskRef = await addDoc(collection(db, "tasks"), {
-          by: "",
+          by: [] as string[],
           content: {
             move: [
               {
@@ -67,6 +68,7 @@ const useTaskCRUD = () => {
           taskState: "UNDO",
           team: basicInfo.teamId,
           title: title ? title : "物品移動",
+          memberNum: memberNum,
         } as Omit<TaskType, "id">);
 
         // taskBlockへの追加

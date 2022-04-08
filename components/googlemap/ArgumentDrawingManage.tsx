@@ -48,7 +48,8 @@ const initInputTask: Omit<TaskType, "id"> = {
   taskState: "UNDO",
   team: "",
   content: { move: [], explaing: [] },
-  by: "",
+  by: [],
+  memberNum: 1,
 };
 
 const initPtrMarker = {
