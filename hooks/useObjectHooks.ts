@@ -16,7 +16,11 @@ import {
   writeBatch,
 } from "firebase/firestore";
 import { useAppSelector } from "../app/hooks";
-import { selectAdminObjects } from "../features/adminSlice";
+import {
+  selectAdminObjects,
+  selectAdminTimeSche,
+} from "../features/adminSlice";
+import { selectBasicInfo } from "../features/basicInfoSlice";
 import {
   db,
   ObjectLocation,
@@ -28,14 +32,17 @@ import {
 } from "../utils/firebase/FirebaseStore";
 
 type Props = {
-  teamId: string;
+  teamId?: string;
 };
 
 //const path = "place";
 
-const useObjectHooks = ({ teamId }: Props) => {
+const useObjectHooks = () => {
   //const initObjectLocations = useAppSelector(selectAdminInitObjects);
   const globalObjects = useAppSelector(selectAdminObjects);
+  const timeSchedule = useAppSelector(selectAdminTimeSche);
+  const { teamId } = useAppSelector(selectBasicInfo);
+
   // 最初の位置をUpdateする
   const saveInitObjectLocation = async (
     objectIds: string[],
@@ -145,11 +152,51 @@ const useObjectHooks = ({ teamId }: Props) => {
     await batch.commit();
   };
 
+  /**時間に対して適切なObject Refを割り当てる */
+  const Date2ObjectsLocations = (ptrDate: Date) => {
+    const targetTimeLocationsIndex: number[] = globalObjects.map(
+      (param) =>
+        param.objectTimeLocations?.findIndex(
+          (timeLoc) => timeLoc.timeStamp.toDate() >= ptrDate
+        ) ?? 0
+    );
+
+    return globalObjects.map((param, index) => {
+      if (!param.objectTimeLocations) {
+        return {
+          objectId: param.id,
+          locationTime: {},
+        } as ObjectLocation;
+      }
+      if (targetTimeLocationsIndex[index] !== -1) {
+        // 現在の時刻より後かつ最初のObjectを選択
+        // console.log(
+        //   param.objectTimeLocations[targetTimeLocationsIndex[index]]
+        // );
+        return {
+          objectId: param.id,
+          locationTime: {
+            ...param.objectTimeLocations[targetTimeLocationsIndex[index]],
+          },
+        } as ObjectLocation;
+      } /*if (param.objectTimeLocations.length !== 0)*/ else {
+        // 最新の位置を表示
+        return {
+          objectId: param.id,
+          locationTime:
+            param.objectTimeLocations[param.objectTimeLocations.length - 1],
+        } as ObjectLocation;
+      }
+      // それ以外
+    });
+  };
+
   return {
     saveInitObjectLocation,
     incrementObjectNum,
     decrementObjectNum,
     FilteredObjectParam,
+    Date2ObjectsLocations,
   };
 };
 

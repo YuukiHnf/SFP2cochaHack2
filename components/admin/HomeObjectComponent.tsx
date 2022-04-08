@@ -6,6 +6,7 @@ import {
   selectAdminTaskBlock,
   selectAdminTimeSche,
 } from "../../features/adminSlice";
+import useObjectHooks from "../../hooks/useObjectHooks";
 import useTaskCRUD from "../../hooks/useTaskCRUD";
 import {
   ObjectLocation,
@@ -28,6 +29,12 @@ const initTimeObject: ObjectTaskstate = {
   timeLocationId: "",
 };
 
+/**
+ * Objectをタスク操作する画面
+ * @param param0
+ * @returns
+ */
+
 const HomeObjectComponent: VFC<Props> = ({ selectedTaskBlockId }) => {
   const taskBlocks = useAppSelector(selectAdminTaskBlock);
   const objectParams = useAppSelector(selectAdminObjects);
@@ -37,6 +44,8 @@ const HomeObjectComponent: VFC<Props> = ({ selectedTaskBlockId }) => {
   const timeSchedule = useAppSelector(selectAdminTimeSche);
   // 表示するObjectを時間から算出して保存するState
   const [ptrLocations, setPtrLocations] = useState<ObjectLocation[]>([]);
+
+  const { Date2ObjectsLocations } = useObjectHooks();
   useEffect(() => {
     // 現在選択されているtaskBlockの始まる時間
     if (!taskBlocks) {
@@ -45,42 +54,43 @@ const HomeObjectComponent: VFC<Props> = ({ selectedTaskBlockId }) => {
     // 現在選択されているObjectのLocationを算出
     if (ptrDate) {
       // objectTimeLocationがソートされていることに注意
-      const targetTimeLocationsIndex: number[] = objectParams.map(
-        (param) =>
-          param.objectTimeLocations?.findIndex(
-            (timeLoc) => timeLoc.timeStamp.toDate() >= ptrDate
-          ) ?? 0
-      );
+      // const targetTimeLocationsIndex: number[] = objectParams.map(
+      //   (param) =>
+      //     param.objectTimeLocations?.findIndex(
+      //       (timeLoc) => timeLoc.timeStamp.toDate() >= ptrDate
+      //     ) ?? 0
+      // );
       //console.log(targetTimeLocationsIndex);
       setPtrLocations(
-        objectParams.map((param, index) => {
-          if (!param.objectTimeLocations) {
-            return {
-              objectId: param.id,
-              locationTime: {},
-            } as ObjectLocation;
-          }
-          if (targetTimeLocationsIndex[index] !== -1) {
-            // 現在の時刻より後かつ最初のObjectを選択
-            // console.log(
-            //   param.objectTimeLocations[targetTimeLocationsIndex[index]]
-            // );
-            return {
-              objectId: param.id,
-              locationTime: {
-                ...param.objectTimeLocations[targetTimeLocationsIndex[index]],
-              },
-            } as ObjectLocation;
-          } /*if (param.objectTimeLocations.length !== 0)*/ else {
-            // 最新の位置を表示
-            return {
-              objectId: param.id,
-              locationTime:
-                param.objectTimeLocations[param.objectTimeLocations.length - 1],
-            } as ObjectLocation;
-          }
-          // それ以外
-        })
+        Date2ObjectsLocations(ptrDate)
+        //   objectParams.map((param, index) => {
+        //     if (!param.objectTimeLocations) {
+        //       return {
+        //         objectId: param.id,
+        //         locationTime: {},
+        //       } as ObjectLocation;
+        //     }
+        //     if (targetTimeLocationsIndex[index] !== -1) {
+        //       // 現在の時刻より後かつ最初のObjectを選択
+        //       // console.log(
+        //       //   param.objectTimeLocations[targetTimeLocationsIndex[index]]
+        //       // );
+        //       return {
+        //         objectId: param.id,
+        //         locationTime: {
+        //           ...param.objectTimeLocations[targetTimeLocationsIndex[index]],
+        //         },
+        //       } as ObjectLocation;
+        //     } /*if (param.objectTimeLocations.length !== 0)*/ else {
+        //       // 最新の位置を表示
+        //       return {
+        //         objectId: param.id,
+        //         locationTime:
+        //           param.objectTimeLocations[param.objectTimeLocations.length - 1],
+        //       } as ObjectLocation;
+        //     }
+        //     // それ以外
+        //   })
       );
     }
   }, [selectedTaskBlockId]);

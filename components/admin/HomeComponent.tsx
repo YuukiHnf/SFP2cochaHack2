@@ -16,6 +16,7 @@ import MapSettingComponent from "../googlemap/MapSettingComponent";
 import CommentCard from "./CommentCard";
 import CommentOnMap from "./CommentOnMap";
 import HomeObjectComponent from "./HomeObjectComponent";
+import HomeObjectView from "./HomeObjectView";
 import InputTypeToggle from "./InputTypeToggle";
 import MemberLocation from "./MemberLocation";
 import MultiToggleMode from "./MultiToggleMode";
@@ -137,7 +138,17 @@ const HomeComponent = () => {
           {/* Objectを指定した時間ごとに描画する */}
           {!UIToggle.includes("TaskState") && selectedTaskBlockId ? ( // select taskBlock
             <>
-              <HomeObjectComponent selectedTaskBlockId={selectedTaskBlockId} />
+              {InputType === "ADD" ? (
+                // タスクを追加するとき
+                <HomeObjectComponent
+                  selectedTaskBlockId={selectedTaskBlockId}
+                />
+              ) : (
+                // Objectを普通に表示する時
+                <HomeObjectView
+                  selectedTaskBlockId={selectedTaskBlockId}
+                ></HomeObjectView>
+              )}
             </>
           ) : (
             <></>
