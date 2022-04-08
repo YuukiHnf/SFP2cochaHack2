@@ -43,6 +43,7 @@ const TaskViewObjectComponents: VFC<Props> = ({ taskdata }) => {
                 scaledSize: new window.google.maps.Size(30, 30),
               }}
               onClick={(e) => setIsSelected(true)}
+              zIndex={2}
             />
             {isSelected && (
               <InfoWindow
@@ -86,6 +87,7 @@ const TaskViewObjectComponents: VFC<Props> = ({ taskdata }) => {
                 scaledSize: new window.google.maps.Size(30, 30),
               }}
               onClick={(e) => setIsSelected(true)}
+              zIndex={0}
             />
             {isSelected && (
               <InfoWindow

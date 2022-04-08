@@ -64,7 +64,7 @@ const useTaskCRUD = () => {
           },
           kindOf: "OBJECT",
           taskState: "UNDO",
-          team: "hokdaiFesta",
+          team: basicInfo.teamId,
           title: "物品移動",
         } as Omit<TaskType, "id">);
 

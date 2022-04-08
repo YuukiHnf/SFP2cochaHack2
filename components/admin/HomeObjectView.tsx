@@ -53,7 +53,7 @@ const HomeObjectView: VFC<Props> = ({ selectedTaskBlockId }) => {
             url:
               //loc.id === ptrObjectId
               objectParams.find((value) => value.id === loc.objectId)
-                ?.iconUrl ?? "",
+                ?.semiIconUrl ?? "",
             // : objectParams.find((value) => value.id === obj.id)
             //     ?.semiIconUrl ?? "",
             origin: new window.google.maps.Point(0, 0),

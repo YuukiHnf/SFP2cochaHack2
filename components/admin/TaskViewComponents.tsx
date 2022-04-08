@@ -22,17 +22,17 @@ const TaskViewComponents: VFC<Props> = ({ taskId, onClickAnyObject }) => {
   useEffect(() => {
     const unSub = onSnapshot(doc(db, "tasks", taskId), (doc) => {
       //console.log(doc.data());
-      const _data = doc.data() as Omit<TaskType, "id">;
-      setTaskdata({
-        ..._data,
-        id: doc.id,
-      });
+      if (doc.exists()) {
+        const _data = doc.data() as Omit<TaskType, "id">;
+        setTaskdata({
+          ..._data,
+          id: doc.id,
+        });
+      }
     });
 
     return () => unSub();
   }, [taskId]);
-
-  //  wconsole.log(taskdata);
 
   if (!taskdata) return <></>;
   /**
@@ -44,6 +44,7 @@ const TaskViewComponents: VFC<Props> = ({ taskId, onClickAnyObject }) => {
   /**
    * Humanタスクの表示
    */
+  console.log(taskdata);
   return (
     <>
       {/* moveの表示を出力する */}
