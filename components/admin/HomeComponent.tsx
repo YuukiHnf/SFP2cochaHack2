@@ -120,20 +120,6 @@ const HomeComponent = () => {
           {!UIToggle.includes("TaskState") && InputType === "ADD" && (
             <ArgumentDrawingManage taskBlockId={selectedTaskBlockId} />
           )}
-          {/* タスク提示用のComponent */}
-          {(!UIToggle.includes("TaskState") &&
-            taskBlock?.filter(
-              (block) => block.id === selectedTaskBlockId
-            )[0] && (
-              <TaskViewForTaskIdsComponents
-                taskIds={
-                  taskBlock?.filter(
-                    (block) => block.id === selectedTaskBlockId
-                  )[0].taskIds
-                }
-                taskBlockId={selectedTaskBlockId}
-              />
-            )) ?? <></>}
           {/* この時のObject用の描画ツール */}
           {/* Objectを指定した時間ごとに描画する */}
           {!UIToggle.includes("TaskState") && selectedTaskBlockId ? ( // select taskBlock
@@ -153,6 +139,20 @@ const HomeComponent = () => {
           ) : (
             <></>
           )}
+          {/* タスク提示用のComponent */}
+          {(!UIToggle.includes("TaskState") &&
+            taskBlock?.filter(
+              (block) => block.id === selectedTaskBlockId
+            )[0] && (
+              <TaskViewForTaskIdsComponents
+                taskIds={
+                  taskBlock?.filter(
+                    (block) => block.id === selectedTaskBlockId
+                  )[0].taskIds
+                }
+                taskBlockId={selectedTaskBlockId}
+              />
+            )) ?? <></>}
           ) : (<></>){/* 全体説明用オブジェクト*/}
           <MapSettingComponent />
           {/* commentの表示用 */}
