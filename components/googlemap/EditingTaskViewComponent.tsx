@@ -88,6 +88,10 @@ const EditingTaskViewComponent: VFC<Props> = ({
           >
             <>
               <div>{mv.desc}</div>
+              <p>{`必要人数:${taskdata.memberNum}`}</p>
+              <p>{`担当:${
+                taskdata.by.length === 0 ? "未定" : taskdata.by.join(",")
+              }`}</p>
               <SvgIcon
                 component={DeleteIcon}
                 onClick={() => {

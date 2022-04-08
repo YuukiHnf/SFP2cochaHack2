@@ -55,7 +55,10 @@ const TaskViewObjectComponents: VFC<Props> = ({ taskdata }) => {
                 <>
                   <div style={{ fontWeight: "bold" }}>{"移動タスク"}</div>
                   <p>{"移動後"}</p>
-                  <p>{`担当:${taskdata.by === "" ? "未定" : taskdata.by}`}</p>
+                  <p>{`必要人数:${taskdata.memberNum}`}</p>
+                  <p>{`担当:${
+                    taskdata.by.length === 0 ? "未定" : taskdata.by.join(",")
+                  }`}</p>
                 </>
               </InfoWindow>
             )}

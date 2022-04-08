@@ -2,8 +2,13 @@ import {
   Alert,
   Button,
   Divider,
+  FormControl,
   Icon,
   IconButton,
+  InputLabel,
+  MenuItem,
+  NativeSelect,
+  Select,
   Snackbar,
 } from "@mui/material";
 import { DrawingManager } from "@react-google-maps/api";
@@ -48,7 +53,8 @@ const initInputTask: Omit<TaskType, "id"> = {
   taskState: "UNDO",
   team: "",
   content: { move: [], explaing: [] },
-  by: "",
+  by: [],
+  memberNum: 1,
 };
 
 const initPtrMarker = {
@@ -248,6 +254,11 @@ const ArgumentDrawingManage: VFC<Props> = ({ taskBlockId }) => {
     !isSnacks.info && setIsSnacks((state) => ({ ...state, info: true }));
   };
 
+  /**memberの数設定 */
+  const handleTaskMemberNum = (num: number) => {
+    setInputingTask((_state) => ({ ..._state, memberNum: num }));
+  };
+
   return (
     <>
       {/* 入力用のToggle */}
@@ -275,6 +286,35 @@ const ArgumentDrawingManage: VFC<Props> = ({ taskBlockId }) => {
         >
           <>
             <span>{`Inputing... ${inputingTask.content.move.length}moves & ${inputingTask.content.explaing.length}explains`}</span>
+
+            <span>
+              <FormControl>
+                <InputLabel id="select-member-num">MemberNum</InputLabel>
+                <Select
+                  labelId="select-member-num"
+                  id="selecter-memeber-num"
+                  label="member-num"
+                  value={inputingTask.memberNum}
+                  onChange={(e) => {
+                    handleTaskMemberNum(Number(e.target.value));
+                  }}
+                >
+                  {/* <NativeSelect
+                  defaultValue={inputingTask.memberNum}
+                  inputProps={{
+                    name: "num",
+                    // onChange={(e)=> {
+                    //   handleTaskMemberNum(Number(e.target.value));
+                    // }},
+                  }}
+                > */}
+                  <MenuItem value={1}>{"1人"}</MenuItem>
+                  <MenuItem value={2}>{"2人"}</MenuItem>
+                  <MenuItem value={3}>{"3人"}</MenuItem>
+                  {/* </NativeSelect> */}
+                </Select>
+              </FormControl>
+            </span>
             <span>
               <Button color="success" size="small" onClick={() => handleSave()}>
                 <SaveAsIcon />

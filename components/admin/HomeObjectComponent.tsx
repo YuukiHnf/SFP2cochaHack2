@@ -77,6 +77,7 @@ const HomeObjectComponent: VFC<Props> = ({ selectedTaskBlockId }) => {
       ptrDate,
       ptrTimeObject.objectId,
       ptrTimeObject.timeLocationId,
+      1, //memberNum
       title
     );
 

@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
-  selectAdminObjects,
   selectAdminTaskBlock,
   // selectAdminInitObjects,
 } from "../../features/adminSlice";
@@ -9,7 +8,6 @@ import {
   selectInputType,
   setChatInputLocation,
 } from "../../features/uiHelperSlice";
-import { ObjectLocation, TaskBlock } from "../../utils/firebase/FirebaseStore";
 import ArgumentDrawingManage from "../googlemap/ArgumentDrawingManage";
 import DefaultGoogleMapComponent from "../googlemap/DefaultGoogleMapComponent";
 import MapSettingComponent from "../googlemap/MapSettingComponent";
@@ -21,7 +19,6 @@ import InputTypeToggle from "./InputTypeToggle";
 import MemberLocation from "./MemberLocation";
 import MultiToggleMode from "./MultiToggleMode";
 import TaskStateView from "./TaskStatesView";
-import TaskViewComponents from "./TaskViewComponents";
 import TaskViewForTaskIdsComponents from "./TaskViewForTaskIdsComponents";
 import TimeTable from "./TimeTable";
 

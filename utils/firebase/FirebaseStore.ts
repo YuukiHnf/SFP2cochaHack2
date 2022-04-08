@@ -118,8 +118,9 @@ export type TaskType = {
   title: string;
   taskState: TaskProgressState;
   team: string;
-  by: string;
+  by: string[];
   content: TaskContentType;
+  memberNum: number;
 };
 
 export type Comment = {
