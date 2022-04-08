@@ -27,7 +27,7 @@ export const TaskDialog = (props: SimpleDialogProps) => {
 
   return (
     <Dialog onClose={handleClose} open={open}>
-      <div style={{ alignItems: "center" }}>
+      <div style={{ margin: "0 auto" }}>
         <DialogTitle>{"Title"}</DialogTitle>
         <List sx={{ pt: 0 }}>
           <ListItem>
@@ -40,7 +40,6 @@ export const TaskDialog = (props: SimpleDialogProps) => {
               onChange={(e) => setInputTitle(e.target.value)}
             />
           </ListItem>
-          <DialogTitle>{"NEXT"}</DialogTitle>
           <ListItem alignItems="center">
             <Button
               variant="outlined"
@@ -49,6 +48,7 @@ export const TaskDialog = (props: SimpleDialogProps) => {
                 onExplaing(inputTitle);
                 onClose();
               }}
+              style={{ margin: "0 auto" }}
             >
               {"SAVE"}
             </Button>
@@ -65,7 +65,12 @@ export const TaskDialog = (props: SimpleDialogProps) => {
           </Button>
         </ListItem> */}
           <ListItem alignItems="center">
-            <Button variant="outlined" color="error" onClick={() => onClose()}>
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={() => onClose()}
+              style={{ margin: "0 auto" }}
+            >
               CANCEL
             </Button>
           </ListItem>
