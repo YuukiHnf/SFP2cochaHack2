@@ -39,7 +39,7 @@ const DefaultGoogleMapComponent: VFC<Props> = ({
   const placeParam = useAppSelector(selectAdminPlaceState);
   const mapOption: google.maps.MapOptions = {
     disableDefaultUI: true, // button無くす
-    minZoom: placeParam.zoom,
+    minZoom: placeParam.zoom - 4,
     maxZoom: 50,
     rotateControl: true, // 効果なさそう
     gestureHandling: "cooperative",
