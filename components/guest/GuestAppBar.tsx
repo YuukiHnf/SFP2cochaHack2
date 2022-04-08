@@ -101,6 +101,7 @@ const GuestAppBar = ({ setState }: any) => {
             noWrap
             component="div"
             sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
+            onClick={() => setState("Home")}
           >
             CochaHack
           </Typography>
