@@ -227,7 +227,12 @@ const OneTaskStateView: VFC<Props> = ({ taskId, isTapping }) => {
                 <div>{mv.desc}</div>
                 <p
                   style={{
-                    backgroundColor: state === "UNDO" ? "#FF9966" : "#008000",
+                    backgroundColor:
+                      state === "UNDO"
+                        ? "#FF9966"
+                        : state === "DONE"
+                        ? "#A5A5A5"
+                        : "#008000",
                   }}
                 >
                   State:
