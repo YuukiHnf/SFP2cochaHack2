@@ -18,6 +18,7 @@ import AdminComment from "./AdminComment";
 type Props = {
   taskId: string;
   isTapping: boolean;
+  handleSelect: () => void;
 };
 
 const humanPosUrl = "/(UNDO)humanTaskIcon.png"; //`http://localhost:9199/v0/b/default-bucket/o/(input)humanTaskIcon.png?alt=media&token=2a7a1373-0953-4fa9-997b-dbdedac8ca99`;
@@ -53,9 +54,10 @@ const initGuestInput: GuestInputType = {
   pointerLocation: null,
 };
 
-const OneTaskStateView: VFC<Props> = ({ taskId, isTapping }) => {
+const OneTaskStateView: VFC<Props> = ({ taskId, isTapping, handleSelect }) => {
   const [taskData, setTaskData] = useState<TaskType>();
   const objectState = useAppSelector(selectAdminObjects);
+  console.log(isTapping);
   //const [open, setOpen] = useState<boolean>(false);
 
   // /**Comment系の処理 */
@@ -89,7 +91,8 @@ const OneTaskStateView: VFC<Props> = ({ taskId, isTapping }) => {
   const taskAndDataViewObject = (
     taskData: TaskType,
     isTapping: boolean,
-    state: TaskProgressState
+    state: TaskProgressState,
+    handleSelect: () => void
   ) => {
     return (
       <>
@@ -118,9 +121,11 @@ const OneTaskStateView: VFC<Props> = ({ taskId, isTapping }) => {
                   anchor: new window.google.maps.Point(15, 15),
                   scaledSize: new window.google.maps.Size(30, 30),
                 }}
-                onClick={() => {}}
+                onClick={() => {
+                  handleSelect();
+                }}
               />
-              {!(state === "UNDO") && (
+              {!(state === "UNDO") && isTapping && (
                 <InfoWindow position={_objLoc.location}>
                   <div
                     style={{
@@ -174,9 +179,11 @@ const OneTaskStateView: VFC<Props> = ({ taskId, isTapping }) => {
                   anchor: new window.google.maps.Point(15, 15),
                   scaledSize: new window.google.maps.Size(30, 30),
                 }}
-                onClick={() => {}}
+                onClick={() => {
+                  handleSelect();
+                }}
               />
-              {!(state === "DONE") && (
+              {!(state === "DONE") && isTapping && (
                 <InfoWindow position={_objLoc.location} onCloseClick={() => {}}>
                   <div>
                     <div>物品移動タスク</div>
@@ -201,7 +208,8 @@ const OneTaskStateView: VFC<Props> = ({ taskId, isTapping }) => {
   const taskAndDataView = (
     taskData: TaskType,
     isTapping: boolean,
-    state: TaskProgressState
+    state: TaskProgressState,
+    handleSelect: () => void
   ) => {
     return (
       <>
@@ -221,39 +229,43 @@ const OneTaskStateView: VFC<Props> = ({ taskId, isTapping }) => {
                 anchor: new window.google.maps.Point(15, 15),
                 scaledSize: new window.google.maps.Size(30, 30),
               }}
+              onClick={() => {
+                handleSelect();
+              }}
             />
-            <InfoWindow position={mv.location} onCloseClick={() => {}}>
-              <div>
-                <div>{mv.desc}</div>
-                <p
-                  style={{
-                    backgroundColor:
-                      state === "UNDO"
-                        ? "#FF9966"
-                        : state === "DONE"
-                        ? "#A5A5A5"
-                        : "#008000",
-                  }}
-                >
-                  State:
-                  {state === "UNDO"
-                    ? "未着手"
-                    : state === "DONE"
-                    ? "完了"
-                    : "進行中"}
-                </p>
-                <p>{`必要人数:${taskData.memberNum}`}</p>
-                <p>{`担当:${
-                  taskData.by.length === 0 ? "未定" : taskData.by.join(",")
-                }`}</p>
-                <h6
-                  style={{ color: "gray" }}
-                  onClick={() => dispatch(setChatTaskId(taskData.id))}
-                >
-                  chat
-                </h6>
+            {isTapping && (
+              <InfoWindow position={mv.location} onCloseClick={() => {}}>
+                <div>
+                  <div>{mv.desc}</div>
+                  <p
+                    style={{
+                      backgroundColor:
+                        state === "UNDO"
+                          ? "#FF9966"
+                          : state === "DONE"
+                          ? "#A5A5A5"
+                          : "#008000",
+                    }}
+                  >
+                    State:
+                    {state === "UNDO"
+                      ? "未着手"
+                      : state === "DONE"
+                      ? "完了"
+                      : "進行中"}
+                  </p>
+                  <p>{`必要人数:${taskData.memberNum}`}</p>
+                  <p>{`担当:${
+                    taskData.by.length === 0 ? "未定" : taskData.by.join(",")
+                  }`}</p>
+                  <h6
+                    style={{ color: "gray" }}
+                    onClick={() => dispatch(setChatTaskId(taskData.id))}
+                  >
+                    chat
+                  </h6>
 
-                {/* <SvgIcon
+                  {/* <SvgIcon
                         component={DeleteIcon}
                         onClick={() => {
                           deleteTaskInBlock(taskBlockId, taskId);
@@ -261,8 +273,9 @@ const OneTaskStateView: VFC<Props> = ({ taskId, isTapping }) => {
                         //onClick={() => console.log("Delete", taskId)}
                       />
                       <SvgIcon component={EditIcon} /> */}
-              </div>
-            </InfoWindow>
+                </div>
+              </InfoWindow>
+            )}
           </>
         ))}
         {taskData.content.explaing.map((ex, index) => (
@@ -281,6 +294,9 @@ const OneTaskStateView: VFC<Props> = ({ taskId, isTapping }) => {
                 origin: new window.google.maps.Point(0, 0),
                 anchor: new window.google.maps.Point(15, 15),
                 scaledSize: new window.google.maps.Size(30, 30),
+              }}
+              onClick={() => {
+                handleSelect();
               }}
             />
           </>
@@ -314,12 +330,12 @@ const OneTaskStateView: VFC<Props> = ({ taskId, isTapping }) => {
   if (taskData.kindOf === "HUMAN") {
     switch (taskData.taskState) {
       case "UNDO":
-        return taskAndDataView(taskData, isTapping, "UNDO");
+        return taskAndDataView(taskData, isTapping, "UNDO", handleSelect);
       case "DOING":
       case "CHECK":
-        return taskAndDataView(taskData, isTapping, "DOING");
+        return taskAndDataView(taskData, isTapping, "DOING", handleSelect);
       case "DONE":
-        return taskAndDataView(taskData, isTapping, "DONE");
+        return taskAndDataView(taskData, isTapping, "DONE", handleSelect);
     }
   }
   /**
@@ -327,12 +343,12 @@ const OneTaskStateView: VFC<Props> = ({ taskId, isTapping }) => {
    */
   switch (taskData.taskState) {
     case "UNDO":
-      return taskAndDataViewObject(taskData, isTapping, "UNDO");
+      return taskAndDataViewObject(taskData, isTapping, "UNDO", handleSelect);
     case "DOING":
     case "CHECK":
-      return taskAndDataViewObject(taskData, isTapping, "DOING");
+      return taskAndDataViewObject(taskData, isTapping, "DOING", handleSelect);
     case "DONE":
-      return taskAndDataViewObject(taskData, isTapping, "DONE");
+      return taskAndDataViewObject(taskData, isTapping, "DONE", handleSelect);
   }
 };
 

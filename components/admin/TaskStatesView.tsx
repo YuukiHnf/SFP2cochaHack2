@@ -6,7 +6,9 @@ type Props = {
 };
 
 const TaskStatesView: VFC<Props> = ({ taskIds }) => {
-  const [isTappings, setIsTappings] = useState<boolean[]>([]);
+  const [isTappings, setIsTappings] = useState<boolean[]>(
+    taskIds.map((id) => false)
+  );
 
   const handleSelectedTask = (_index: number, value: boolean) => {
     setIsTappings((_state) =>
@@ -20,7 +22,8 @@ const TaskStatesView: VFC<Props> = ({ taskIds }) => {
         <OneTaskStateView
           key={_id + index}
           taskId={_id}
-          isTapping={isTappings[index] ?? true}
+          isTapping={isTappings[index] ?? false}
+          handleSelect={() => handleSelectedTask(index, !isTappings[index])}
         />
       ))}
     </div>
