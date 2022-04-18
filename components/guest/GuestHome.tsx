@@ -1,4 +1,4 @@
-import { Marker } from "@react-google-maps/api";
+import { DirectionsRenderer, Marker } from "@react-google-maps/api";
 import React, { useEffect, useState, VFC } from "react";
 import { useAppSelector } from "../../app/hooks";
 import { selectBasicInfo } from "../../features/basicInfoSlice";
@@ -44,9 +44,10 @@ const GuestHome: VFC = () => {
   const [ptrLocation, setPtrLocation] = useState<Location>({ lat: 0, lng: 0 });
   const { uploadMyLocation } = useUserHooks();
 
+  console.log("ptrLocation", ptrLocation);
   // UIのMode切り替え
   const [UIMode, setUIMode] = useState<GuestUIMode>("Origin");
-  console.log(UIMode);
+  //console.log(UIMode);
 
   /**Comment系の処理 */
   const [guestInput, setGuestInput] = useState<GuestInputType>(initGuestInput);
@@ -98,7 +99,31 @@ const GuestHome: VFC = () => {
       });
       console.log(position.coords);
     });
+    guestTaskState[0] &&
+      directionservice.route(
+        {
+          origin: ptrLocation,
+          destination: guestTaskState[0].content.move[0].location,
+          travelMode: google.maps.TravelMode.WALKING,
+        },
+        (result, status) => {
+          if (status === google.maps.DirectionsStatus.OK) {
+            result && setDirectionResult(result);
+          } else {
+            console.error(`error fetching directions ${result}`);
+          }
+        }
+      );
   }, []);
+
+  const [directionservice, setDirectionService] =
+    useState<google.maps.DirectionsService>(
+      new google.maps.DirectionsService()
+    );
+
+  //const directionsService = new google.maps.DirectionsService();
+  const [directionResult, setDirectionResult] =
+    useState<google.maps.DirectionsResult | null>(null);
 
   return (
     <div style={{ margin: "0 auto" }}>
@@ -137,6 +162,23 @@ const GuestHome: VFC = () => {
             <Direction
               origin={ptrLocation}
               destination={guestTaskState[0].content.move[0].location}
+            />
+            // directionResult && (
+            //   <DirectionsRenderer
+            //     directions={directionResult}
+            //     options={{ suppressMarkers: false }}
+            //   />
+          )}
+          {ptrLocation && (
+            <Marker
+              position={ptrLocation}
+              icon={{
+                url: "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png", // basicInfo.avaterUrl ?? "/humanIcon.png",
+                origin: new window.google.maps.Point(0, 0),
+                anchor: new window.google.maps.Point(15, 15),
+                scaledSize: new window.google.maps.Size(30, 30),
+              }}
+              options={{}}
             />
           )}
           {/* GuestからCommentとして持ちたい位置情報を表示 */}

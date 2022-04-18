@@ -1,5 +1,5 @@
 import { InfoWindow, Marker } from "@react-google-maps/api";
-import React, { VFC } from "react";
+import React, { useState, VFC } from "react";
 import { TaskType } from "../../utils/firebase/FirebaseStore";
 import { marker2Url } from "./ArgumentDrawingManage";
 
@@ -8,9 +8,16 @@ type Props = {
 };
 
 const TaskViewElementForGuest: VFC<Props> = ({ taskdata }) => {
+  const [isTapping, setIsTapping] = useState<boolean[]>(
+    taskdata.content.move.map(() => false)
+  );
+  const [isTappingEx, setIsTappingEx] = useState<boolean[]>(
+    taskdata.content.explaing.map(() => false)
+  );
+
   return (
     <>
-      {taskdata.content.move.map((mv) => (
+      {taskdata.content.move.map((mv, index) => (
         <>
           <Marker
             key={mv.location.lat * mv.location.lng * 0.7}
@@ -21,10 +28,23 @@ const TaskViewElementForGuest: VFC<Props> = ({ taskdata }) => {
               anchor: new window.google.maps.Point(15, 15),
               scaledSize: new window.google.maps.Size(30, 30),
             }}
-            onClick={() => {}}
+            onClick={() => {
+              setIsTapping((_state) =>
+                _state.map((isTap, _index) => (_index === index ? true : isTap))
+              );
+            }}
           />
-          {false && (
-            <InfoWindow position={mv.location}>
+          {isTapping[index] && (
+            <InfoWindow
+              position={mv.location}
+              onCloseClick={() => {
+                setIsTapping((_state) =>
+                  _state.map((isTap, _index) =>
+                    _index === index ? false : isTap
+                  )
+                );
+              }}
+            >
               <div>{mv.desc}</div>
             </InfoWindow>
           )}
@@ -43,11 +63,22 @@ const TaskViewElementForGuest: VFC<Props> = ({ taskdata }) => {
               scaledSize: new window.google.maps.Size(30, 30),
             }}
             onClick={() => {
-              //setSelectedExplainId(index);
+              setIsTappingEx((_state) =>
+                _state.map((isTap, _index) => (_index === index ? true : isTap))
+              );
             }}
           />
-          {true && (
-            <InfoWindow position={ex.location} onCloseClick={() => {}}>
+          {isTappingEx[index] && (
+            <InfoWindow
+              position={ex.location}
+              onCloseClick={() => {
+                setIsTappingEx((_state) =>
+                  _state.map((isTap, _index) =>
+                    _index === index ? false : isTap
+                  )
+                );
+              }}
+            >
               <div>{ex.desc}</div>
             </InfoWindow>
           )}
