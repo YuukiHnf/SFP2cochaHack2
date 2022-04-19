@@ -2,8 +2,13 @@ import fs from "fs";
 import { NextApiRequest, NextApiResponse } from "next";
 import path from "path";
 import puppeteer from "puppeteer";
-import ReactDOMServer, { renderToString } from "react-dom/server";
+import ReactDOMServer, {
+  renderToReadableStream,
+  renderToString,
+} from "react-dom/server";
+import HomeComponent from "../../components/admin/HomeComponent";
 import TestComponent from "../../components/TestComponent";
+//import TestComponent from "../../components/TestComponent";
 
 // export default (req: NextApiRequest, res: NextApiResponse): void => {
 //   res.statusCode = 200;
@@ -27,13 +32,19 @@ import TestComponent from "../../components/TestComponent";
 //   res.
 // };
 
+// const TestComponent = () => {
+//     return (<div></div>);
+// }
+
 export default (req: NextApiRequest, res: NextApiResponse): void => {
   res.statusCode = 200;
   (async () => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    const html = "<h1>日本語いけ...</h1>";
-    //const html = renderToString(<TestComponent />);
+    //const html = "<h1>日本語いけ...</h1>";
+    const html = renderToString(<TestComponent />);
+
+    //const html = renderToString(<HomeComponent />);
     await page.setContent(html);
     const pdf = await page.pdf({
       path: "./public/puppteer.pdf",
