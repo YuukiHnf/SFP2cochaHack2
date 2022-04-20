@@ -5,6 +5,7 @@ import path from "path";
 import puppeteer from "puppeteer";
 import ReactDOMServer, {
   renderToReadableStream,
+  renderToStaticNodeStream,
   renderToString,
 } from "react-dom/server";
 import HomeComponent from "../../components/admin/HomeComponent";
@@ -278,34 +279,49 @@ const setObjects: SetObjectType[] = [
   },
 ];
 
+const generatePDF = async (html: string) => {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+  //const html = "<h1>日本語いけ...</h1>";
+  //const html = renderToString(<TestComponent />);
+
+  //const html = renderToString(<HomeComponent />);
+  await page.setViewport({ width: 1920, height: 1080 });
+  await page.setContent(html, {
+    waitUntil: "networkidle0",
+  });
+  // await page.goto("http://localhost:3000/admin/", {
+  //   waitUntil: "networkidle0",
+  // });
+
+  const pdf = await page.pdf({
+    path: "./public/puppteer.pdf",
+    format: "a4",
+  });
+  //await page.screenshot({ path: "./public/puppteer.png" });
+
+  await browser.close();
+  return pdf;
+};
+
 export default (req: NextApiRequest, res: NextApiResponse): void => {
   res.statusCode = 200;
-  (async () => {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    //const html = "<h1>日本語いけ...</h1>";
-    //const html = renderToString(<TestComponent />);
-    const JSXComponent = (
-      <LoadScript
-        googleMapsApiKey={`${process.env.NEXT_PUBLIC_GOOGLE_MAPS_APIKEY}&libraries=drawing`}
-      >
-        <PDFViewer placeParam={placeParam} setObjects={setObjects} />
-      </LoadScript>
-    );
+  const JSXComponent = (
+    <LoadScript
+      googleMapsApiKey={`${process.env.NEXT_PUBLIC_GOOGLE_MAPS_APIKEY}&libraries=drawing`}
+    >
+      <PDFViewer placeParam={placeParam} setObjects={setObjects} />
+    </LoadScript>
+  );
 
-    const html = renderToString(JSXComponent);
-
-    //const html = renderToString(<HomeComponent />);
-    await page.setContent(html, { waitUntil: "networkidle0" });
-    //await page.setRequestInterception(false);
-    //await page.waitForSelector("#gm-style");
-    const pdf = await page.pdf({
-      path: "./public/puppteer.pdf",
-      format: "a4",
-    });
-
-    await browser.close();
-    return pdf;
-  })();
+  const html = renderToString(
+    // JSXComponent
+    <PDFViewer placeParam={placeParam} setObjects={setObjects} />
+  );
+  // const appStream = renderToStaticNodeStream(JSXComponent);
+  // appStream.on("end", (props) => {
+  //   console.log(props);
+  // });
+  generatePDF(html);
   return res.json({ result: true });
 };
