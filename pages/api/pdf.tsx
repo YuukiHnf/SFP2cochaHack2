@@ -41,8 +41,8 @@ export default (req: NextApiRequest, res: NextApiResponse): void => {
   (async () => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    //const html = "<h1>日本語いけ...</h1>";
-    const html = renderToString(<TestComponent />);
+    const html = "<h1>日本語いけ...</h1>";
+    //const html = renderToString(<TestComponent />);
 
     //const html = renderToString(<HomeComponent />);
     await page.setContent(html);

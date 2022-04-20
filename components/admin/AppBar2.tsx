@@ -15,7 +15,7 @@ import useAuthState from "../../hooks/useAuthState";
 import Link from "next/link";
 import React from "react";
 
-const pages = ["team", "place", "object"];
+const pages = ["team", "place", "object", "pdf"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const AppBar2 = ({ setState }: any) => {
