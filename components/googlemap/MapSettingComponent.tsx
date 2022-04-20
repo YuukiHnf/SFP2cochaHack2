@@ -7,34 +7,34 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import useSetObjectHooks from "../../hooks/useSetObjectHooks";
 
-const rectAngleOption = {
+export const rectAngleOption = {
   fillColor: "teal",
   fillOpactiy: 0.3,
   strokeColor: "teal",
   strokeOpacity: 0.3,
 };
-const rectAngleOption2 = {
+export const rectAngleOption2 = {
   fillColor: "black",
   fillOpactiy: 0.3,
   strokeColor: "black",
   strokeOpacity: 0.3,
 };
 
-const rectAngleOption3 = {
+export const rectAngleOption3 = {
   fillColor: "gray",
   fillOpactiy: 0.3,
   strokeColor: "gray",
   strokeOpacity: 0.3,
 };
 
-const rectAngleOption4 = {
+export const rectAngleOption4 = {
   fillColor: "darkgreen",
   fillOpactiy: 0.3,
   strokeColor: "darkgreen",
   strokeOpacity: 0.3,
 };
 
-const rectAngleOption5 = {
+export const rectAngleOption5 = {
   fillColor: "darkred",
   fillOpactiy: 0.3,
   strokeColor: "darkred",
