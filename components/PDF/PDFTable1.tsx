@@ -39,13 +39,19 @@ type props = {
 export const PDFTable1 = () => {
   return (
     <TableContainer component={Paper} style={TableStyle}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <Table aria-label="simple table" style={{ tableLayout: "auto" }}>
         <TableHead>
           <TableRow>
-            <TableCell>時間</TableCell>
-            <TableCell align="right">コンテンツ</TableCell>
-            <TableCell align="right">タスク数(個)</TableCell>
-            <TableCell align="right">人数(人)</TableCell>
+            <TableCell style={{ width: "25%" }}>時間</TableCell>
+            <TableCell style={{ width: "25%" }} align="right">
+              コンテンツ
+            </TableCell>
+            <TableCell style={{ width: "25%" }} align="right">
+              タスク数(個)
+            </TableCell>
+            <TableCell style={{ width: "25%" }} align="right">
+              人数(人)
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

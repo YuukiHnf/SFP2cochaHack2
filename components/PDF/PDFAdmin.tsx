@@ -10,9 +10,9 @@ const PDFAdmin = () => {
   const setObjects = useAppSelector(selectSetObjects);
 
   return (
-    <div>
+    <>
       <PDFViewer placeParam={placeParam} setObjects={setObjects} />
-    </div>
+    </>
   );
 };
 

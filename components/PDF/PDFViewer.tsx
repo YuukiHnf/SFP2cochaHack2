@@ -1,4 +1,4 @@
-import { Divider, Paper, Stack } from "@mui/material";
+import { Divider, Grid, Paper, Stack } from "@mui/material";
 import React, { VFC } from "react";
 import TextArea from "./TextArea";
 import { styled } from "@mui/material/styles";
@@ -86,7 +86,7 @@ const mapOption: google.maps.MapOptions = {
 const PDFViewer: VFC<PDFViewerProps> = ({ placeParam, setObjects }) => {
   const now = new Date();
   return (
-    <div style={{ margin: "20 auto", width: "80%" }}>
+    <div style={{ margin: "0 auto", width: "80%" }}>
       {/* Title */}
       <h1 style={titleStyle}>全体運営マニュアル</h1>
       <div style={subTitleDivStyle}>
