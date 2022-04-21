@@ -83,90 +83,6 @@ const mapOption: google.maps.MapOptions = {
   ],
 };
 
-// const SetObject2JSX = (setObjects: SetObjectType[]) =>
-//   setObjects.map((setObj, index) => {
-//     switch (setObj.setObjectType) {
-//       case "GooglePolygon":
-//         return (
-//           <>
-//             <Polygon
-//               key={setObj.id}
-//               path={setObj.locations}
-//               options={
-//                 setObj.desc.endsWith("ステージ")
-//                   ? rectAngleOption
-//                   : setObj.desc.endsWith("テント")
-//                   ? rectAngleOption4
-//                   : rectAngleOption3
-//               }
-//             />
-//             <Marker
-//               position={{
-//                 lat:
-//                   setObj.locations
-//                     .map((loc) => loc.lat)
-//                     .reduce((sum, element) => sum + element, 0) /
-//                   setObj.locations.length,
-//                 lng:
-//                   setObj.locations
-//                     .map((loc) => loc.lng)
-//                     .reduce((sum, element) => sum + element, 0) /
-//                   setObj.locations.length,
-//               }}
-//               label={{ text: setObj.desc, color: "black", fontSize: "12px" }}
-//               icon={{ url: "./explaingIcon.png" }}
-//             />
-//           </>
-//         );
-//       case "GoogleMarker":
-//         return (
-//           <>
-//             <Marker
-//               key={setObj.id}
-//               position={setObj.locations[0]}
-//               label={setObj.desc[0]}
-//             />
-
-//             <Marker
-//               position={{
-//                 lat:
-//                   setObj.locations
-//                     .map((loc) => loc.lat)
-//                     .reduce((sum, element) => sum + element, 0) /
-//                   setObj.locations.length,
-//                 lng:
-//                   setObj.locations
-//                     .map((loc) => loc.lng)
-//                     .reduce((sum, element) => sum + element, 0) /
-//                   setObj.locations.length,
-//               }}
-//               label={{ text: setObj.desc, color: "black", fontSize: "12px" }}
-//               icon={{ url: "./explaingIcon.png" }}
-//             />
-//           </>
-//         );
-//       case "GoogleCircle":
-//         return (
-//           <>
-//             <Circle
-//               key={setObj.id}
-//               center={setObj.locations[0]}
-//               radius={setObj.locations[1].lat}
-//               options={rectAngleOption5}
-//             />
-
-//             <Marker
-//               position={setObj.locations[0]}
-//               label={{ text: setObj.desc, color: "black", fontSize: "12px" }}
-//               icon={{ url: "./explaingIcon.png" }}
-//             />
-//           </>
-//         );
-//       default:
-//         return <></>;
-//     }
-//   });
-
 const PDFViewer: VFC<PDFViewerProps> = ({ placeParam, setObjects }) => {
   const now = new Date();
   return (
@@ -202,20 +118,77 @@ const PDFViewer: VFC<PDFViewerProps> = ({ placeParam, setObjects }) => {
             title={"場所・日時"}
             description={"場所：教養棟前特設ステージ 日時:6/3"}
           />
-          {/* <GoogleMap
-            mapContainerStyle={_mapContainerStyle}
-            zoom={placeParam.zoom - 0.5}
-            center={placeParam.center}
-            options={mapOption}
-          >
-            {SetObject2JSX(setObjects)}
-          </GoogleMap> */}
           <StaticGoogleMap
             apiKey={`${process.env.NEXT_PUBLIC_GOOGLE_MAPS_APIKEY}&libraries=drawing`}
-            size="600x600"
+            size="600x400"
+            language="ja"
+            scale={"1"}
+            center={`${placeParam.center.lat},${placeParam.center.lng}`}
+            zoom={placeParam.zoom}
           >
-            <Marker location={placeParam.center} color="blue" />
+            {setObjects &&
+              setObjects.map((obj, index) => {
+                switch (obj.setObjectType) {
+                  case "GooglePolygon":
+                    return (
+                      <Marker
+                        key={obj.id + index + "Marker"}
+                        size="mid"
+                        color="white"
+                        label={`${index}`}
+                        scale={"1"}
+                        location={{
+                          lat:
+                            obj.locations
+                              .map((loc) => loc.lat)
+                              .reduce((sum, element) => sum + element, 0) /
+                            obj.locations.length,
+                          lng:
+                            obj.locations
+                              .map((loc) => loc.lng)
+                              .reduce((sum, element) => sum + element, 0) /
+                            obj.locations.length,
+                        }}
+                      />
+                    );
+                  case "GoogleMarker":
+                  case "GoogleCircle":
+                    return (
+                      <Marker
+                        key={obj.id + index + "Marker"}
+                        size="mid"
+                        color="white"
+                        label={`${index}`}
+                        scale={"1"}
+                        location={obj.locations[0]}
+                      />
+                    );
+                  default:
+                    return;
+                }
+              })}
+            {setObjects &&
+              setObjects.map((obj) => {
+                switch (obj.setObjectType) {
+                  case "GooglePolygon":
+                    return (
+                      <Path
+                        key={obj.id + "path"}
+                        weight={"0"}
+                        fillcolor={"green"}
+                        points={obj.locations}
+                      />
+                    );
+                  default:
+                    return;
+                }
+              })}
           </StaticGoogleMap>
+          {setObjects.map((obj, index) => (
+            <>
+              <p>{`${index}:${obj.desc}`}</p>
+            </>
+          ))}
         </Item>
         <Item>
           <TextArea
@@ -224,10 +197,6 @@ const PDFViewer: VFC<PDFViewerProps> = ({ placeParam, setObjects }) => {
           />
           <PDFTable1 />
         </Item>
-        {/* <Item>
-          <TextArea title={"シフト人数"} description={"タスク一覧."} />
-          <PDFTable1 />
-        </Item> */}
         <Item>
           <TextArea
             title={"タスク内容"}
