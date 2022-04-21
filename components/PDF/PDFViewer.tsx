@@ -2,13 +2,13 @@ import { Divider, Paper, Stack } from "@mui/material";
 import React, { VFC } from "react";
 import TextArea from "./TextArea";
 import { styled } from "@mui/material/styles";
-import {
-  Circle,
-  GoogleMap,
-  InfoWindow,
-  Marker,
-  Polygon,
-} from "@react-google-maps/api";
+// import {
+//   Circle,
+//   GoogleMap,
+//   InfoWindow,
+//   Marker,
+//   Polygon,
+// } from "@react-google-maps/api";
 import {
   GoogleDrawingOverlay,
   PLACE,
@@ -22,6 +22,8 @@ import {
   rectAngleOption5,
 } from "../googlemap/MapSettingComponent";
 import { PDFTable1 } from "./PDFTable1";
+
+import { StaticGoogleMap, Marker, Path } from "react-static-google-map";
 
 export type PDFViewerProps = {
   placeParam: PLACE;
@@ -81,89 +83,89 @@ const mapOption: google.maps.MapOptions = {
   ],
 };
 
-const SetObject2JSX = (setObjects: SetObjectType[]) =>
-  setObjects.map((setObj, index) => {
-    switch (setObj.setObjectType) {
-      case "GooglePolygon":
-        return (
-          <>
-            <Polygon
-              key={setObj.id}
-              path={setObj.locations}
-              options={
-                setObj.desc.endsWith("ステージ")
-                  ? rectAngleOption
-                  : setObj.desc.endsWith("テント")
-                  ? rectAngleOption4
-                  : rectAngleOption3
-              }
-            />
-            <Marker
-              position={{
-                lat:
-                  setObj.locations
-                    .map((loc) => loc.lat)
-                    .reduce((sum, element) => sum + element, 0) /
-                  setObj.locations.length,
-                lng:
-                  setObj.locations
-                    .map((loc) => loc.lng)
-                    .reduce((sum, element) => sum + element, 0) /
-                  setObj.locations.length,
-              }}
-              label={{ text: setObj.desc, color: "black", fontSize: "12px" }}
-              icon={{ url: "./explaingIcon.png" }}
-            />
-          </>
-        );
-      case "GoogleMarker":
-        return (
-          <>
-            <Marker
-              key={setObj.id}
-              position={setObj.locations[0]}
-              label={setObj.desc[0]}
-            />
+// const SetObject2JSX = (setObjects: SetObjectType[]) =>
+//   setObjects.map((setObj, index) => {
+//     switch (setObj.setObjectType) {
+//       case "GooglePolygon":
+//         return (
+//           <>
+//             <Polygon
+//               key={setObj.id}
+//               path={setObj.locations}
+//               options={
+//                 setObj.desc.endsWith("ステージ")
+//                   ? rectAngleOption
+//                   : setObj.desc.endsWith("テント")
+//                   ? rectAngleOption4
+//                   : rectAngleOption3
+//               }
+//             />
+//             <Marker
+//               position={{
+//                 lat:
+//                   setObj.locations
+//                     .map((loc) => loc.lat)
+//                     .reduce((sum, element) => sum + element, 0) /
+//                   setObj.locations.length,
+//                 lng:
+//                   setObj.locations
+//                     .map((loc) => loc.lng)
+//                     .reduce((sum, element) => sum + element, 0) /
+//                   setObj.locations.length,
+//               }}
+//               label={{ text: setObj.desc, color: "black", fontSize: "12px" }}
+//               icon={{ url: "./explaingIcon.png" }}
+//             />
+//           </>
+//         );
+//       case "GoogleMarker":
+//         return (
+//           <>
+//             <Marker
+//               key={setObj.id}
+//               position={setObj.locations[0]}
+//               label={setObj.desc[0]}
+//             />
 
-            <Marker
-              position={{
-                lat:
-                  setObj.locations
-                    .map((loc) => loc.lat)
-                    .reduce((sum, element) => sum + element, 0) /
-                  setObj.locations.length,
-                lng:
-                  setObj.locations
-                    .map((loc) => loc.lng)
-                    .reduce((sum, element) => sum + element, 0) /
-                  setObj.locations.length,
-              }}
-              label={{ text: setObj.desc, color: "black", fontSize: "12px" }}
-              icon={{ url: "./explaingIcon.png" }}
-            />
-          </>
-        );
-      case "GoogleCircle":
-        return (
-          <>
-            <Circle
-              key={setObj.id}
-              center={setObj.locations[0]}
-              radius={setObj.locations[1].lat}
-              options={rectAngleOption5}
-            />
+//             <Marker
+//               position={{
+//                 lat:
+//                   setObj.locations
+//                     .map((loc) => loc.lat)
+//                     .reduce((sum, element) => sum + element, 0) /
+//                   setObj.locations.length,
+//                 lng:
+//                   setObj.locations
+//                     .map((loc) => loc.lng)
+//                     .reduce((sum, element) => sum + element, 0) /
+//                   setObj.locations.length,
+//               }}
+//               label={{ text: setObj.desc, color: "black", fontSize: "12px" }}
+//               icon={{ url: "./explaingIcon.png" }}
+//             />
+//           </>
+//         );
+//       case "GoogleCircle":
+//         return (
+//           <>
+//             <Circle
+//               key={setObj.id}
+//               center={setObj.locations[0]}
+//               radius={setObj.locations[1].lat}
+//               options={rectAngleOption5}
+//             />
 
-            <Marker
-              position={setObj.locations[0]}
-              label={{ text: setObj.desc, color: "black", fontSize: "12px" }}
-              icon={{ url: "./explaingIcon.png" }}
-            />
-          </>
-        );
-      default:
-        return <></>;
-    }
-  });
+//             <Marker
+//               position={setObj.locations[0]}
+//               label={{ text: setObj.desc, color: "black", fontSize: "12px" }}
+//               icon={{ url: "./explaingIcon.png" }}
+//             />
+//           </>
+//         );
+//       default:
+//         return <></>;
+//     }
+//   });
 
 const PDFViewer: VFC<PDFViewerProps> = ({ placeParam, setObjects }) => {
   const now = new Date();
@@ -200,14 +202,20 @@ const PDFViewer: VFC<PDFViewerProps> = ({ placeParam, setObjects }) => {
             title={"場所・日時"}
             description={"場所：教養棟前特設ステージ 日時:6/3"}
           />
-          <GoogleMap
+          {/* <GoogleMap
             mapContainerStyle={_mapContainerStyle}
             zoom={placeParam.zoom - 0.5}
             center={placeParam.center}
             options={mapOption}
           >
             {SetObject2JSX(setObjects)}
-          </GoogleMap>
+          </GoogleMap> */}
+          <StaticGoogleMap
+            apiKey={`${process.env.NEXT_PUBLIC_GOOGLE_MAPS_APIKEY}&libraries=drawing`}
+            size="600x600"
+          >
+            <Marker location={placeParam.center} color="blue" />
+          </StaticGoogleMap>
         </Item>
         <Item>
           <TextArea
@@ -228,11 +236,6 @@ const PDFViewer: VFC<PDFViewerProps> = ({ placeParam, setObjects }) => {
         </Item>
         <Item>
           <TextArea title={"Q&A"} description={"Q&Aの内容を以下に示す."} />
-          <img
-            src={
-              "https://images.unsplash.com/photo-1638734990506-f04273578da0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"
-            }
-          />
         </Item>
       </Stack>
     </div>
