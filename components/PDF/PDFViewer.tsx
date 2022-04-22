@@ -30,6 +30,7 @@ export type PDFViewerProps = {
   placeParam: PLACE;
   setObjects: SetObjectType[];
   taskBlock: TaskBlock[];
+  isClient: boolean;
 };
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -89,6 +90,7 @@ const PDFViewer: VFC<PDFViewerProps> = ({
   placeParam,
   setObjects,
   taskBlock,
+  isClient = false,
 }) => {
   const now = new Date();
   return (

@@ -394,6 +394,7 @@ export default (req: NextApiRequest, res: NextApiResponse): void => {
         placeParam={placeParam}
         setObjects={setObjects}
         taskBlock={taskBlock}
+        isClient={false}
       />
     </LoadScript>
   );
@@ -404,6 +405,7 @@ export default (req: NextApiRequest, res: NextApiResponse): void => {
       placeParam={placeParam}
       setObjects={setObjects}
       taskBlock={taskBlock}
+      isClient={false}
     />
   );
   // const appStream = renderToStaticNodeStream(JSXComponent);
