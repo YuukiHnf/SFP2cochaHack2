@@ -1,4 +1,5 @@
 import { LoadScript } from "@react-google-maps/api";
+import { Timestamp } from "firebase/firestore";
 import fs from "fs";
 import { NextApiRequest, NextApiResponse } from "next";
 import path from "path";
@@ -11,7 +12,7 @@ import ReactDOMServer, {
 import HomeComponent from "../../components/admin/HomeComponent";
 import PDFViewer from "../../components/PDF/PDFViewer";
 import TestComponent from "../../components/TestComponent";
-import { SetObjectType } from "../../utils/firebase/FirebaseStore";
+import { SetObjectType, TaskBlock } from "../../utils/firebase/FirebaseStore";
 //import TestComponent from "../../components/TestComponent";
 
 // export default (req: NextApiRequest, res: NextApiResponse): void => {
@@ -49,6 +50,85 @@ const placeParam = {
   zoom: 19,
   tilt: 0,
 };
+
+const taskBlock: TaskBlock[] = [
+  {
+    taskIds: [],
+    title: "初期位置",
+    time: new Timestamp(1654214400, 0),
+    isInit: true,
+    id: "7kb2b37J0PTwPeptGz5R",
+  },
+  {
+    title: "設営",
+    taskIds: [
+      "Qdmd7gtsmmbWmdoUXX7L",
+      "p5Vm7o2vDBs9ZyCpXYHU",
+      "4hS7vtRJPCdbhsSV1hwy",
+      "HDo5qCFH5xpgtr0eOyDt",
+      "z9nKDjDOUXdjwuhjcL9t",
+      "Ip8cBmpePHUXnjzmarcz",
+      "mdYrCv7yXFTFp2AszsXw",
+      "HhwTvBkDSm20qld96NvG",
+      "RmUCqbb8UCBBPAnbgHJM",
+      "HB4Ecgwhd1xpsIYN628k",
+      "cciB4fziNAx9yTqp3P8n",
+      "btT0Lx2XfhqpJ793gi2x",
+      "C7QjWrwEnZlqu9R2z5n6",
+      "zIU5eKzy0r4BjuKpRUQY",
+      "NNkZ1WChCickqyOSnMGt",
+      "WiLhUBGxpULlxSdeuV4s",
+      "MLMckkVNLFSgbjCSSaYK",
+      "c49IsRnZGRN7HdT6jAo9",
+      "vTQ2B2TDObZVO4q28jiR",
+      "rceHUcjyUt89FLQ8JAC7",
+      "67hKkLfRt4gFwjsnfg2l",
+      "voVU6ypaZW7JauADe8eq",
+      "gtV24oyFpiaLStiCx35d",
+      "Pgf3PKSF7s7HdBH21LU6",
+      "qQgFxDL5S4TXGiaeWTQo",
+    ],
+    time: new Timestamp(1654215000, 0),
+    isInit: false,
+    id: "Y7WAfI45mwPBjJhsCQmk",
+  },
+  {
+    title: "演者受付",
+    taskIds: [
+      "1QpAqsmwqJBtfAd7tBio",
+      "4Kgl5mjnAvPqpShkBfTC",
+      "C0SrkbuON931pkvuszJD",
+      "N5Iz8kvhmXGONwUVgfiN",
+      "Yvi6uh3sphP3NuPLI8ON",
+      "XLIDeMR0sXpAe8vMdCne",
+      "2tkzEhX5QNWwQG5qMBSc",
+      "i5VuBSOYHJ5uNs3brr8r",
+      "uzyK53bQRzsFgyYFwtxE",
+    ],
+    time: new Timestamp(1654217100, 0),
+    isInit: false,
+    id: "2TliJxat77MMAP7w8aKI",
+  },
+  {
+    title: "開会挨拶",
+    taskIds: [
+      "xNH1SB9rK6hHPml71bTt",
+      "yJ9bnmhMrv68G0PMjy4v",
+      "D9Zf2wBE5dJHWIKyWzjA",
+      "Xn2jSBOtqhCsCBrcKdpg",
+    ],
+    time: new Timestamp(1654219800, 0),
+    isInit: false,
+    id: "c5OnVltF0siUpyTfO5f9",
+  },
+  {
+    taskIds: [],
+    title: "第一部",
+    time: new Timestamp(1654220100, 0),
+    isInit: false,
+    id: "N8yPBLWMCt9rdfNkR9Fu",
+  },
+];
 
 const setObjects: SetObjectType[] = [
   {
@@ -310,13 +390,21 @@ export default (req: NextApiRequest, res: NextApiResponse): void => {
     <LoadScript
       googleMapsApiKey={`${process.env.NEXT_PUBLIC_GOOGLE_MAPS_APIKEY}&libraries=drawing`}
     >
-      <PDFViewer placeParam={placeParam} setObjects={setObjects} />
+      <PDFViewer
+        placeParam={placeParam}
+        setObjects={setObjects}
+        taskBlock={taskBlock}
+      />
     </LoadScript>
   );
 
   const html = renderToString(
     // JSXComponent
-    <PDFViewer placeParam={placeParam} setObjects={setObjects} />
+    <PDFViewer
+      placeParam={placeParam}
+      setObjects={setObjects}
+      taskBlock={taskBlock}
+    />
   );
   // const appStream = renderToStaticNodeStream(JSXComponent);
   // appStream.on("end", (props) => {
