@@ -21,6 +21,7 @@ const PDFAdmin = () => {
           placeParam={placeParam}
           setObjects={setObjects}
           taskBlock={taskBlock}
+          isClient={true}
         />
       )}
     </>
