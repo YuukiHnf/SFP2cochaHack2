@@ -1,6 +1,9 @@
 import React from "react";
 import { useAppSelector } from "../../app/hooks";
-import { selectAdminPlaceState } from "../../features/adminSlice";
+import {
+  selectAdminPlaceState,
+  selectAdminTaskBlock,
+} from "../../features/adminSlice";
 import { selectSetObjects } from "../../features/setObjectSlice";
 import PDFViewer from "./PDFViewer";
 
@@ -9,10 +12,18 @@ const PDFAdmin = () => {
 
   const setObjects = useAppSelector(selectSetObjects);
 
+  const taskBlock = useAppSelector(selectAdminTaskBlock);
+
   return (
-    <div>
-      <PDFViewer placeParam={placeParam} setObjects={setObjects} />
-    </div>
+    <>
+      {taskBlock && (
+        <PDFViewer
+          placeParam={placeParam}
+          setObjects={setObjects}
+          taskBlock={taskBlock}
+        />
+      )}
+    </>
   );
 };
 
