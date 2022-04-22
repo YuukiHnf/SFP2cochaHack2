@@ -8,12 +8,13 @@ import HomeComponent from "../../components/admin/HomeComponent";
 import ObjectComponent from "../../components/admin/ObjectComponent";
 import PlaceComponent from "../../components/admin/PlaceComponent";
 import TeamComponent from "../../components/admin/TeamComponent";
+import PDFAdmin from "../../components/PDF/PDFAdmin";
 import { selectAdminPlaceState } from "../../features/adminSlice";
 
 const Index = () => {
-  const [menu, setMenu] = useState<"home" | "team" | "place" | "object">(
-    "home"
-  );
+  const [menu, setMenu] = useState<
+    "home" | "team" | "place" | "object" | "pdf"
+  >("home");
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey:
       `${process.env.NEXT_PUBLIC_GOOGLE_MAPS_APIKEY}&libraries=drawing` ?? "",
@@ -33,6 +34,8 @@ const Index = () => {
         return <PlaceComponent />;
       case "object":
         return <ObjectComponent />;
+      case "pdf":
+        return <PDFAdmin />;
       default:
         return <HomeComponent />;
     }
